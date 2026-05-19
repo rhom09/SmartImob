@@ -12,6 +12,11 @@ Este roadmap segue a abordagem de **módulos incrementais**, onde cada fase entr
 
 **Duração estimada**: 1-2 semanas
 
+**Plans:** 1 plan
+
+Plans:
+- [ ] 00-01-PLAN.md — Monorepo setup, technology stack configuration, and base layout.
+
 ### Entregáveis
 
 #### 0.1 - Setup do Projeto
@@ -231,17 +236,6 @@ Este roadmap segue a abordagem de **módulos incrementais**, onde cada fase entr
 - [ ] Implementar filtros (tipo, status, período)
 - [ ] Implementar busca por número/imóvel/cliente
 - [ ] Implementar badges de status
-
-#### 3.5 - Frontend - Cadastro/Edição
-- [ ] Criar formulário de cadastro de contrato
-- [ ] Implementar seleção de imóvel (autocomplete)
-- [ ] Implementar seleção de cliente (autocomplete)
-- [ ] Implementar campos específicos para locação
-- [ ] Implementar campos específicos para venda
-- [ ] Implementar upload de documentos
-- [ ] Implementar validações
-
-#### 3.6 - Frontend - Visualização
 - [ ] Criar página de detalhes do contrato
 - [ ] Exibir todos os dados do contrato
 - [ ] Exibir parcelas (tabela)
