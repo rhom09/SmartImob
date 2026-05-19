@@ -109,3 +109,24 @@ export const propertyFiltersSchema = z.object({
   orderBy: z.enum(['createdAt', 'valorVenda', 'valorLocacao', 'areaTotal']).default('createdAt'),
   order: z.enum(['asc', 'desc']).default('desc'),
 });
+
+// ─── Schemas de Clientes (Inquilinos/Interessados) ───────────────────
+export const createTenantSchema = z.object({
+  nome: z.string().min(2, 'Nome deve ter pelo menos 2 caracteres'),
+  cpfCnpj: z.string().refine(isValidCpfCnpj, 'CPF/CNPJ inválido'),
+  rg: z.string().optional(),
+  dataNascimento: z.coerce.date().optional(),
+  telefone: z.string().optional(),
+  email: z.string().email('Email inválido').optional().or(z.literal('')),
+  endereco: z.string().optional(),
+  tipo: z.enum(['INQUILINO', 'INTERESSADO']).default('INQUILINO'),
+});
+
+export const updateTenantSchema = createTenantSchema.partial();
+
+// ─── Schemas de Interações ───────────────────────────────────────────
+export const createInteractionSchema = z.object({
+  tipo: z.enum(['LIGACAO', 'EMAIL', 'VISITA', 'WHATSAPP', 'OUTROS']),
+  descricao: z.string().min(3, 'A descrição é obrigatória'),
+  usuarioId: z.string().uuid().optional(),
+});
