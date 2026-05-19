@@ -1,0 +1,19 @@
+{
+  "project_name": "SmartImob",
+  "project_type": "Sistema de Gestão Imobiliária",
+  "approach": "incremental_modules",
+  "stack": {
+    "frontend": "Next.js com TypeScript",
+    "backend": "Node.js com Express/Fastify",
+    "database": "PostgreSQL (Supabase)",
+    "hosting": "Vercel (frontend) + Render (backend)",
+    "architecture": "Modular com separação clara de responsabilidades"
+  },
+  "preferences": {
+    "development_style": "módulos incrementais - um módulo completo por vez",
+    "starting_point": "projeto totalmente novo",
+    "research_enabled": true,
+    "language": "pt-BR"
+  },
+  "created_at": "2026-05-19T01:06:32.757Z"
+}
