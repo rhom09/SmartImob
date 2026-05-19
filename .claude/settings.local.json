@@ -12,7 +12,11 @@
       "Bash(git add *)",
       "Bash(git commit -m ' *)",
       "Bash(gsd-sdk query *)",
-      "Bash(git push *)"
+      "Bash(git push *)",
+      "Bash(npx tsc *)",
+      "Bash(npm install *)",
+      "Bash(npm run *)",
+      "Bash(npx next *)"
     ],
     "additionalDirectories": [
       "c:\\Users\\Usuario\\source\\repos\\SmartImob\\.planning"

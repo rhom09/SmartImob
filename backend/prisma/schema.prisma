@@ -4,35 +4,302 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
 }
 
-model User {
-  id            String    @id @default(uuid())
-  supabaseId    String    @unique
-  email         String    @unique
-  name          String?
-  role          Role      @default(USER)
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  properties    Property[]
-}
-
-model Property {
-  id          String   @id @default(uuid())
-  title       String
-  description String?
-  price       Decimal
-  address     String
-  ownerId     String
-  owner       User     @relation(fields: [ownerId], references: [id])
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-}
+// ─── ENUMS ───────────────────────────────────────────────────────────
 
 enum Role {
   USER
   ADMIN
   MANAGER
+}
+
+enum StatusGeral {
+  ATIVO
+  INATIVO
+}
+
+enum StatusImovel {
+  VAGO
+  OCUPADO
+  SUSPENSO
+}
+
+enum TipoImovel {
+  CASA
+  APARTAMENTO
+  TERRENO
+  COMERCIAL
+  SALA
+  GALPAO
+  OUTROS
+}
+
+enum FinalidadeImovel {
+  VENDA
+  LOCACAO
+  AMBOS
+}
+
+enum StatusContrato {
+  ATIVO
+  ENCERRADO
+  RENOVADO
+  SUSPENSO
+}
+
+enum StatusRecibo {
+  PENDENTE
+  PAGO
+  CANCELADO
+}
+
+enum IndiceReajuste {
+  IGPM
+  IPCA
+  MANUAL
+  OUTROS
+}
+
+enum TipoDespesa {
+  IPTU
+  CONDOMINIO
+  AGUA
+  LUZ
+  OUTROS
+}
+
+enum StatusDespesa {
+  PENDENTE
+  PAGO
+}
+
+enum TipoAlerta {
+  VENCIMENTO
+  REAJUSTE
+  RECIBO
+  OUTROS
+}
+
+enum StatusAlerta {
+  ATIVO
+  LIDO
+  RESOLVIDO
+}
+
+// ─── MODELS ──────────────────────────────────────────────────────────
+
+model User {
+  id         String     @id @default(uuid())
+  supabaseId String     @unique @map("supabase_id")
+  nome       String
+  email      String     @unique
+  senhaHash  String?    @map("senha_hash")
+  perfil     Role       @default(USER)
+  status     StatusGeral @default(ATIVO)
+  createdAt  DateTime   @default(now()) @map("data_criacao")
+  updatedAt  DateTime   @updatedAt @map("data_atualizacao")
+
+  auditoria  Auditoria[]
+
+  @@map("USUARIOS")
+}
+
+model Owner {
+  id        String      @id @default(uuid())
+  nome      String
+  cpfCnpj   String      @unique @map("cpf_cnpj")
+  telefone  String?
+  email     String?
+  endereco  String?
+  status    StatusGeral @default(ATIVO)
+  createdAt DateTime    @default(now()) @map("data_criacao")
+  updatedAt DateTime    @updatedAt @map("data_atualizacao")
+
+  imoveis   Property[]
+
+  @@map("PROPRIETARIOS")
+}
+
+model Property {
+  id           String          @id @default(uuid())
+  ownerId      String          @map("proprietario_id")
+  tipo         TipoImovel      @default(CASA)
+  finalidade   FinalidadeImovel @default(LOCACAO)
+  endereco     String
+  numero       String?
+  complemento  String?
+  bairro       String?
+  cidade       String?
+  estado       String?
+  cep          String?
+  descricao    String?
+  codigo       String?         @unique
+
+  // Características
+  areaTotal     Decimal?       @map("area_total")
+  areaConstruida Decimal?      @map("area_construida")
+  quartos       Int?
+  suites        Int?
+  banheiros     Int?
+  vagas         Int?
+
+  // Valores
+  valorVenda    Decimal?       @map("valor_venda")
+  valorLocacao  Decimal?       @map("valor_locacao")
+  valorCondominio Decimal?     @map("valor_condominio")
+  valorIptu     Decimal?       @map("valor_iptu")
+
+  status       StatusImovel    @default(VAGO)
+  observacoes  String?
+  deletedAt    DateTime?       @map("deleted_at")
+  createdAt    DateTime        @default(now()) @map("data_criacao")
+  updatedAt    DateTime        @updatedAt @map("data_atualizacao")
+
+  owner        Owner           @relation(fields: [ownerId], references: [id])
+  fotos        PropertyPhoto[]
+  contratos    Contract[]
+
+  @@map("IMOVEIS")
+}
+
+model PropertyPhoto {
+  id         String   @id @default(uuid())
+  propertyId String   @map("imovel_id")
+  url        String
+  caption    String?
+  isCover    Boolean  @default(false) @map("is_capa")
+  order      Int      @default(0) @map("ordem")
+  createdAt  DateTime @default(now()) @map("data_criacao")
+
+  property   Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+
+  @@map("IMOVEL_FOTOS")
+}
+
+model Tenant {
+  id        String      @id @default(uuid())
+  nome      String
+  cpfCnpj   String      @unique @map("cpf_cnpj")
+  telefone  String?
+  email     String?
+  endereco  String?
+  status    StatusGeral @default(ATIVO)
+  createdAt DateTime    @default(now()) @map("data_criacao")
+  updatedAt DateTime    @updatedAt @map("data_atualizacao")
+
+  contratos Contract[]
+
+  @@map("INQUILINOS")
+}
+
+model Contract {
+  id              String         @id @default(uuid())
+  imovelId        String         @map("imovel_id")
+  inquilinoId     String         @map("inquilino_id")
+  usuarioId       String?        @map("usuario_id")
+  numeroContrato  String         @unique @map("numero_contrato")
+  dataInicio      DateTime       @map("data_inicio")
+  dataFim         DateTime       @map("data_fim")
+  valorAluguel    Decimal        @map("valor_aluguel")
+  diaVencimento   Int            @map("dia_vencimento")
+  status          StatusContrato @default(ATIVO)
+  observacoes     String?
+  createdAt       DateTime       @default(now()) @map("data_criacao")
+  updatedAt       DateTime       @updatedAt @map("data_atualizacao")
+
+  imovel          Property       @relation(fields: [imovelId], references: [id])
+  inquilino       Tenant         @relation(fields: [inquilinoId], references: [id])
+  recibos         Receipt[]
+  reajustes       Adjustment[]
+  despesas        Expense[]
+  alertas         Alert[]
+
+  @@map("CONTRATOS")
+}
+
+model Receipt {
+  id             String        @id @default(uuid())
+  contratoId     String        @map("contrato_id")
+  referenciaMes  Int           @map("referencia_mes")
+  referenciaAno  Int           @map("referencia_ano")
+  valorBruto     Decimal       @map("valor_bruto")
+  descontos      Decimal       @default(0)
+  valorLiquido   Decimal       @map("valor_liquido")
+  dataVencimento DateTime      @map("data_vencimento")
+  dataPagamento  DateTime?     @map("data_pagamento")
+  status         StatusRecibo  @default(PENDENTE)
+  numeroRecibo   String        @unique @map("numero_recibo")
+  observacoes    String?
+  createdAt      DateTime      @default(now()) @map("data_criacao")
+  updatedAt      DateTime      @updatedAt @map("data_atualizacao")
+
+  contrato       Contract      @relation(fields: [contratoId], references: [id])
+
+  @@map("RECIBOS")
+}
+
+model Adjustment {
+  id            String         @id @default(uuid())
+  contratoId    String         @map("contrato_id")
+  dataReajuste  DateTime       @map("data_reajuste")
+  indice        IndiceReajuste
+  percentual    Decimal
+  valorAnterior Decimal        @map("valor_anterior")
+  novoValor     Decimal        @map("novo_valor")
+  observacoes   String?
+  createdAt     DateTime       @default(now()) @map("data_criacao")
+  updatedAt     DateTime       @updatedAt @map("data_atualizacao")
+
+  contrato      Contract       @relation(fields: [contratoId], references: [id])
+
+  @@map("REAJUSTES")
+}
+
+model Expense {
+  id             String       @id @default(uuid())
+  contratoId     String       @map("contrato_id")
+  tipo           TipoDespesa
+  descricao      String?
+  valor          Decimal
+  dataVencimento DateTime     @map("data_vencimento")
+  dataPagamento  DateTime?    @map("data_pagamento")
+  status         StatusDespesa @default(PENDENTE)
+  createdAt      DateTime     @default(now()) @map("data_criacao")
+  updatedAt      DateTime     @updatedAt @map("data_atualizacao")
+
+  contrato       Contract     @relation(fields: [contratoId], references: [id])
+
+  @@map("DESPESAS")
+}
+
+model Alert {
+  id          String      @id @default(uuid())
+  contratoId  String      @map("contrato_id")
+  tipo        TipoAlerta
+  mensagem    String
+  dataEvento  DateTime    @map("data_evento")
+  status      StatusAlerta @default(ATIVO)
+  createdAt   DateTime    @default(now()) @map("data_criacao")
+  updatedAt   DateTime    @updatedAt @map("data_atualizacao")
+
+  contrato    Contract    @relation(fields: [contratoId], references: [id])
+
+  @@map("ALERTAS")
+}
+
+model Auditoria {
+  id              String   @id @default(uuid())
+  usuarioId       String   @map("usuario_id")
+  acao            String
+  tabelaAfetada   String   @map("tabela_afetada")
+  registroId      String?  @map("registro_id")
+  dadosAnteriores Json?    @map("dados_anteriores")
+  dadosNovos      Json?    @map("dados_novos")
+  dataAcao        DateTime @default(now()) @map("data_acao")
+  ipMaquina       String?  @map("ip_maquina")
+
+  usuario         User     @relation(fields: [usuarioId], references: [id])
+
+  @@map("AUDITORIA")
 }
