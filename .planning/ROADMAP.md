@@ -145,6 +145,11 @@ Plans:
 
 **Duração estimada**: 1-2 semanas
 
+**Plans:** 1 plan
+
+Plans:
+- [ ] 02-01-PLAN.md — Implementação do CRUD de clientes, interações e linha do tempo.
+
 **Dependências**: Fase 0
 
 ### Entregáveis
@@ -524,8 +529,8 @@ Plans:
 | Fase | Módulo | Duração | Status |
 |------|--------|---------|--------|
 | 0 | Setup e Infraestrutura | 1-2 semanas | ✅ Concluído |
-| 1 | Gestão de Imóveis | 2-3 semanas | 🟡 Em planejamento |
-| 2 | Gestão de Clientes | 1-2 semanas | 🔴 Não iniciado |
+| 1 | Gestão de Imóveis | 2-3 semanas | ✅ Concluído |
+| 2 | Gestão de Clientes | 1-2 semanas | 🟡 Em planejamento |
 | 3 | Gestão de Contratos | 2-3 semanas | 🔴 Não iniciado |
 | 4 | Gestão Financeira | 2 semanas | 🔴 Não iniciado |
 | 5 | Relatórios e Dashboards | 1-2 semanas | 🔴 Não iniciado |
