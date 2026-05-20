@@ -130,3 +130,21 @@ export const createInteractionSchema = z.object({
   descricao: z.string().min(3, 'A descrição é obrigatória'),
   usuarioId: z.string().uuid().optional(),
 });
+
+// ─── Schemas de Contratos ───────────────────────────────────────────
+export const createContractSchema = z.object({
+  imovelId: z.string().uuid('ID do imóvel inválido'),
+  inquilinoId: z.string().uuid('ID do inquilino inválido'),
+  usuarioId: z.string().uuid().optional(),
+  numeroContrato: z.string().min(1, 'Número do contrato é obrigatório'),
+  dataInicio: z.coerce.date(),
+  dataFim: z.coerce.date(),
+  valorAluguel: z.number().positive('O valor do aluguel deve ser positivo'),
+  diaVencimento: z.number().int().min(1).max(31, 'Dia de vencimento inválido'),
+  observacoes: z.string().optional(),
+}).refine(data => data.dataFim > data.dataInicio, {
+  message: 'A data de fim deve ser posterior à data de início',
+  path: ['dataFim'],
+});
+
+export const updateContractSchema = createContractSchema.partial();
