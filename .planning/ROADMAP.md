@@ -211,6 +211,11 @@ Plans:
 
 **Duração estimada**: 2-3 semanas
 
+**Plans:** 1 plan
+
+Plans:
+- [ ] 03-01-PLAN.md — Configuração de schema e lógica de backend para geração de parcelas e CRUD de contratos.
+
 **Dependências**: Fase 1 (Imóveis), Fase 2 (Clientes)
 
 ### Entregáveis
@@ -530,8 +535,8 @@ Plans:
 |------|--------|---------|--------|
 | 0 | Setup e Infraestrutura | 1-2 semanas | ✅ Concluído |
 | 1 | Gestão de Imóveis | 2-3 semanas | ✅ Concluído |
-| 2 | Gestão de Clientes | 1-2 semanas | 🟡 Em planejamento |
-| 3 | Gestão de Contratos | 2-3 semanas | 🔴 Não iniciado |
+| 2 | Gestão de Clientes | 1-2 semanas | ✅ Concluído |
+| 3 | Gestão de Contratos | 2-3 semanas | 🟡 Em planejamento |
 | 4 | Gestão Financeira | 2 semanas | 🔴 Não iniciado |
 | 5 | Relatórios e Dashboards | 1-2 semanas | 🔴 Não iniciado |
 | 6 | Sistema de Notificações | 1 semana | 🔴 Não iniciado |
