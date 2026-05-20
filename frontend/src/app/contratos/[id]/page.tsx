@@ -43,6 +43,34 @@ export default function DetalhesContratoPage() {
     }
   };
 
+  const handlePay = async (receiptId: string) => {
+    if (!confirm("Confirmar o recebimento desta parcela?")) return;
+
+    try {
+      const response = await fetch(`http://localhost:3001/api/recibos/${receiptId}/pagar`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ dataPagamento: new Date().toISOString() })
+      });
+
+      if (response.ok) {
+        fetchContract(); // recarrega os dados
+      } else {
+        alert("Erro ao processar pagamento.");
+      }
+    } catch (error) {
+      alert("Erro ao conectar ao servidor.");
+    }
+  };
+
+  const handleDownloadPDF = async (receiptId: string, numeroRecibo: string) => {
+    try {
+      window.open(`http://localhost:3001/api/recibos/${receiptId}/pdf`, '_blank');
+    } catch (error) {
+      alert("Erro ao gerar PDF.");
+    }
+  };
+
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'PAGO': return <CheckCircle2 size={16} className="text-success" />;
@@ -173,9 +201,24 @@ export default function DetalhesContratoPage() {
                             </span>
                           </div>
                         </td>
-                        <td className="px-6 py-4 text-right">
-                          <Button variant="ghost" size="sm" className="h-8 text-[10px] uppercase font-bold">
-                            Baixar Recibo
+                        <td className="px-6 py-4 text-right flex justify-end gap-2">
+                          {recibo.status === 'PENDENTE' && (
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="h-8 text-[10px] uppercase font-bold border-success text-success hover:bg-success/10"
+                              onClick={() => handlePay(recibo.id)}
+                            >
+                              Baixar Parcela
+                            </Button>
+                          )}
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-8 text-[10px] uppercase font-bold"
+                            onClick={() => handleDownloadPDF(recibo.id, recibo.numeroRecibo)}
+                          >
+                            PDF
                           </Button>
                         </td>
                       </tr>

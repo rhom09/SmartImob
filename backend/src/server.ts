@@ -6,6 +6,7 @@ import proprietariosRouter from './routes/proprietarios';
 import imoveisRouter from './routes/imoveis';
 import clientesRouter from './routes/clientes';
 import contratosRouter from './routes/contratos';
+import recibosRouter from './routes/recibos';
 
 dotenv.config();
 
@@ -25,6 +26,7 @@ app.use('/api/proprietarios', proprietariosRouter);
 app.use('/api/imoveis', imoveisRouter);
 app.use('/api/clientes', clientesRouter);
 app.use('/api/contratos', contratosRouter);
+app.use('/api/recibos', recibosRouter);
 
 // ─── Protected route example ─────────────────────────────────────────
 app.get('/api/protected', authMiddleware, (req, res) => {
