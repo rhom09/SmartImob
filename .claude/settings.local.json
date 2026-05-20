@@ -16,10 +16,13 @@
       "Bash(npx tsc *)",
       "Bash(npm install *)",
       "Bash(npm run *)",
-      "Bash(npx next *)"
+      "Bash(npx next *)",
+      "Bash(npx prisma *)",
+      "Bash(mkdir -p frontend/src/components/contratos && mkdir -p frontend/src/app/contratos/[id] && mkdir -p frontend/src/app/contratos/novo)"
     ],
     "additionalDirectories": [
-      "c:\\Users\\Usuario\\source\\repos\\SmartImob\\.planning"
+      "c:\\Users\\Usuario\\source\\repos\\SmartImob\\.planning",
+      "C:\\Users\\Usuario\\source\\repos\\SmartImob\\frontend\\src\\app\\contratos"
     ]
   }
 }
