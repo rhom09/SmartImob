@@ -23,6 +23,8 @@ export default function DetalhesContratoPage() {
   const router = useRouter();
   const [contract, setContract] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [showAdjustmentForm, setShowAdjustmentForm] = useState(false);
+  const [adjustmentData, setAdjustmentData] = useState({ indice: "IGPM", percentual: 0, novoValor: 0 });
 
   useEffect(() => {
     if (id) {
@@ -57,6 +59,28 @@ export default function DetalhesContratoPage() {
         fetchContract(); // recarrega os dados
       } else {
         alert("Erro ao processar pagamento.");
+      }
+    } catch (error) {
+      alert("Erro ao conectar ao servidor.");
+    }
+  };
+
+  const handleAdjustment = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!adjustmentData.novoValor || adjustmentData.novoValor <= 0) return;
+
+    try {
+      const response = await fetch(`http://localhost:3001/api/contratos/${id}/reajustar`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(adjustmentData)
+      });
+
+      if (response.ok) {
+        setShowAdjustmentForm(false);
+        fetchContract();
+      } else {
+        alert("Erro ao aplicar reajuste.");
       }
     } catch (error) {
       alert("Erro ao conectar ao servidor.");
@@ -155,6 +179,91 @@ export default function DetalhesContratoPage() {
                     </p>
                   </div>
                 </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Histórico de Reajustes */}
+          <Card>
+            <CardHeader className="pb-3 flex flex-row items-center justify-between border-b border-outline-variant/30">
+              <CardTitle className="text-xs uppercase tracking-widest text-secondary">Reajustes</CardTitle>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-7 text-[10px] font-bold uppercase"
+                onClick={() => setShowAdjustmentForm(!showAdjustmentForm)}
+              >
+                {showAdjustmentForm ? "Cancelar" : "Reajustar"}
+              </Button>
+            </CardHeader>
+            <CardContent className="pt-4 space-y-4">
+              {showAdjustmentForm && (
+                <form onSubmit={handleAdjustment} className="p-3 bg-surface-container-low rounded-md space-y-3 border border-outline-variant/50">
+                  <div className="grid grid-cols-2 gap-2">
+                    <div>
+                      <label className="text-[10px] font-bold uppercase text-on-surface-variant">Índice</label>
+                      <select
+                        className="w-full h-8 text-xs border border-outline-variant rounded bg-white px-1"
+                        value={adjustmentData.indice}
+                        onChange={(e) => setAdjustmentData({ ...adjustmentData, indice: e.target.value })}
+                      >
+                        <option value="IGPM">IGP-M</option>
+                        <option value="IPCA">IPCA</option>
+                        <option value="MANUAL">Manual</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="text-[10px] font-bold uppercase text-on-surface-variant">Percentual (%)</label>
+                      <input
+                        type="number"
+                        step="0.01"
+                        className="w-full h-8 text-xs border border-outline-variant rounded bg-white px-2"
+                        value={adjustmentData.percentual}
+                        onChange={(e) => {
+                          const val = parseFloat(e.target.value) || 0;
+                          const novoVal = Number(contract.valorAluguel) * (1 + val / 100);
+                          setAdjustmentData({ ...adjustmentData, percentual: val, novoValor: novoVal });
+                        }}
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="text-[10px] font-bold uppercase text-on-surface-variant">Novo Valor</label>
+                    <input
+                      type="number"
+                      step="0.01"
+                      className="w-full h-8 text-xs border border-outline-variant rounded bg-white px-2 font-bold text-secondary"
+                      value={adjustmentData.novoValor}
+                      onChange={(e) => setAdjustmentData({ ...adjustmentData, novoValor: parseFloat(e.target.value) || 0 })}
+                    />
+                  </div>
+                  <Button type="submit" size="sm" className="w-full h-8 text-xs font-bold uppercase">
+                    Aplicar Reajuste
+                  </Button>
+                </form>
+              )}
+
+              <div className="space-y-3">
+                {contract.reajustes?.length > 0 ? (
+                  contract.reajustes.map((adj: any) => (
+                    <div key={adj.id} className="text-xs border-l-2 border-secondary pl-3 py-1">
+                      <div className="flex justify-between items-center mb-1">
+                        <span className="font-bold text-on-surface">{adj.indice} (+{adj.percentual}%)</span>
+                        <span className="text-[10px] text-on-surface-variant font-medium">
+                          {new Date(adj.dataReajuste).toLocaleDateString()}
+                        </span>
+                      </div>
+                      <p className="text-on-surface-variant">
+                        {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(Number(adj.valorAnterior))} →
+                        <span className="font-bold text-secondary ml-1">
+                          {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(Number(adj.novoValor))}
+                        </span>
+                      </p>
+                    </div>
+                  ))
+                ) : (
+                  <p className="text-xs text-on-surface-variant italic text-center py-2">Sem histórico de reajustes.</p>
+                )}
               </div>
             </CardContent>
           </Card>

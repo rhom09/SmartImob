@@ -51,4 +51,15 @@ export class ContractController {
       return res.status(500).json({ message: 'Erro interno do servidor' });
     }
   }
+
+  static async applyAdjustment(req: Request, res: Response) {
+    try {
+      const { id } = req.params;
+      const result = await ContractService.applyAdjustment(id, req.body);
+      return res.json(result);
+    } catch (error: any) {
+      console.error('Erro ao aplicar reajuste:', error);
+      return res.status(400).json({ message: error.message || 'Erro interno do servidor' });
+    }
+  }
 }

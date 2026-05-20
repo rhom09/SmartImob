@@ -137,6 +137,50 @@ export class ContractService {
     };
   }
 
+  static async applyAdjustment(id: string, data: { indice: any, percentual: number, novoValor: number, observacoes?: string }) {
+    return await prisma.$transaction(async (tx) => {
+      const contract = await tx.contract.findUnique({ where: { id } });
+      if (!contract) throw new Error('Contrato não encontrado');
+
+      const valorAnterior = contract.valorAluguel;
+
+      // 1. Criar registro de reajuste
+      const adjustment = await tx.adjustment.create({
+        data: {
+          contratoId: id,
+          indice: data.indice,
+          percentual: data.percentual,
+          valorAnterior,
+          novoValor: data.novoValor,
+          dataReajuste: new Date(),
+          observacoes: data.observacoes,
+        }
+      });
+
+      // 2. Atualizar valor no contrato
+      await tx.contract.update({
+        where: { id },
+        data: { valorAluguel: data.novoValor }
+      });
+
+      // 3. Atualizar recibos PENDENTES futuros
+      // Recibos com dataVencimento > hoje
+      await tx.receipt.updateMany({
+        where: {
+          contratoId: id,
+          status: 'PENDENTE',
+          dataVencimento: { gt: new Date() }
+        },
+        data: {
+          valorBruto: data.novoValor,
+          valorLiquido: data.novoValor // Simplificado: valorLiquido = novo valor bruto
+        }
+      });
+
+      return adjustment;
+    });
+  }
+
   static async getById(id: string) {
     return await prisma.contract.findUnique({
       where: { id },
