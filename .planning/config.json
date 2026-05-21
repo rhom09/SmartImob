@@ -15,5 +15,8 @@
     "research_enabled": true,
     "language": "pt-BR"
   },
-  "created_at": "2026-05-19T01:06:32.757Z"
+  "created_at": "2026-05-19T01:06:32.757Z",
+  "graphify": {
+    "enabled": true
+  }
 }

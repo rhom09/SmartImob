@@ -1,0 +1,1 @@
+- [Preferências de Interação](memory/interaction_preferences.md) — Regras de idioma e uso de skills

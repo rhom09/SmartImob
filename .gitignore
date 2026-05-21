@@ -54,3 +54,4 @@ prisma/migrations/
 # Misc
 *.pem
 .cache/
+graphify-out/

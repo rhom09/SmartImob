@@ -57,7 +57,19 @@
       "PowerShell(Start-Sleep 3; Get-Content \"$env:TEMP\\\\smartimob-backend.log\" -ErrorAction SilentlyContinue)",
       "PowerShell(Invoke-RestMethod -Uri \"http://localhost:3001/api/financeiro/resumo\" -Method GET)",
       "PowerShell(Invoke-RestMethod -Uri \"http://localhost:3001/api/financeiro/inadimplencia\" -Method GET)",
-      "PowerShell(Invoke-RestMethod -Uri \"http://localhost:3001/api/despesas\" -Method GET)"
+      "PowerShell(Invoke-RestMethod -Uri \"http://localhost:3001/api/despesas\" -Method GET)",
+      "Skill(gsd-graphify)",
+      "Skill(gsd-graphify:*)",
+      "Bash(uv pip *)",
+      "Bash(graphify install *)",
+      "Bash(graphify update *)",
+      "Bash(cp graphify-out/graph.json .planning/graphs/graph.json)",
+      "Bash(cp graphify-out/graph.html .planning/graphs/graph.html)",
+      "Bash(cp graphify-out/GRAPH_REPORT.md .planning/graphs/GRAPH_REPORT.md)",
+      "Bash(node __TRACKED_VAR__/.claude/get-shit-done/bin/gsd-tools.cjs graphify build snapshot)",
+      "Bash(mkdir -p .planning/graphs)",
+      "Bash(node __TRACKED_VAR__/.claude/get-shit-done/bin/gsd-tools.cjs graphify status)",
+      "Bash(echo \"graphify-out/\")"
     ],
     "additionalDirectories": [
       "c:\\Users\\Usuario\\source\\repos\\SmartImob\\.planning",
