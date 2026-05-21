@@ -132,7 +132,7 @@ export const createInteractionSchema = z.object({
 });
 
 // ─── Schemas de Contratos ───────────────────────────────────────────
-export const createContractSchema = z.object({
+const contractBaseSchema = z.object({
   imovelId: z.string().uuid('ID do imóvel inválido'),
   inquilinoId: z.string().uuid('ID do inquilino inválido'),
   usuarioId: z.string().uuid().optional(),
@@ -142,9 +142,11 @@ export const createContractSchema = z.object({
   valorAluguel: z.number().positive('O valor do aluguel deve ser positivo'),
   diaVencimento: z.number().int().min(1).max(31, 'Dia de vencimento inválido'),
   observacoes: z.string().optional(),
-}).refine(data => data.dataFim > data.dataInicio, {
+});
+
+export const createContractSchema = contractBaseSchema.refine(data => data.dataFim > data.dataInicio, {
   message: 'A data de fim deve ser posterior à data de início',
   path: ['dataFim'],
 });
 
-export const updateContractSchema = createContractSchema.partial();
+export const updateContractSchema = contractBaseSchema.partial();

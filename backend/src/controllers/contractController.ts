@@ -22,7 +22,7 @@ export class ContractController {
     try {
       const { busca, status, page, limit } = req.query;
       const filters = {
-        busca: busca as string,
+        busca: typeof busca === 'string' ? busca : undefined,
         status: status as any,
         page: page ? Number(page) : 1,
         limit: limit ? Number(limit) : 20
@@ -38,7 +38,7 @@ export class ContractController {
 
   static async getById(req: Request, res: Response) {
     try {
-      const { id } = req.params;
+      const id = typeof req.params.id === 'string' ? req.params.id : '';
       const contract = await ContractService.getById(id);
 
       if (!contract) {
@@ -54,7 +54,7 @@ export class ContractController {
 
   static async applyAdjustment(req: Request, res: Response) {
     try {
-      const { id } = req.params;
+      const id = typeof req.params.id === 'string' ? req.params.id : '';
       const result = await ContractService.applyAdjustment(id, req.body);
       return res.json(result);
     } catch (error: any) {

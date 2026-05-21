@@ -25,8 +25,8 @@ export class PDFService {
       doc.text(`a importância de ${new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(Number(receipt.valorLiquido))}.`);
       doc.moveDown();
 
-      doc.fontSize(12).text('Referente ao aluguel do imóvel:', { font: 'Helvetica-Bold' });
-      doc.text(receipt.contrato.imovel.endereco);
+      doc.fontSize(12).font('Helvetica-Bold').text('Referente ao aluguel do imóvel:');
+      doc.font('Helvetica').text(receipt.contrato.imovel.endereco);
       doc.moveDown();
 
       doc.text(`Mês de Referência: ${receipt.referenciaMes.toString().padStart(2, '0')}/${receipt.referenciaAno}`);
@@ -40,7 +40,7 @@ export class PDFService {
       doc.moveDown(4);
       doc.text('____________________________________________________', { align: 'center' });
       doc.text('SmartImob - Gestão Imobiliária', { align: 'center' });
-      doc.fontSize(10).text('Este recibo é um documento digital gerado pelo sistema.', { align: 'center', color: 'gray' });
+      doc.fontSize(10).fillColor('gray').text('Este recibo é um documento digital gerado pelo sistema.', { align: 'center' });
 
       doc.end();
     });

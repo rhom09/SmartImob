@@ -7,6 +7,7 @@ import imoveisRouter from './routes/imoveis';
 import clientesRouter from './routes/clientes';
 import contratosRouter from './routes/contratos';
 import recibosRouter from './routes/recibos';
+import seedRouter from './routes/seed';
 
 dotenv.config();
 
@@ -27,6 +28,7 @@ app.use('/api/imoveis', imoveisRouter);
 app.use('/api/clientes', clientesRouter);
 app.use('/api/contratos', contratosRouter);
 app.use('/api/recibos', recibosRouter);
+app.use('/api/seed', seedRouter);
 
 // ─── Protected route example ─────────────────────────────────────────
 app.get('/api/protected', authMiddleware, (req, res) => {

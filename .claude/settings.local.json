@@ -18,7 +18,13 @@
       "Bash(npm run *)",
       "Bash(npx next *)",
       "Bash(npx prisma *)",
-      "Bash(mkdir -p frontend/src/components/contratos && mkdir -p frontend/src/app/contratos/[id] && mkdir -p frontend/src/app/contratos/novo)"
+      "Bash(mkdir -p frontend/src/components/contratos && mkdir -p frontend/src/app/contratos/[id] && mkdir -p frontend/src/app/contratos/novo)",
+      "Bash(npx ts-node *)",
+      "PowerShell(cd backend; $env:DATABASE_URL = \\(Get-Content .env | Select-String \"DATABASE_URL=\"\\).ToString\\(\\).Split\\(\"=\"\\)[1].Trim\\('\"'\\); npx ts-node prisma/seed-mock.ts)",
+      "PowerShell(cd c:\\\\Users\\\\Usuario\\\\source\\\\repos\\\\SmartImob\\\\backend; $env:DATABASE_URL = \"postgres://postgres:postgres@localhost:5432/postgres\"; npx ts-node prisma/seed-mock.ts)",
+      "PowerShell(node c:\\\\Users\\\\Usuario\\\\source\\\\repos\\\\SmartImob\\\\backend\\\\prisma\\\\seed-mock.js)",
+      "Bash(curl -X GET http://localhost:3001/api/seed)",
+      "Bash(npm uninstall *)"
     ],
     "additionalDirectories": [
       "c:\\Users\\Usuario\\source\\repos\\SmartImob\\.planning",

@@ -5,7 +5,7 @@ import { PDFService } from '../services/pdfService';
 export class ReceiptController {
   static async downloadPDF(req: Request, res: Response) {
     try {
-      const { id } = req.params;
+      const id = typeof req.params.id === 'string' ? req.params.id : '';
       const receipt = await prisma.receipt.findUnique({
         where: { id },
         include: {
@@ -35,7 +35,7 @@ export class ReceiptController {
 
   static async pay(req: Request, res: Response) {
     try {
-      const { id } = req.params;
+      const id = typeof req.params.id === 'string' ? req.params.id : '';
       const { dataPagamento } = req.body;
 
       const receipt = await prisma.receipt.update({
@@ -58,7 +58,7 @@ export class ReceiptController {
 
   static async listByContract(req: Request, res: Response) {
     try {
-      const { contratoId } = req.params;
+      const contratoId = typeof req.params.contratoId === 'string' ? req.params.contratoId : '';
       const receipts = await prisma.receipt.findMany({
         where: { contratoId },
         orderBy: { dataVencimento: 'asc' },
