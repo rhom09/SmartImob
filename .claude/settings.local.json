@@ -50,7 +50,14 @@
       "Bash(curl -i http://localhost:3000/proprietarios/f9de8664-e6bd-4469-a02c-530165293d34)",
       "Bash(taskkill /F /PID 21724)",
       "PowerShell(Stop-Process -Id 21724 -Force)",
-      "PowerShell(Stop-Process -Id 29876 -Force)"
+      "PowerShell(Stop-Process -Id 29876 -Force)",
+      "PowerShell($procs3001 = Get-NetTCPConnection -LocalPort 3001 -ErrorAction SilentlyContinue | Select-Object -ExpandProperty OwningProcess -Unique; if \\($procs3001\\) { $procs3001 | ForEach-Object { Stop-Process -Id $_ -Force -ErrorAction SilentlyContinue } }; $procs3000 = Get-NetTCPConnection -LocalPort 3000 -ErrorAction SilentlyContinue | Select-Object -ExpandProperty OwningProcess -Unique; if \\($procs3000\\) { $procs3000 | ForEach-Object { Stop-Process -Id $_ -Force -ErrorAction SilentlyContinue } }; Write-Host \"Portas limpas\")",
+      "PowerShell(Set-Location \"c:\\\\Users\\\\Usuario\\\\source\\\\repos\\\\SmartImob\\\\backend\"; Start-Process -NoNewWindow -FilePath \"npm\" -ArgumentList \"run\",\"dev\" -RedirectStandardOutput \"$env:TEMP\\\\smartimob-backend.log\" -RedirectStandardError \"$env:TEMP\\\\smartimob-backend-err.log\"; Start-Sleep 4; Get-Content \"$env:TEMP\\\\smartimob-backend.log\" -ErrorAction SilentlyContinue)",
+      "PowerShell(Set-Location \"c:\\\\Users\\\\Usuario\\\\source\\\\repos\\\\SmartImob\\\\backend\"; Start-Process -NoNewWindow -FilePath \"cmd.exe\" -ArgumentList \"/c\",\"npm run dev\" -RedirectStandardOutput \"$env:TEMP\\\\smartimob-backend.log\" -RedirectStandardError \"$env:TEMP\\\\smartimob-backend-err.log\"; Start-Sleep 5; Get-Content \"$env:TEMP\\\\smartimob-backend.log\" -ErrorAction SilentlyContinue; Write-Host \"--- STDERR ---\"; Get-Content \"$env:TEMP\\\\smartimob-backend-err.log\" -ErrorAction SilentlyContinue)",
+      "PowerShell(Start-Sleep 3; Get-Content \"$env:TEMP\\\\smartimob-backend.log\" -ErrorAction SilentlyContinue)",
+      "PowerShell(Invoke-RestMethod -Uri \"http://localhost:3001/api/financeiro/resumo\" -Method GET)",
+      "PowerShell(Invoke-RestMethod -Uri \"http://localhost:3001/api/financeiro/inadimplencia\" -Method GET)",
+      "PowerShell(Invoke-RestMethod -Uri \"http://localhost:3001/api/despesas\" -Method GET)"
     ],
     "additionalDirectories": [
       "c:\\Users\\Usuario\\source\\repos\\SmartImob\\.planning",

@@ -1,4 +1,4 @@
-import { Home, Building2, Users, FileText, Settings, LogOut, Bell, Search, UserCheck } from "lucide-react";
+import { Home, Building2, Users, FileText, Settings, LogOut, Bell, Search, UserCheck, DollarSign } from "lucide-react";
 import Link from "next/link";
 
 const menuItems = [
@@ -7,6 +7,7 @@ const menuItems = [
   { icon: UserCheck, label: "Proprietários", href: "/proprietarios" },
   { icon: Users, label: "Clientes", href: "/clientes" },
   { icon: FileText, label: "Contratos", href: "/contratos" },
+  { icon: DollarSign, label: "Financeiro", href: "/financeiro" },
   { icon: Settings, label: "Configurações", href: "/configuracoes" },
 ];
 
