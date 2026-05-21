@@ -140,6 +140,7 @@ const contractBaseSchema = z.object({
   dataInicio: z.coerce.date(),
   dataFim: z.coerce.date(),
   valorAluguel: z.number().positive('O valor do aluguel deve ser positivo'),
+  percentualComissao: z.number().min(0, 'Percentual de comissão inválido').default(8),
   diaVencimento: z.number().int().min(1).max(31, 'Dia de vencimento inválido'),
   observacoes: z.string().optional(),
 });

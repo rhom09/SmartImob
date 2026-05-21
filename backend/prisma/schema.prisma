@@ -235,6 +235,7 @@ model Contract {
   dataInicio     DateTime       @map("data_inicio")
   dataFim        DateTime       @map("data_fim")
   valorAluguel   Decimal        @map("valor_aluguel")
+  percentualComissao Decimal    @default(8) @map("percentual_comissao")
   diaVencimento  Int            @map("dia_vencimento")
   status         StatusContrato @default(ATIVO)
   observacoes    String?

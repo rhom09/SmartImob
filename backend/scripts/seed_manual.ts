@@ -57,6 +57,8 @@ async function main() {
   }
 
   // 4. Criar Contratos (7 - vinculados aos 7 imóveis ocupados)
+  // Cada contrato com comissão 8% ou 10%
+  const comissoes = [8, 8, 8, 8, 10, 10, 10];
   for (let i = 0; i < 7; i++) {
     const contract = await prisma.contract.create({
       data: {
@@ -66,6 +68,7 @@ async function main() {
         dataInicio: subMonths(new Date(), 6),
         dataFim: addMonths(new Date(), 6),
         valorAluguel: Number(properties[i].valorLocacao),
+        percentualComissao: comissoes[i],
         diaVencimento: 10,
         status: 'ATIVO'
       }

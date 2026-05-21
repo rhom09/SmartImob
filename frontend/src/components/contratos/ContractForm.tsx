@@ -15,6 +15,7 @@ const contractSchema = z.object({
   dataInicio: z.string().min(1, "Data de início é obrigatória"),
   dataFim: z.string().min(1, "Data de fim é obrigatória"),
   valorAluguel: z.coerce.number().positive("O valor deve ser positivo"),
+  percentualComissao: z.coerce.number().min(0, "Percentual inválido").default(8),
   diaVencimento: z.coerce.number().int().min(1).max(31, "Dia inválido"),
   observacoes: z.string().optional(),
 });
@@ -145,6 +146,15 @@ export function ContractForm({ onSubmit, isLoading }: ContractFormProps) {
             placeholder="0.00"
             error={errors.valorAluguel?.message}
             {...register("valorAluguel")}
+          />
+
+          <Input
+            label="% Comissão"
+            type="number"
+            step="0.1"
+            placeholder="8"
+            error={errors.percentualComissao?.message}
+            {...register("percentualComissao")}
           />
 
           <Input

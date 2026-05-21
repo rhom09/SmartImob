@@ -122,12 +122,8 @@ export default function RelatoriosPage() {
                 <span className="font-medium">{formatCurrency(resumo.receitas.alugueisPagos)}</span>
               </div>
               <div className="flex justify-between items-center py-2 border-b border-outline-variant">
-                <span className="text-sm text-on-surface-variant">Comissões (8%)</span>
+                <span className="text-sm text-on-surface-variant">Comissões</span>
                 <span className="font-medium text-success">{formatCurrency(resumo.receitas.comissoes)}</span>
-              </div>
-              <div className="flex justify-between items-center pt-2">
-                <span className="font-bold text-on-surface">Total Receitas</span>
-                <span className="font-bold text-success text-lg">{formatCurrency(resumo.receitas.total)}</span>
               </div>
             </CardContent>
           </Card>
@@ -218,7 +214,6 @@ export default function RelatoriosPage() {
                       <th className="px-4 py-3 font-bold">Mês/Ano</th>
                       <th className="px-4 py-3 font-bold">Qtd Contratos</th>
                       <th className="px-4 py-3 font-bold">Total Aluguéis</th>
-                      <th className="px-4 py-3 font-bold">% Comissão</th>
                       <th className="px-4 py-3 font-bold">Valor Comissão</th>
                     </tr>
                   </thead>
@@ -228,7 +223,6 @@ export default function RelatoriosPage() {
                         <td className="px-4 py-3 font-medium">{MESES[c.mes]}/{c.ano}</td>
                         <td className="px-4 py-3">{c.contratos.length}</td>
                         <td className="px-4 py-3">{formatCurrency(c.totalAlugueis)}</td>
-                        <td className="px-4 py-3">{c.percentualComissao}%</td>
                         <td className="px-4 py-3 font-bold text-success">{formatCurrency(c.valorComissao)}</td>
                       </tr>
                     ))}

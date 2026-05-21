@@ -9,6 +9,7 @@ export interface CreateContractData {
   dataInicio: Date;
   dataFim: Date;
   valorAluguel: number;
+  percentualComissao: number;
   diaVencimento: number;
   observacoes?: string;
 }
@@ -41,6 +42,7 @@ export class ContractService {
           dataInicio: data.dataInicio,
           dataFim: data.dataFim,
           valorAluguel: data.valorAluguel,
+          percentualComissao: data.percentualComissao,
           diaVencimento: data.diaVencimento,
           observacoes: data.observacoes,
           status: 'ATIVO',

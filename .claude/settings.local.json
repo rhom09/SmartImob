@@ -72,7 +72,13 @@
       "Bash(echo \"graphify-out/\")",
       "Bash(curl http://localhost:3001/api/seed-completo)",
       "Bash(taskkill /PID 10364 /F)",
-      "PowerShell($proc = Get-NetTCPConnection -LocalPort 3001 -ErrorAction SilentlyContinue; if \\($proc\\) { Stop-Process -Id $proc.OwningProcess -Force }; cd \"c:\\\\Users\\\\Usuario\\\\source\\\\repos\\\\SmartImob\\\\backend\"; npm run dev)"
+      "PowerShell($proc = Get-NetTCPConnection -LocalPort 3001 -ErrorAction SilentlyContinue; if \\($proc\\) { Stop-Process -Id $proc.OwningProcess -Force }; cd \"c:\\\\Users\\\\Usuario\\\\source\\\\repos\\\\SmartImob\\\\backend\"; npm run dev)",
+      "PowerShell(taskkill /F /IM node.exe)",
+      "PowerShell(Set-Location \"c:\\\\Users\\\\Usuario\\\\source\\\\repos\\\\SmartImob\\\\backend\"; npx prisma generate; npx ts-node scripts/seed_manual.ts; $proc = Get-NetTCPConnection -LocalPort 3001 -ErrorAction SilentlyContinue; if \\($proc\\) { Stop-Process -Id $proc.OwningProcess -Force }; npm run dev)",
+      "PowerShell(npm run dev --prefix \"c:\\\\Users\\\\Usuario\\\\source\\\\repos\\\\SmartImob\\\\backend\")",
+      "mcp__plugin_prisma_Prisma-Local__migrate-status",
+      "Bash(curl -X POST https://aws-1-us-east-2.pooler.supabase.com/rest/v1/rpc/exec_sql -H 'apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9' -H 'Content-Type: application/json' -d '{\"sql\": \"ALTER TABLE \\\\\"CONTRATOS\\\\\" ADD COLUMN IF NOT EXISTS \\\\\"percentual_comissao\\\\\" DECIMAL DEFAULT 8;\"}')",
+      "PowerShell(cd c:\\\\Users\\\\Usuario\\\\source\\\\repos\\\\SmartImob\\\\backend; npx ts-node -e \"import { PrismaClient } from '@prisma/client'; const prisma = new PrismaClient\\(\\); prisma.contract.findMany\\({ select: { numeroContrato: true, valorAluguel: true, percentualComissao: true } }\\).then\\(c => console.log\\(JSON.stringify\\(c, null, 2\\)\\)\\).finally\\(\\(\\) => prisma.\\\\$disconnect\\(\\)\\)\")"
     ],
     "additionalDirectories": [
       "c:\\Users\\Usuario\\source\\repos\\SmartImob\\.planning",

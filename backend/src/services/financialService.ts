@@ -1,5 +1,5 @@
 import prisma from '../lib/prisma';
-import { calcularTotalDevido, calcularComissao, calcularRepasse, CONSTANTES } from '../utils/financial';
+import { calcularTotalDevido, CONSTANTES } from '../utils/financial';
 import { startOfMonth, endOfMonth, addMonths, format } from 'date-fns';
 
 export class FinancialService {
@@ -109,14 +109,14 @@ export class FinancialService {
       const payDate = receipt.dataPagamento!;
       const key = `${payDate.getFullYear()}-${String(payDate.getMonth() + 1).padStart(2, '0')}`;
       const valorAluguel = Number(receipt.valorBruto);
-      const comissao = calcularComissao(valorAluguel);
+      const taxaComissao = Number(receipt.contrato.percentualComissao) / 100;
+      const comissao = valorAluguel * taxaComissao;
 
       if (!monthsMap.has(key)) {
         monthsMap.set(key, {
           mes: payDate.getMonth() + 1,
           ano: payDate.getFullYear(),
           totalAlugueis: 0,
-          percentualComissao: CONSTANTES.TAXA_COMISSAO_PADRAO * 100,
           valorComissao: 0,
           contratos: [],
         });
@@ -131,7 +131,8 @@ export class FinancialService {
         inquilino: receipt.contrato.inquilino.nome,
         imovel: receipt.contrato.imovel.endereco,
         valorAluguel,
-        comissao,
+        taxaComissao: taxaComissao * 100,
+        comissao: Number(comissao.toFixed(2)),
       });
     }
 
@@ -174,7 +175,8 @@ export class FinancialService {
       const owner = receipt.contrato.imovel.owner;
       const ownerId = owner.id;
       const valorAluguel = Number(receipt.valorBruto);
-      const comissao = calcularComissao(valorAluguel);
+      const taxaComissao = Number(receipt.contrato.percentualComissao) / 100;
+      const comissao = valorAluguel * taxaComissao;
 
       // Despesas do contrato no período
       const totalDespesas = receipt.contrato.despesas.reduce(
@@ -184,7 +186,7 @@ export class FinancialService {
       // Despesas rateadas por recibo (simplificação)
       const totalRecibos = paidReceipts.filter((r) => r.contratoId === receipt.contratoId).length;
       const despesasPorRecibo = totalRecibos > 0 ? totalDespesas / totalRecibos : 0;
-      const repasse = calcularRepasse(valorAluguel, CONSTANTES.TAXA_COMISSAO_PADRAO, despesasPorRecibo);
+      const repasse = valorAluguel - comissao - despesasPorRecibo;
 
       if (!ownersMap.has(ownerId)) {
         ownersMap.set(ownerId, {
@@ -213,9 +215,10 @@ export class FinancialService {
           numeroContrato: receipt.contrato.numeroContrato,
           imovelEndereco: receipt.contrato.imovel.endereco,
           valorAluguel,
-          comissao,
-          despesas: despesasPorRecibo,
-          valorRepasse: repasse,
+          taxaComissao: taxaComissao * 100,
+          comissao: Number(comissao.toFixed(2)),
+          despesas: Number(despesasPorRecibo.toFixed(2)),
+          valorRepasse: Number(repasse.toFixed(2)),
         });
       }
       ownerData.totalRepasse += repasse;
@@ -256,10 +259,14 @@ export class FinancialService {
             lte: mesFim,
           },
         },
+        include: { contrato: true },
       });
 
       const totalAlugueis = recibosPagos.reduce((sum, r) => sum + Number(r.valorBruto), 0);
-      const totalComissoes = totalAlugueis * CONSTANTES.TAXA_COMISSAO_PADRAO;
+      const totalComissoes = recibosPagos.reduce(
+        (sum, r) => sum + (Number(r.valorBruto) * (Number(r.contrato.percentualComissao) / 100)), 0
+      );
+      const totalRepasses = totalAlugueis - totalComissoes;
 
       // Despesas pagas no mês
       const despesasPagas = await prisma.expense.findMany({
@@ -273,11 +280,7 @@ export class FinancialService {
       });
 
       const totalDespesas = despesasPagas.reduce((sum, d) => sum + Number(d.valor), 0);
-      const totalRepasses = totalAlugueis - totalComissoes;
-
-      const receitas = totalComissoes; // Receita da imobiliária = comissões
-      const despesas = totalDespesas;
-      const saldo = receitas - despesas;
+      const saldo = totalComissoes - totalDespesas;
       saldoAcumulado += saldo;
 
       meses.push({
@@ -318,12 +321,20 @@ export class FinancialService {
         status: 'PAGO',
         dataPagamento: { gte: inicio, lte: fim },
       },
+      include: {
+        contrato: true
+      }
     });
 
     const totalAlugueisPagos = recibosPagos.reduce(
       (sum, r) => sum + Number(r.valorBruto), 0
     );
-    const totalComissoes = totalAlugueisPagos * CONSTANTES.TAXA_COMISSAO_PADRAO;
+
+    // Calcula comissão proporcional ao percentual de cada contrato
+    const totalComissoes = recibosPagos.reduce(
+      (sum, r) => sum + (Number(r.valorBruto) * (Number(r.contrato.percentualComissao) / 100)), 0
+    );
+
     const totalRepasses = totalAlugueisPagos - totalComissoes;
 
     // Despesas pagas no período

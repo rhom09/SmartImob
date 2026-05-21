@@ -18,6 +18,7 @@ interface OwnerTransfer {
     numeroContrato: string;
     imovelEndereco: string;
     valorAluguel: number;
+    taxaComissao: number;
     comissao: number;
     despesas: number;
     valorRepasse: number;
@@ -155,7 +156,7 @@ export default function RepassesPage() {
                         <th className="px-4 py-3 font-bold">Contrato</th>
                         <th className="px-4 py-3 font-bold">Imóvel</th>
                         <th className="px-4 py-3 font-bold">Aluguel</th>
-                        <th className="px-4 py-3 font-bold">Comissão (8%)</th>
+                        <th className="px-4 py-3 font-bold">Comissão</th>
                         <th className="px-4 py-3 font-bold">Despesas</th>
                         <th className="px-4 py-3 font-bold">Repasse</th>
                       </tr>
@@ -175,7 +176,12 @@ export default function RepassesPage() {
                             </div>
                           </td>
                           <td className="px-4 py-3 font-medium">{formatCurrency(contrato.valorAluguel)}</td>
-                          <td className="px-4 py-3 text-error">- {formatCurrency(contrato.comissao)}</td>
+                          <td className="px-4 py-3 text-error">
+                            <div className="flex flex-col">
+                              <span>- {formatCurrency(contrato.comissao)}</span>
+                              <span className="text-[10px] text-on-surface-variant">({contrato.taxaComissao}%)</span>
+                            </div>
+                          </td>
                           <td className="px-4 py-3 text-error">- {formatCurrency(contrato.despesas)}</td>
                           <td className="px-4 py-3 font-bold text-success">{formatCurrency(contrato.valorRepasse)}</td>
                         </tr>
