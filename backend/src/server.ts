@@ -10,6 +10,7 @@ import recibosRouter from './routes/recibos';
 import despesasRouter from './routes/despesas';
 import financeiroRouter from './routes/financeiro';
 import seedRouter from './routes/seed';
+import seedCompletoRouter from './routes/seed_completo';
 
 dotenv.config();
 
@@ -33,6 +34,7 @@ app.use('/api/recibos', recibosRouter);
 app.use('/api/despesas', despesasRouter);
 app.use('/api/financeiro', financeiroRouter);
 app.use('/api/seed', seedRouter);
+app.use('/api/seed-completo', seedCompletoRouter);
 
 // ─── Protected route example ─────────────────────────────────────────
 app.get('/api/protected', authMiddleware, (req, res) => {

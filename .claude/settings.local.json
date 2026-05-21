@@ -69,7 +69,10 @@
       "Bash(node __TRACKED_VAR__/.claude/get-shit-done/bin/gsd-tools.cjs graphify build snapshot)",
       "Bash(mkdir -p .planning/graphs)",
       "Bash(node __TRACKED_VAR__/.claude/get-shit-done/bin/gsd-tools.cjs graphify status)",
-      "Bash(echo \"graphify-out/\")"
+      "Bash(echo \"graphify-out/\")",
+      "Bash(curl http://localhost:3001/api/seed-completo)",
+      "Bash(taskkill /PID 10364 /F)",
+      "PowerShell($proc = Get-NetTCPConnection -LocalPort 3001 -ErrorAction SilentlyContinue; if \\($proc\\) { Stop-Process -Id $proc.OwningProcess -Force }; cd \"c:\\\\Users\\\\Usuario\\\\source\\\\repos\\\\SmartImob\\\\backend\"; npm run dev)"
     ],
     "additionalDirectories": [
       "c:\\Users\\Usuario\\source\\repos\\SmartImob\\.planning",
