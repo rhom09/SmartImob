@@ -10,12 +10,14 @@ import { Input } from "@/components/ui/Input";
 export default function ContratosPage() {
   const [contracts, setContracts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [mounted, setMounted] = useState(false);
   const [filters, setFilters] = useState({
     busca: "",
     status: "",
   });
 
   useEffect(() => {
+    setMounted(true);
     fetchContracts();
   }, []);
 
@@ -83,7 +85,7 @@ export default function ContratosPage() {
           </form>
         </CardHeader>
         <CardContent>
-          {loading ? (
+          {!mounted || loading ? (
             <div className="py-12 text-center text-on-surface-variant">Carregando contratos...</div>
           ) : contracts.length === 0 ? (
             <div className="py-12 text-center space-y-4">
@@ -96,64 +98,72 @@ export default function ContratosPage() {
               </Link>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {contracts.map((contract) => (
-                <Card key={contract.id} className="hover:border-secondary/50 transition-all group">
-                  <CardContent className="p-5 space-y-4">
-                    <div className="flex justify-between items-start">
-                      <div className="flex items-center gap-2">
-                        <span className="text-xs font-bold bg-primary/10 text-primary px-2 py-1 rounded">
-                          #{contract.numeroContrato}
-                        </span>
-                        <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${
-                          contract.status === 'ATIVO' ? 'bg-success/10 text-success' : 'bg-outline-variant/30 text-outline'
+            <div className="overflow-x-auto -mx-6 -mb-6">
+              <table className="w-full text-sm text-left">
+                <thead className="text-xs text-on-surface-variant uppercase bg-surface-container/50 border-y border-outline-variant">
+                  <tr>
+                    <th scope="col" className="px-6 py-4 font-bold">Nº Contrato</th>
+                    <th scope="col" className="px-6 py-4 font-bold">Imóvel</th>
+                    <th scope="col" className="px-6 py-4 font-bold">Inquilino</th>
+                    <th scope="col" className="px-6 py-4 font-bold">Vigência</th>
+                    <th scope="col" className="px-6 py-4 font-bold">Valor</th>
+                    <th scope="col" className="px-6 py-4 font-bold">Status</th>
+                    <th scope="col" className="px-6 py-4 font-bold text-right">Ações</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {contracts.map((contract) => (
+                    <tr key={contract.id} className="bg-white border-b border-outline-variant hover:bg-surface-container/30 transition-colors">
+                      <td className="px-6 py-4 font-bold text-on-surface">
+                        {contract.numeroContrato}
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-2">
+                          <Building2 size={14} className="text-on-surface-variant" />
+                          <span className="font-medium text-on-surface truncate max-w-[200px]" title={contract.imovel?.endereco}>
+                            {contract.imovel?.endereco}
+                          </span>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-2">
+                          <User size={14} className="text-on-surface-variant" />
+                          <span className="font-medium text-on-surface">
+                            {contract.inquilino?.nome}
+                          </span>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-1 text-xs text-on-surface-variant">
+                          <Calendar size={12} />
+                          <span>
+                            {new Date(contract.dataInicio).toLocaleDateString('pt-BR')} até {new Date(contract.dataFim).toLocaleDateString('pt-BR')}
+                          </span>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 font-bold text-secondary">
+                        {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(contract.valorAluguel)}
+                      </td>
+                      <td className="px-6 py-4">
+                        <span className={`px-2 py-1 rounded-full text-[10px] font-bold border ${
+                          contract.status === 'ATIVO' ? 'bg-success/10 text-success border-success/20' :
+                          contract.status === 'ENCERRADO' ? 'bg-error/10 text-error border-error/20' :
+                          'bg-warning/10 text-warning border-warning/20'
                         }`}>
                           {contract.status}
                         </span>
-                      </div>
-                      <Link href={`/contratos/${contract.id}`} className="text-on-surface-variant hover:text-secondary">
-                        <ExternalLink size={18} />
-                      </Link>
-                    </div>
-
-                    <div className="space-y-3">
-                      <div className="flex items-start gap-3">
-                        <User size={18} className="text-on-surface-variant mt-0.5" />
-                        <div>
-                          <p className="text-[10px] uppercase font-bold text-on-surface-variant">Inquilino</p>
-                          <p className="text-sm font-semibold text-on-surface">{contract.inquilino?.nome}</p>
-                        </div>
-                      </div>
-
-                      <div className="flex items-start gap-3">
-                        <Building2 size={18} className="text-on-surface-variant mt-0.5" />
-                        <div>
-                          <p className="text-[10px] uppercase font-bold text-on-surface-variant">Imóvel</p>
-                          <p className="text-sm font-medium text-on-surface truncate max-w-[300px]">
-                            {contract.imovel?.endereco}
-                          </p>
-                        </div>
-                      </div>
-
-                      <div className="grid grid-cols-2 gap-4 pt-2 border-t border-outline-variant/50">
-                        <div className="flex items-center gap-2">
-                          <Calendar size={14} className="text-on-surface-variant" />
-                          <div className="text-xs">
-                            <p className="text-[8px] uppercase font-bold text-on-surface-variant">Início</p>
-                            <p className="font-medium">{new Date(contract.dataInicio).toLocaleDateString()}</p>
-                          </div>
-                        </div>
-                        <div className="text-right">
-                          <p className="text-[8px] uppercase font-bold text-on-surface-variant">Valor</p>
-                          <p className="text-sm font-bold text-secondary">
-                            {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(Number(contract.valorAluguel))}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
+                      </td>
+                      <td className="px-6 py-4 text-right">
+                        <Link href={`/contratos/${contract.id}`}>
+                          <Button variant="outline" size="sm" className="h-8 text-xs">
+                            Ver Detalhes
+                          </Button>
+                        </Link>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           )}
         </CardContent>

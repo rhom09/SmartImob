@@ -3,26 +3,26 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in_progress
-last_updated: "2026-05-20T12:00:00.000Z"
+last_updated: "2026-05-21T03:30:00.000Z"
 progress:
   total_phases: 9
   completed_phases: 4
   total_plans: 6
   completed_plans: 6
-  percent: 44
+  percent: 45
 ---
 
 # Estado do Projeto - SmartImob
 
-**Última atualização**: 2026-05-20T12:00:00.000Z
+**Última atualização**: 2026-05-21T03:30:00.000Z
 
 ---
 
 ## Status Geral
 
-**Estado**: 🟢 Fase 3 Concluída (Gestão de Contratos)  
-**Fase Atual**: Preparando Fase 4 - Gestão Financeira  
-**Progresso Geral**: 44% (4/9 fases concluídas)
+**Estado**: 🟢 Fase 3 Estabilizada (Estabilidade e UI concluídas)  
+**Fase Atual**: Iniciando Planejamento Fase 4 - Gestão Financeira  
+**Progresso Geral**: 45% (Base sólida e módulos centrais operacionais)
 
 ---
 
@@ -68,10 +68,12 @@ progress:
 
 ## Histórico de Mudanças
 
-### 2026-05-20
-- ✅ Fase 3 (Gestão de Contratos) concluída com sucesso.
-- ✅ Implementada baixa de pagamentos e geração de PDFs.
-- ✅ Implementada lógica de reajustes anuais com histórico.
-- 📈 Progresso geral atualizado para 44% (4 de 9 fases).
+### 2026-05-21
+- ✅ Estabilização total da Fase 3 e módulos centrais.
+- ✅ Migração de layouts de Cards para Tabelas profissionais (Imóveis, Proprietários, Clientes, Contratos).
+- ✅ Correção de erro 500 em detalhes (Serialização Decimal do Prisma).
+- ✅ Correção de erros de Hydration Mismatch no Next.js (SSR robusto).
+- ✅ Estabilização de conexões Supabase (Singleton Pattern + ?pgbouncer=true).
+- 📈 Progresso geral atualizado para 45%.
 
 ---

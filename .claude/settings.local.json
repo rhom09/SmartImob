@@ -24,11 +24,38 @@
       "PowerShell(cd c:\\\\Users\\\\Usuario\\\\source\\\\repos\\\\SmartImob\\\\backend; $env:DATABASE_URL = \"postgres://postgres:postgres@localhost:5432/postgres\"; npx ts-node prisma/seed-mock.ts)",
       "PowerShell(node c:\\\\Users\\\\Usuario\\\\source\\\\repos\\\\SmartImob\\\\backend\\\\prisma\\\\seed-mock.js)",
       "Bash(curl -X GET http://localhost:3001/api/seed)",
-      "Bash(npm uninstall *)"
+      "Bash(npm uninstall *)",
+      "Bash(git checkout *)",
+      "Bash(node test-db.js)",
+      "Bash(node apply-sql.js)",
+      "Bash(node c:\\\\Users\\\\Usuario\\\\source\\\\repos\\\\SmartImob\\\\backend\\\\apply-sql.js)",
+      "Bash(netstat -ano)",
+      "Bash(findstr :3001)",
+      "Bash(curl http://localhost:3001/api/properties)",
+      "Bash(curl http://localhost:3001/api/imoveis)",
+      "Bash(PORT=3002 npx ts-node src/server.ts)",
+      "Bash(curl http://localhost:3002/api/imoveis)",
+      "Bash(taskkill /F /PID 30804)",
+      "PowerShell(Stop-Process -Id 30804 -Force)",
+      "Bash(curl -s http://localhost:3001/api/imoveis)",
+      "Bash(curl -s http://localhost:3001/api/imoveis/62a6a4aa-b41f-4113-af0f-059f49ff2a77)",
+      "Bash(mkdir frontend/src/app/proprietarios/[id])",
+      "Skill(gsd-debug)",
+      "Skill(gsd-debug:*)",
+      "Bash(curl -i http://localhost:3001/api/proprietarios/f9de8664-e6bd-4469-a02c-530165293d34)",
+      "Bash(findstr :3000)",
+      "Bash(taskkill /F /PID 16736)",
+      "PowerShell(Stop-Process -Id 16736 -Force)",
+      "Bash(Get-Content C:\\\\Users\\\\Usuario\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\c--Users-Usuario-source-repos-SmartImob\\\\41d2b4b2-97c6-41f8-b235-03a08420b484\\\\tasks\\\\bp4q51vf1.output -Tail 20)",
+      "Bash(curl -i http://localhost:3000/proprietarios/f9de8664-e6bd-4469-a02c-530165293d34)",
+      "Bash(taskkill /F /PID 21724)",
+      "PowerShell(Stop-Process -Id 21724 -Force)",
+      "PowerShell(Stop-Process -Id 29876 -Force)"
     ],
     "additionalDirectories": [
       "c:\\Users\\Usuario\\source\\repos\\SmartImob\\.planning",
-      "C:\\Users\\Usuario\\source\\repos\\SmartImob\\frontend\\src\\app\\contratos"
+      "C:\\Users\\Usuario\\source\\repos\\SmartImob\\frontend\\src\\app\\contratos",
+      "C:\\Users\\Usuario\\source\\repos\\SmartImob\\frontend\\src\\app\\proprietarios"
     ]
   }
 }

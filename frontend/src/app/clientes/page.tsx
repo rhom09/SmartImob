@@ -11,12 +11,14 @@ import { formatCPF, formatCNPJ, formatPhone } from "@/lib/utils";
 export default function ClientesPage() {
   const [clients, setClients] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [mounted, setMounted] = useState(false);
   const [filters, setFilters] = useState({
     busca: "",
     tipo: "",
   });
 
   useEffect(() => {
+    setMounted(true);
     fetchClients();
   }, []);
 
@@ -83,7 +85,7 @@ export default function ClientesPage() {
           </form>
         </CardHeader>
         <CardContent>
-          {loading ? (
+          {!mounted || loading ? (
             <div className="py-12 text-center text-on-surface-variant">Carregando clientes...</div>
           ) : clients.length === 0 ? (
             <div className="py-12 text-center space-y-4">
@@ -96,55 +98,73 @@ export default function ClientesPage() {
               </Link>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {clients.map((client) => (
-                <Card key={client.id} className="hover:border-secondary/50 transition-all group">
-                  <CardContent className="p-5 space-y-4">
-                    <div className="flex justify-between items-start">
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold">
-                          {client.nome.charAt(0).toUpperCase()}
+            <div className="overflow-x-auto -mx-6 -mb-6">
+              <table className="w-full text-sm text-left">
+                <thead className="text-xs text-on-surface-variant uppercase bg-surface-container/50 border-y border-outline-variant">
+                  <tr>
+                    <th scope="col" className="px-6 py-4 font-bold">Nome / Tipo</th>
+                    <th scope="col" className="px-6 py-4 font-bold">Documento</th>
+                    <th scope="col" className="px-6 py-4 font-bold">Contato</th>
+                    <th scope="col" className="px-6 py-4 font-bold">Resumo</th>
+                    <th scope="col" className="px-6 py-4 font-bold text-right">Ações</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {clients.map((client) => (
+                    <tr key={client.id} className="bg-white border-b border-outline-variant hover:bg-surface-container/30 transition-colors">
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-3">
+                          <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs ${
+                            client.tipo === 'INQUILINO' ? 'bg-secondary/10 text-secondary' : 'bg-outline-variant/30 text-outline'
+                          }`}>
+                            {client.nome.charAt(0).toUpperCase()}
+                          </div>
+                          <div>
+                            <div className="font-bold text-on-surface">{client.nome}</div>
+                            <span className={`text-[10px] font-bold uppercase tracking-wider ${
+                              client.tipo === 'INQUILINO' ? 'text-secondary' : 'text-outline'
+                            }`}>
+                              {client.tipo}
+                            </span>
+                          </div>
                         </div>
-                        <span className={`px-2 py-0.5 rounded text-[10px] font-bold tracking-wider ${
-                          client.tipo === 'INQUILINO' ? 'bg-secondary/10 text-secondary' : 'bg-outline-variant/30 text-outline'
-                        }`}>
-                          {client.tipo}
-                        </span>
-                      </div>
-                      <Link href={`/clientes/${client.id}`} className="text-on-surface-variant hover:text-secondary opacity-0 group-hover:opacity-100 transition-opacity">
-                        <ExternalLink size={18} />
-                      </Link>
-                    </div>
-
-                    <div>
-                      <h4 className="font-bold text-on-surface truncate">{client.nome}</h4>
-                      <p className="text-xs text-on-surface-variant uppercase tracking-wider font-semibold mt-0.5">
+                      </td>
+                      <td className="px-6 py-4 text-on-surface-variant font-medium">
                         {client.cpfCnpj.length === 11 ? formatCPF(client.cpfCnpj) : formatCNPJ(client.cpfCnpj)}
-                      </p>
-                    </div>
-
-                    <div className="space-y-2 pt-2 border-t border-outline-variant/50">
-                      {client.telefone && (
-                        <div className="flex items-center gap-2 text-sm text-on-surface-variant">
-                          <Phone size={14} className="text-primary/60" />
-                          <span>{formatPhone(client.telefone)}</span>
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="space-y-1">
+                          {client.telefone && (
+                            <div className="flex items-center gap-2 text-xs text-on-surface-variant">
+                              <Phone size={12} className="text-primary/60" />
+                              <span>{formatPhone(client.telefone)}</span>
+                            </div>
+                          )}
+                          {client.email && (
+                            <div className="flex items-center gap-2 text-xs text-on-surface-variant">
+                              <Mail size={12} className="text-primary/60" />
+                              <span>{client.email}</span>
+                            </div>
+                          )}
                         </div>
-                      )}
-                      {client.email && (
-                        <div className="flex items-center gap-2 text-sm text-on-surface-variant truncate">
-                          <Mail size={14} className="text-primary/60" />
-                          <span className="truncate">{client.email}</span>
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="flex flex-col gap-1 text-xs font-medium text-on-surface-variant">
+                          <span><strong className="text-on-surface">{client._count?.contratos || 0}</strong> contratos</span>
+                          <span><strong className="text-on-surface">{client._count?.interacoes || 0}</strong> interações</span>
                         </div>
-                      )}
-                      <div className="flex items-center gap-2 text-xs font-semibold text-outline pt-2">
-                        <span>{client._count?.contratos || 0} contratos</span>
-                        <span>•</span>
-                        <span>{client._count?.interacoes || 0} interações</span>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
+                      </td>
+                      <td className="px-6 py-4 text-right">
+                        <Link href={`/clientes/${client.id}`}>
+                          <Button variant="outline" size="sm" className="h-8 text-xs">
+                            Ver Detalhes
+                          </Button>
+                        </Link>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           )}
         </CardContent>

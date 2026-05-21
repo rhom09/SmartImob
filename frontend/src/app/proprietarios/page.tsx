@@ -11,9 +11,11 @@ import { formatCPF, formatCNPJ, formatPhone } from "@/lib/utils";
 export default function ProprietariosPage() {
   const [owners, setOwners] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [mounted, setMounted] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
+    setMounted(true);
     fetchOwners();
   }, []);
 
@@ -67,7 +69,7 @@ export default function ProprietariosPage() {
           </form>
         </CardHeader>
         <CardContent>
-          {loading ? (
+          {!mounted || loading ? (
             <div className="py-12 text-center text-on-surface-variant">Carregando proprietários...</div>
           ) : owners.length === 0 ? (
             <div className="py-12 text-center space-y-4">
@@ -80,47 +82,64 @@ export default function ProprietariosPage() {
               </Link>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {owners.map((owner) => (
-                <Card key={owner.id} className="hover:border-secondary/50 transition-all group">
-                  <CardContent className="p-5 space-y-4">
-                    <div className="flex justify-between items-start">
-                      <div className="w-10 h-10 rounded-full bg-secondary-container/30 text-secondary flex items-center justify-center font-bold">
-                        {owner.nome.charAt(0).toUpperCase()}
-                      </div>
-                      <Link href={`/proprietarios/${owner.id}`} className="text-on-surface-variant hover:text-secondary opacity-0 group-hover:opacity-100 transition-opacity">
-                        <ExternalLink size={18} />
-                      </Link>
-                    </div>
-
-                    <div>
-                      <h4 className="font-bold text-on-surface truncate">{owner.nome}</h4>
-                      <p className="text-xs text-on-surface-variant uppercase tracking-wider font-semibold mt-0.5">
+            <div className="overflow-x-auto -mx-6 -mb-6">
+              <table className="w-full text-sm text-left">
+                <thead className="text-xs text-on-surface-variant uppercase bg-surface-container/50 border-y border-outline-variant">
+                  <tr>
+                    <th scope="col" className="px-6 py-4 font-bold">Nome</th>
+                    <th scope="col" className="px-6 py-4 font-bold">Documento</th>
+                    <th scope="col" className="px-6 py-4 font-bold">Contato</th>
+                    <th scope="col" className="px-6 py-4 font-bold">Imóveis</th>
+                    <th scope="col" className="px-6 py-4 font-bold text-right">Ações</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {owners.map((owner) => (
+                    <tr key={owner.id} className="bg-white border-b border-outline-variant hover:bg-surface-container/30 transition-colors">
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-3">
+                          <div className="w-8 h-8 rounded-full bg-secondary-container/30 text-secondary flex items-center justify-center font-bold text-xs">
+                            {owner.nome.charAt(0).toUpperCase()}
+                          </div>
+                          <span className="font-bold text-on-surface">{owner.nome}</span>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 text-on-surface-variant font-medium">
                         {owner.cpfCnpj.length === 11 ? formatCPF(owner.cpfCnpj) : formatCNPJ(owner.cpfCnpj)}
-                      </p>
-                    </div>
-
-                    <div className="space-y-2 pt-2 border-t border-outline-variant/50">
-                      {owner.telefone && (
-                        <div className="flex items-center gap-2 text-sm text-on-surface-variant">
-                          <Phone size={14} className="text-secondary" />
-                          <span>{formatPhone(owner.telefone)}</span>
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="space-y-1">
+                          {owner.telefone && (
+                            <div className="flex items-center gap-2 text-xs text-on-surface-variant">
+                              <Phone size={12} className="text-secondary/70" />
+                              <span>{formatPhone(owner.telefone)}</span>
+                            </div>
+                          )}
+                          {owner.email && (
+                            <div className="flex items-center gap-2 text-xs text-on-surface-variant">
+                              <Mail size={12} className="text-secondary/70" />
+                              <span>{owner.email}</span>
+                            </div>
+                          )}
                         </div>
-                      )}
-                      {owner.email && (
-                        <div className="flex items-center gap-2 text-sm text-on-surface-variant truncate">
-                          <Mail size={14} className="text-secondary" />
-                          <span className="truncate">{owner.email}</span>
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-2 text-on-surface-variant">
+                          <Building2 size={14} className="text-secondary/70" />
+                          <span className="font-bold">{owner._count?.imoveis || 0}</span>
                         </div>
-                      )}
-                      <div className="flex items-center gap-2 text-sm text-on-surface-variant">
-                        <Building2 size={14} className="text-secondary" />
-                        <span>{owner._count?.imoveis || 0} imóveis vinculados</span>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
+                      </td>
+                      <td className="px-6 py-4 text-right">
+                        <Link href={`/proprietarios/${owner.id}`}>
+                          <Button variant="outline" size="sm" className="h-8 text-xs">
+                            Ver Detalhes
+                          </Button>
+                        </Link>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           )}
         </CardContent>

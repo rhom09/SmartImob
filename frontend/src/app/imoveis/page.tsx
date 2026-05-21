@@ -11,6 +11,7 @@ import { formatCurrency } from "@/lib/utils";
 export default function ImoveisPage() {
   const [properties, setProperties] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [mounted, setMounted] = useState(false);
   const [filters, setFilters] = useState({
     busca: "",
     tipo: "",
@@ -18,6 +19,7 @@ export default function ImoveisPage() {
   });
 
   useEffect(() => {
+    setMounted(true);
     fetchProperties();
   }, []);
 
@@ -29,7 +31,9 @@ export default function ImoveisPage() {
       if (params.tipo) queryParams.append("tipo", params.tipo);
       if (params.status) queryParams.append("status", params.status);
 
-      const response = await fetch(`http://localhost:3001/api/imoveis?${queryParams.toString()}`);
+      const response = await fetch(`http://localhost:3001/api/imoveis?${queryParams.toString()}`, {
+        cache: 'no-store'
+      });
       const result = await response.json();
       setProperties(result.data || []);
     } catch (error) {
@@ -111,7 +115,7 @@ export default function ImoveisPage() {
         </CardContent>
       </Card>
 
-      {loading ? (
+      {!mounted || loading ? (
         <div className="py-20 text-center text-on-surface-variant">Carregando imóveis...</div>
       ) : properties.length === 0 ? (
         <div className="py-20 text-center space-y-4">
@@ -124,89 +128,60 @@ export default function ImoveisPage() {
           </Link>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {properties.map((property) => (
-            <Card key={property.id} className="group hover:border-secondary/30 transition-all flex flex-col">
-              <div className="relative h-48 bg-surface-container">
-                {property.fotos?.[0] ? (
-                  <img
-                    src={property.fotos[0].url}
-                    alt={property.endereco}
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center text-on-surface-variant/30">
-                    <Building2 size={48} />
-                  </div>
-                )}
-                <div className="absolute top-3 left-3">
-                  {getStatusBadge(property.status)}
-                </div>
-                {property.codigo && (
-                  <div className="absolute bottom-3 right-3 bg-primary/80 text-on-primary text-[10px] font-bold px-2 py-1 rounded">
-                    #{property.codigo}
-                  </div>
-                )}
-              </div>
-
-              <CardContent className="p-4 flex-1 flex flex-col space-y-3">
-                <div className="space-y-1">
-                  <div className="flex items-center gap-1 text-on-surface-variant">
-                    <Tag size={12} className="text-secondary" />
-                    <span className="text-[10px] font-bold uppercase tracking-widest">{property.tipo}</span>
-                  </div>
-                  <h4 className="font-bold text-on-surface leading-tight h-10 line-clamp-2">
-                    {property.endereco}, {property.numero}
-                  </h4>
-                  <div className="flex items-center gap-1 text-xs text-on-surface-variant">
-                    <MapPin size={12} />
-                    <span>{property.bairro}, {property.cidade}</span>
-                  </div>
-                </div>
-
-                <div className="flex items-center justify-between py-2 border-y border-outline-variant/50">
-                  <div className="flex items-center gap-1" title="Quartos">
-                    <Bed size={14} className="text-on-surface-variant" />
-                    <span className="text-xs font-bold">{property.quartos || 0}</span>
-                  </div>
-                  <div className="flex items-center gap-1" title="Banheiros">
-                    <Bath size={14} className="text-on-surface-variant" />
-                    <span className="text-xs font-bold">{property.banheiros || 0}</span>
-                  </div>
-                  <div className="flex items-center gap-1" title="Vagas">
-                    <Car size={14} className="text-on-surface-variant" />
-                    <span className="text-xs font-bold">{property.vagas || 0}</span>
-                  </div>
-                  <div className="flex items-center gap-1" title="Área">
-                    <Maximize2 size={14} className="text-on-surface-variant" />
-                    <span className="text-xs font-bold">{property.areaTotal || 0}m²</span>
-                  </div>
-                </div>
-
-                <div className="pt-2 mt-auto">
-                  {property.finalidade === "LOCACAO" || property.finalidade === "AMBOS" ? (
-                    <div className="flex justify-between items-end">
-                      <span className="text-[10px] text-on-surface-variant uppercase font-bold tracking-wider">Locação</span>
-                      <span className="text-lg font-black text-secondary">{formatCurrency(property.valorLocacao || 0)}</span>
-                    </div>
-                  ) : null}
-                  {property.finalidade === "VENDA" ? (
-                    <div className="flex justify-between items-end">
-                      <span className="text-[10px] text-on-surface-variant uppercase font-bold tracking-wider">Venda</span>
-                      <span className="text-lg font-black text-secondary">{formatCurrency(property.valorVenda || 0)}</span>
-                    </div>
-                  ) : null}
-                </div>
-
-                <Link href={`/imoveis/${property.id}`} className="block pt-2">
-                  <Button variant="outline" size="sm" className="w-full text-xs">
-                    Ver Detalhes
-                  </Button>
-                </Link>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+        <Card>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm text-left">
+              <thead className="text-xs text-on-surface-variant uppercase bg-surface-container/50 border-b border-outline-variant">
+                <tr>
+                  <th scope="col" className="px-6 py-4 font-bold">Código</th>
+                  <th scope="col" className="px-6 py-4 font-bold">Endereço</th>
+                  <th scope="col" className="px-6 py-4 font-bold">Tipo</th>
+                  <th scope="col" className="px-6 py-4 font-bold">Finalidade</th>
+                  <th scope="col" className="px-6 py-4 font-bold">Valor</th>
+                  <th scope="col" className="px-6 py-4 font-bold">Status</th>
+                  <th scope="col" className="px-6 py-4 font-bold text-right">Ações</th>
+                </tr>
+              </thead>
+              <tbody>
+                {properties.map((property) => (
+                  <tr key={property.id} className="bg-white border-b border-outline-variant hover:bg-surface-container/30 transition-colors">
+                    <td className="px-6 py-4 font-medium text-on-surface">
+                      {property.codigo ? `#${property.codigo}` : '-'}
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="font-bold text-on-surface">{property.endereco}, {property.numero}</div>
+                      <div className="text-xs text-on-surface-variant">{property.bairro}, {property.cidade} - {property.estado}</div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className="bg-primary/10 text-primary px-2 py-1 rounded text-xs font-bold uppercase">
+                        {property.tipo}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 text-on-surface-variant font-medium">
+                      {property.finalidade}
+                    </td>
+                    <td className="px-6 py-4 font-bold text-secondary">
+                      {property.finalidade === 'VENDA'
+                        ? formatCurrency(property.valorVenda || 0)
+                        : formatCurrency(property.valorLocacao || 0)
+                      }
+                    </td>
+                    <td className="px-6 py-4">
+                      {getStatusBadge(property.status)}
+                    </td>
+                    <td className="px-6 py-4 text-right">
+                      <Link href={`/imoveis/${property.id}`}>
+                        <Button variant="outline" size="sm" className="h-8 text-xs">
+                          Ver Detalhes
+                        </Button>
+                      </Link>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </Card>
       )}
     </div>
   );

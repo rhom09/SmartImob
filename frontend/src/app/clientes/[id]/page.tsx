@@ -27,12 +27,14 @@ export default function DetalhesClientePage() {
   const [client, setClient] = useState<any>(null);
   const [interactions, setInteractions] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [mounted, setMounted] = useState(false);
 
   // Form de nova interação
   const [novaInteracao, setNovaInteracao] = useState({ tipo: "LIGACAO", descricao: "" });
   const [loadingInteracao, setLoadingInteracao] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
     if (id) {
       fetchClient();
       fetchInteractions();
@@ -103,7 +105,8 @@ export default function DetalhesClientePage() {
     }
   };
 
-  if (loading) return <div className="py-20 text-center text-on-surface-variant">Carregando detalhes...</div>;
+  if (!mounted) return <div className="py-20 text-center text-on-surface-variant">Carregando detalhes...</div>;
+  if (loading) return <div className="py-20 text-center text-on-surface-variant">Buscando dados no servidor...</div>;
   if (!client) return <div className="py-20 text-center text-error">Cliente não encontrado.</div>;
 
   return (
@@ -209,13 +212,17 @@ export default function DetalhesClientePage() {
                 {client.contratos && client.contratos.length > 0 ? (
                   <div className="space-y-3">
                     {client.contratos.map((contrato: any) => (
-                      <div key={contrato.id} className="p-3 border border-outline-variant rounded-md bg-surface-container-lowest">
-                        <div className="flex justify-between items-start mb-1">
-                          <span className="text-xs font-bold bg-primary text-on-primary px-1.5 py-0.5 rounded">#{contrato.numeroContrato}</span>
-                          <span className="text-[10px] font-bold text-success">{contrato.status}</span>
+                      <Link key={contrato.id} href={`/contratos/${contrato.id}`} className="block">
+                        <div className="p-3 border border-outline-variant rounded-md bg-surface-container-lowest hover:border-secondary transition-colors cursor-pointer">
+                          <div className="flex justify-between items-start mb-1">
+                            <span className="text-xs font-bold bg-primary text-on-primary px-1.5 py-0.5 rounded">#{contrato.numeroContrato}</span>
+                            <span className={`text-[10px] font-bold ${
+                              contrato.status === 'ATIVO' ? 'text-success' : 'text-on-surface-variant'
+                            }`}>{contrato.status}</span>
+                          </div>
+                          <p className="text-sm font-medium truncate">{contrato.imovel?.endereco}</p>
                         </div>
-                        <p className="text-sm font-medium truncate">{contrato.imovel?.endereco}</p>
-                      </div>
+                      </Link>
                     ))}
                   </div>
                 ) : (

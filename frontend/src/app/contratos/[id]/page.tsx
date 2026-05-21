@@ -23,10 +23,12 @@ export default function DetalhesContratoPage() {
   const router = useRouter();
   const [contract, setContract] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [mounted, setMounted] = useState(false);
   const [showAdjustmentForm, setShowAdjustmentForm] = useState(false);
   const [adjustmentData, setAdjustmentData] = useState({ indice: "IGPM", percentual: 0, novoValor: 0 });
 
   useEffect(() => {
+    setMounted(true);
     if (id) {
       fetchContract();
     }
@@ -103,7 +105,8 @@ export default function DetalhesContratoPage() {
     }
   };
 
-  if (loading) return <div className="py-20 text-center text-on-surface-variant">Carregando detalhes do contrato...</div>;
+  if (!mounted) return <div className="py-20 text-center text-on-surface-variant">Carregando detalhes...</div>;
+  if (loading) return <div className="py-20 text-center text-on-surface-variant">Buscando contrato no servidor...</div>;
   if (!contract) return <div className="py-20 text-center text-error">Contrato não encontrado.</div>;
 
   return (
@@ -148,7 +151,14 @@ export default function DetalhesContratoPage() {
                 <User size={18} className="text-on-surface-variant mt-0.5" />
                 <div>
                   <p className="text-[10px] uppercase font-bold text-on-surface-variant">Inquilino</p>
-                  <p className="text-sm font-medium text-on-surface">{contract.inquilino?.nome}</p>
+                  <p className="text-sm font-medium text-on-surface">
+                    {contract.inquilino?.nome || "Não informado"}
+                  </p>
+                  {contract.inquilino?.id && (
+                    <Link href={`/clientes/${contract.inquilino.id}`} className="text-[10px] text-secondary hover:underline font-bold uppercase mt-1 block">
+                      Ver Perfil
+                    </Link>
+                  )}
                 </div>
               </div>
 

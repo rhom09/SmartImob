@@ -17,8 +17,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pt-BR" className="h-full antialiased">
-      <body className="min-h-full bg-background text-on-background">
+    <html lang="pt-BR" className="h-full antialiased" suppressHydrationWarning>
+      <body className="min-h-full bg-background text-on-background" suppressHydrationWarning>
         <Sidebar />
         <div className="pl-sidebar">
           <Header />

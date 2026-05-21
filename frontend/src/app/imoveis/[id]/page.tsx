@@ -30,9 +30,11 @@ export default function DetalhesImovelPage() {
   const router = useRouter();
   const [property, setProperty] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [mounted, setMounted] = useState(false);
   const [activePhoto, setActivePhoto] = useState(0);
 
   useEffect(() => {
+    setMounted(true);
     if (id) fetchProperty();
   }, [id]);
 
@@ -68,7 +70,8 @@ export default function DetalhesImovelPage() {
     }
   };
 
-  if (loading) return <div className="py-20 text-center text-on-surface-variant">Carregando detalhes do imóvel...</div>;
+  if (!mounted) return <div className="py-20 text-center text-on-surface-variant">Carregando detalhes...</div>;
+  if (loading) return <div className="py-20 text-center text-on-surface-variant">Buscando imóvel no servidor...</div>;
   if (!property) return <div className="py-20 text-center text-error">Imóvel não encontrado.</div>;
 
   const hasPhotos = property.fotos && property.fotos.length > 0;
@@ -313,29 +316,31 @@ export default function DetalhesImovelPage() {
             <CardContent>
               <div className="flex items-center gap-4 mb-4">
                 <div className="w-12 h-12 rounded-full bg-secondary-container/20 text-secondary flex items-center justify-center font-black text-lg">
-                  {property.owner.nome.charAt(0).toUpperCase()}
+                  {property.owner?.nome?.charAt(0).toUpperCase() || '?'}
                 </div>
                 <div className="overflow-hidden">
-                  <h4 className="font-bold text-on-surface truncate">{property.owner.nome}</h4>
+                  <h4 className="font-bold text-on-surface truncate">{property.owner?.nome || 'Não informado'}</h4>
                   <p className="text-xs text-on-surface-variant">
-                    {property.owner.cpfCnpj.length === 11 ? formatCPF(property.owner.cpfCnpj) : formatCNPJ(property.owner.cpfCnpj)}
+                    {property.owner?.cpfCnpj ? (property.owner.cpfCnpj.length === 11 ? formatCPF(property.owner.cpfCnpj) : formatCNPJ(property.owner.cpfCnpj)) : 'Sem documento'}
                   </p>
                 </div>
               </div>
               <div className="space-y-3 pt-3 border-t border-outline-variant">
                 <div className="flex items-center gap-3 text-sm text-on-surface">
                   <Phone size={16} className="text-secondary" />
-                  <span>{formatPhone(property.owner.telefone || "")}</span>
+                  <span>{formatPhone(property.owner?.telefone || "") || 'Não informado'}</span>
                 </div>
                 <div className="flex items-center gap-3 text-sm text-on-surface">
                   <Mail size={16} className="text-secondary" />
-                  <span className="truncate">{property.owner.email || "Sem email"}</span>
+                  <span className="truncate">{property.owner?.email || "Sem email"}</span>
                 </div>
-                <Link href={`/proprietarios/${property.owner.id}`} className="block pt-2">
-                  <Button variant="outline" size="sm" className="w-full">
-                    Perfil do Proprietário
-                  </Button>
-                </Link>
+                {property.owner?.id && (
+                  <Link href={`/proprietarios/${property.owner.id}`} className="block pt-2">
+                    <Button variant="outline" size="sm" className="w-full">
+                      Perfil do Proprietário
+                    </Button>
+                  </Link>
+                )}
               </div>
             </CardContent>
           </Card>
