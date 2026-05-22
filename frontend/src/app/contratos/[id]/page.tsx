@@ -91,7 +91,7 @@ export default function DetalhesContratoPage() {
 
   const handleDownloadPDF = async (receiptId: string, numeroRecibo: string) => {
     try {
-      window.open(`http://localhost:3001/api/recibos/${receiptId}/pdf`, '_blank');
+      window.open(`http://localhost:3001/api/recibos/${receiptId}/pdf?layout=simple`, '_blank');
     } catch (error) {
       alert("Erro ao gerar PDF.");
     }

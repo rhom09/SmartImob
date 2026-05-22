@@ -2,8 +2,58 @@ import PDFDocument from 'pdfkit';
 
 const formatBRL = (val: any) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(Number(val));
 
+function valorPorExtenso(valor: number) {
+  const unidades = ["", "um", "dois", "três", "quatro", "cinco", "seis", "sete", "oito", "nove"];
+  const dezena_1 = ["dez", "onze", "doze", "treze", "quatorze", "quinze", "dezesseis", "dezessete", "dezoito", "dezenove"];
+  const dezenas = ["", "", "vinte", "trinta", "quarenta", "cinquenta", "sessenta", "setenta", "oitenta", "noventa"];
+  const centenas = ["", "cento", "duzentos", "trezentos", "quatrocentos", "quinhentos", "seiscentos", "setecentos", "oitocentos", "novecentos"];
+
+  if (valor === 0) return "zero reais";
+  if (valor === 100) return "cem reais";
+
+  const centavos = Math.round((valor % 1) * 100);
+  let inteiro = Math.floor(valor);
+
+  const formatarMilhar = (n: number) => {
+    if (n === 0) return "";
+    let res = "";
+    const c = Math.floor(n / 100);
+    const d = Math.floor((n % 100) / 10);
+    const u = n % 10;
+
+    if (c > 0) res += centenas[c];
+    if (c > 0 && (d > 0 || u > 0)) res += " e ";
+
+    if (d === 1) {
+      res += dezena_1[u];
+    } else {
+      if (d > 1) res += dezenas[d];
+      if (d > 1 && u > 0) res += " e ";
+      if (u > 0) res += unidades[u];
+    }
+    return res;
+  };
+
+  const milhar = Math.floor(inteiro / 1000);
+  const resto = inteiro % 1000;
+
+  let resultado = "";
+  if (milhar > 0) {
+    resultado += milhar === 1 ? "mil" : formatarMilhar(milhar) + " mil";
+    if (resto > 0) resultado += (resto < 100 || resto % 100 === 0) ? " e " : ", ";
+  }
+  resultado += formatarMilhar(resto);
+  resultado += (inteiro === 1) ? " real" : " reais";
+
+  if (centavos > 0) {
+    resultado += " e " + formatarMilhar(centavos) + (centavos === 1 ? " centavo" : " centavos");
+  }
+
+  return resultado.charAt(0).toUpperCase() + resultado.slice(1);
+}
+
 export class PDFService {
-  static async generateReceiptPDF(receipt: any): Promise<Buffer> {
+  static async generateSimpleReceiptPDF(receipt: any): Promise<Buffer> {
     return new Promise((resolve, reject) => {
       const doc = new PDFDocument({ margin: 50 });
       const chunks: any[] = [];
@@ -24,12 +74,12 @@ export class PDFService {
 
       // ─── Body ──────────────────────────────────────────────────────────
       doc.fontSize(14).text(`Recebemos de ${receipt.contrato.inquilino.nome},`, { lineGap: 5 });
-      doc.text(`a importância de ${new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(Number(receipt.valorLiquido))}.`);
+      doc.text(`a importância de ${formatBRL(receipt.valorLiquido)}.`);
       doc.moveDown();
 
       doc.fontSize(12).font('Helvetica-Bold').text('Detalhamento dos Valores:');
       doc.font('Helvetica').fontSize(10);
-      doc.text(`Aluguel: ${formatBRL(receipt.valorBruto)}`);
+      doc.text(`Aluguel: ${formatBRL(receipt.contrato.valorAluguel)}`);
       if (Number(receipt.valorIptu) > 0) doc.text(`IPTU: ${formatBRL(receipt.valorIptu)}`);
       if (Number(receipt.valorCondominio) > 0) doc.text(`Condomínio: ${formatBRL(receipt.valorCondominio)}`);
       if (Number(receipt.valorAgua) > 0) doc.text(`Água: ${formatBRL(receipt.valorAgua)}`);
@@ -47,9 +97,6 @@ export class PDFService {
       if (receipt.formaPagamento) {
         doc.text(`Forma de Pagamento: ${receipt.formaPagamento}`);
       }
-      if (receipt.dataPagamento) {
-        doc.text(`Data do Pagamento: ${new Date(receipt.dataPagamento).toLocaleDateString('pt-BR')}`);
-      }
       doc.moveDown();
 
       // ─── Footer ────────────────────────────────────────────────────────
@@ -57,6 +104,130 @@ export class PDFService {
       doc.text('____________________________________________________', { align: 'center' });
       doc.text('SmartImob - Gestão Imobiliária', { align: 'center' });
       doc.fontSize(10).fillColor('gray').text('Este recibo é um documento digital gerado pelo sistema.', { align: 'center' });
+
+      doc.end();
+    });
+  }
+
+  static async generateReceiptPDF(receipt: any): Promise<Buffer> {
+    return new Promise((resolve, reject) => {
+      const doc = new PDFDocument({
+        margin: 0,
+        size: 'A4',
+        layout: 'portrait'
+      });
+      const chunks: any[] = [];
+
+      doc.on('data', (chunk) => chunks.push(chunk));
+      doc.on('end', () => resolve(Buffer.concat(chunks)));
+      doc.on('error', (err) => reject(err));
+
+      const mainX = 50;
+      const rightColX = 380;
+      const rowHeight = 15;
+
+      // ─── CABEÇALHO ──────────────────────────────────────────────────────
+      doc.font('Helvetica-Bold').fontSize(14).text('TIANA IMÓVEIS & NEG IMOBILIARIOS', mainX, 50);
+      doc.fontSize(8).font('Helvetica').text('CRECI 25.129 SP', mainX, 65);
+      doc.text('Av. Mal. Fiúza de Castro, 822 - São Domingos - SP', mainX, 75);
+      doc.text('Fone/Fax: (11) 3731-3276 - 3735-1466', mainX, 85);
+
+      doc.font('Helvetica-Bold').fontSize(11).text('RECIBO DE PAGAMENTO DE ALUGUEL', 350, 60, { align: 'right', width: 200 });
+
+      // ─── QUADRO DE VALORES (DIREITA) ────────────────────────────────────
+      let vY = 110;
+      doc.fontSize(9);
+      const drawValueRow = (label: string, value: any, y: number, isTotal = false) => {
+        doc.font(isTotal ? 'Helvetica-Bold' : 'Helvetica').text(`${label}------------------R$`, rightColX, y);
+        doc.text(Number(value || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }), rightColX + 110, y, { align: 'right', width: 60 });
+      };
+
+      drawValueRow('Aluguel', receipt.contrato.valorAluguel, vY);
+      vY += rowHeight;
+      drawValueRow('Desconto', receipt.descontos, vY);
+      vY += rowHeight;
+      drawValueRow('Condomínio', receipt.valorCondominio, vY);
+      vY += rowHeight;
+      drawValueRow('I P T U', receipt.valorIptu, vY);
+      vY += rowHeight;
+      drawValueRow('Água', receipt.valorAgua, vY);
+      vY += rowHeight;
+      drawValueRow('Luz', receipt.valorLuz, vY);
+      vY += rowHeight;
+      drawValueRow('Outros Débitos', receipt.outrosDebitos, vY);
+
+      vY += 10;
+      doc.moveTo(rightColX, vY).lineTo(rightColX + 175, vY).stroke();
+      vY += 10;
+      drawValueRow('TOTAL', receipt.valorLiquido, vY, true);
+      doc.rect(rightColX - 5, 105, 185, vY - 90).stroke();
+
+      // ─── INFOS DO CONTRATO (ESQUERDA) ──────────────────────────────────
+      let infoY = 110;
+      const dataFim = new Date(receipt.contrato.dataFim);
+      const dataInicio = new Date(receipt.contrato.dataInicio);
+
+      doc.font('Helvetica-Bold').fontSize(9).text('Venc. CONTRATO:', mainX, infoY);
+      doc.font('Helvetica').text(dataFim.toLocaleDateString('pt-BR'), mainX + 90, infoY);
+
+      infoY += 15;
+      doc.font('Helvetica-Bold').text('Próximo Reajuste:', mainX, infoY);
+      const hojeReajuste = new Date();
+      const proximoReajuste = new Date(dataInicio);
+      while (proximoReajuste <= hojeReajuste) {
+        proximoReajuste.setFullYear(proximoReajuste.getFullYear() + 1);
+      }
+      const reajusteStr = proximoReajuste.toLocaleString('pt-BR', { month: 'short', year: '2-digit' }).replace('.', '');
+      doc.font('Helvetica').text(reajusteStr, mainX + 90, infoY);
+
+      infoY += 25;
+      doc.font('Helvetica-Bold').fontSize(10).text('Código    :-', mainX, infoY);
+      doc.font('Helvetica').text(receipt.contrato.numeroContrato || 'N/A', mainX + 60, infoY);
+
+      infoY += 15;
+      doc.font('Helvetica-Bold').text('Locatário :-', mainX, infoY);
+      doc.font('Helvetica').text(receipt.contrato.inquilino.nome.toUpperCase(), mainX + 60, infoY);
+
+      infoY += 15;
+      doc.font('Helvetica-Bold').text('Endereço :-', mainX, infoY);
+      doc.font('Helvetica').text(receipt.contrato.imovel.endereco, mainX + 60, infoY, { width: 300 });
+
+      infoY += 25;
+      doc.font('Helvetica-Bold').text('CPF: ', mainX, infoY);
+      doc.font('Helvetica').text(receipt.contrato.inquilino.cpfCnpj, mainX + 30, infoY);
+
+      // ─── TEXTO CENTRAL ──────────────────────────────────────────────────
+      const midY = 250;
+      doc.font('Helvetica').fontSize(10).text('Recebemos a importância acima de aluguel e acrescentamos demais acessórios :-', mainX, midY);
+      doc.text(`Correspondente ao mes vencido em,`, mainX, midY + 15);
+
+      doc.font('Helvetica-Bold').fontSize(11).text(receipt.referenciaMes.toString().padStart(2, '0'), mainX + 185, midY + 15);
+      doc.text(receipt.referenciaAno.toString(), mainX + 215, midY + 15);
+
+      const extenso = `[${valorPorExtenso(Number(receipt.valorLiquido))}]`;
+      doc.font('Helvetica').fontSize(10).text('o valor de R$', mainX, midY + 40);
+      doc.font('Helvetica-Bold').text(extenso, mainX + 70, midY + 40, { width: 330 });
+
+      // ─── DATA (CORRIGIDA E ALINHADA) ────────────────────────────────────
+      const hoje = new Date();
+      const dataStr = `São Paulo, ${hoje.getDate()} de ${hoje.toLocaleString('pt-BR', { month: 'long' })} de ${hoje.getFullYear()}`;
+      doc.font('Helvetica').fontSize(10).text(dataStr, 330, midY + 40, { align: 'right', width: 220 });
+
+      // ─── ASSINATURAS (DUPLAS) ──────────────────────────────────────────
+      const footerY = 350;
+      // Linha Locador
+      doc.moveTo(mainX, footerY).lineTo(mainX + 220, footerY).stroke();
+      doc.font('Helvetica-Bold').fontSize(9).text('LOCADOR (PROPRIETÁRIO)', mainX, footerY + 5, { align: 'center', width: 220 });
+
+      // Linha Imobiliária
+      doc.moveTo(330, footerY).lineTo(550, footerY).stroke();
+      doc.font('Helvetica-Bold').fontSize(9).text('TIANA IMÓVEIS', 330, footerY + 5, { align: 'center', width: 220 });
+
+      // ─── LEMBRETE (CENTRALIZADO) ───────────────────────────────────────
+      if (receipt.observacoes) {
+        doc.fontSize(10).font('Helvetica-Bold').text('** LEMBRETE **', 0, footerY + 40, { align: 'center', width: 600 });
+        doc.font('Helvetica').fontSize(10).text(receipt.observacoes, 50, footerY + 55, { align: 'center', width: 500 });
+      }
 
       doc.end();
     });

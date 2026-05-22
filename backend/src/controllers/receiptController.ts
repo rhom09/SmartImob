@@ -153,7 +153,9 @@ export class ReceiptController {
         createdAt: new Date()
       };
 
-      const pdfBuffer = await PDFService.generateReceiptPDF(mockReceipt);
+      const pdfBuffer = req.query.layout === 'simple'
+        ? await PDFService.generateSimpleReceiptPDF(mockReceipt)
+        : await PDFService.generateReceiptPDF(mockReceipt);
 
       res.setHeader('Content-Type', 'application/pdf');
       res.setHeader('Content-Disposition', 'inline; filename=preview-recibo.pdf');
@@ -200,7 +202,9 @@ export class ReceiptController {
         return res.status(404).json({ message: 'Recibo não encontrado' });
       }
 
-      const pdfBuffer = await PDFService.generateReceiptPDF(receipt);
+      const pdfBuffer = req.query.layout === 'simple'
+        ? await PDFService.generateSimpleReceiptPDF(receipt)
+        : await PDFService.generateReceiptPDF(receipt);
 
       res.setHeader('Content-Type', 'application/pdf');
       res.setHeader('Content-Disposition', `attachment; filename=recibo-${receipt.numeroRecibo}.pdf`);
