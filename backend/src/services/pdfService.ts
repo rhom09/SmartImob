@@ -187,17 +187,17 @@ export class PDFService {
       doc.font('Helvetica').text(receipt.contrato.numeroContrato || 'N/A', mainX + 60, infoY);
 
       infoY += 15;
-      doc.font('Helvetica-Bold').text('Proprietário :-', mainX, infoY);
-      doc.font('Helvetica').text(receipt.contrato.imovel.owner.nome.toUpperCase(), mainX + 60, infoY);
+      doc.font('Helvetica-Bold').text('Proprietário', mainX, infoY);
+      doc.text(':-', mainX + 70, infoY);
+      doc.font('Helvetica').text(receipt.contrato.imovel.owner.nome.toUpperCase(), mainX + 85, infoY);
 
       infoY += 15;
       doc.font('Helvetica-Bold').text('Locatário :-', mainX, infoY);
-      doc.font('Helvetica').text(receipt.contrato.inquilino.nome.toUpperCase(), mainX + 60, infoY);
+      doc.font('Helvetica').text(receipt.contrato.inquilino.nome.toUpperCase(), mainX + 70, infoY);
 
       infoY += 15;
       doc.font('Helvetica-Bold').text('Endereço :-', mainX, infoY);
       const imovel = receipt.contrato.imovel;
-      // Quebrar em duas linhas conforme solicitado
       const linha1 = `${imovel.endereco}${imovel.numero ? `, ${imovel.numero}` : ''}`;
       const linha2 = [
         imovel.complemento ? `${imovel.complemento} ` : '',
@@ -205,20 +205,17 @@ export class PDFService {
         imovel.cep ? ` - CEP: ${imovel.cep}` : ''
       ].join('');
 
-      doc.font('Helvetica').text(linha1, mainX + 60, infoY, { width: 300 });
-      doc.text(linha2, mainX + 60, infoY + 12, { width: 300 });
+      doc.font('Helvetica').text(linha1, mainX + 70, infoY, { width: 300 });
+      doc.text(linha2, mainX + 70, infoY + 12, { width: 300 });
 
-      infoY += 30; // Ajustado para dar espaço devido às duas linhas de endereço
+      infoY += 35;
       doc.font('Helvetica-Bold').text('CPF: ', mainX, infoY);
       doc.font('Helvetica').text(receipt.contrato.inquilino.cpfCnpj, mainX + 30, infoY);
 
       // ─── TEXTO CENTRAL ──────────────────────────────────────────────────
       const midY = 250;
       doc.font('Helvetica').fontSize(10).text('Recebemos a importância acima de aluguel e acrescentamos demais acessórios :-', mainX, midY);
-      doc.text(`Correspondente ao mes vencido em,`, mainX, midY + 15);
-
-      doc.font('Helvetica-Bold').fontSize(11).text(receipt.referenciaMes.toString().padStart(2, '0'), mainX + 185, midY + 15);
-      doc.text(receipt.referenciaAno.toString(), mainX + 215, midY + 15);
+      doc.text(`Correspondente ao vencimento em, ${new Date(receipt.dataVencimento).toLocaleDateString('pt-BR')}`, mainX, midY + 15);
 
       const extenso = `[${valorPorExtenso(Number(receipt.valorLiquido))}]`;
       doc.font('Helvetica').fontSize(10).text('o valor de R$', mainX, midY + 40);
@@ -227,10 +224,7 @@ export class PDFService {
       // ─── DATA (CORRIGIDA E ALINHADA) ────────────────────────────────────
       const hoje = new Date();
       const dataStr = `São Paulo, ${hoje.getDate()} de ${hoje.toLocaleString('pt-BR', { month: 'long' })} de ${hoje.getFullYear()}`;
-      doc.font('Helvetica').fontSize(10).text(dataStr, 330, midY + 40, { align: 'right', width: 220 });
-
-      // Nova linha para a data de vencimento, conforme solicitado
-      doc.font('Helvetica').fontSize(9).text(`Vencimento: ${new Date(receipt.dataVencimento).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' })}`, 330, midY + 55, { align: 'right', width: 220 });
+      doc.font('Helvetica').fontSize(10).text(dataStr, mainX, midY + 70, { align: 'right', width: 500 });
 
       // ─── ASSINATURAS (DUPLAS) ──────────────────────────────────────────
       const footerY = 350;
