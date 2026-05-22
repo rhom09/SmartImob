@@ -122,123 +122,118 @@ export class PDFService {
       doc.on('end', () => resolve(Buffer.concat(chunks)));
       doc.on('error', (err) => reject(err));
 
-      const mainX = 50;
-      const rightColX = 380;
-      const rowHeight = 15;
+      const renderPage = (startY: number) => {
+        const mainX = 50;
+        const rightColX = 380;
+        const rowHeight = 15;
 
-      // ─── CABEÇALHO ──────────────────────────────────────────────────────
-      doc.font('Helvetica-Bold').fontSize(14).text('TIANA IMÓVEIS & NEG IMOBILIARIOS', mainX, 50);
-      doc.fontSize(8).font('Helvetica').text('CRECI 25.129 SP', mainX, 65);
-      doc.text('Av. Mal. Fiúza de Castro, 822 - São Domingos - SP', mainX, 75);
-      doc.text('Fone/Fax: (11) 3731-3276 - 3735-1466', mainX, 85);
+        // ─── CABEÇALHO ──────────────────────────────────────────────────────
+        doc.font('Helvetica-Bold').fontSize(14).text('TIANA IMÓVEIS & NEG IMOBILIARIOS', mainX, startY + 50);
+        doc.fontSize(8).font('Helvetica').text('CRECI 25.129 SP', mainX, startY + 65);
+        doc.text('Av. Mal. Fiúza de Castro, 822 - São Domingos - SP', mainX, startY + 75);
+        doc.text('Fone/Fax: (11) 3731-3276 - 3735-1466', mainX, startY + 85);
 
-      doc.font('Helvetica-Bold').fontSize(11).text('RECIBO DE PAGAMENTO DE ALUGUEL', 350, 60, { align: 'right', width: 200 });
+        doc.font('Helvetica-Bold').fontSize(11).text('RECIBO DE PAGAMENTO DE ALUGUEL', 350, startY + 60, { align: 'right', width: 200 });
 
-      // ─── QUADRO DE VALORES (DIREITA) ────────────────────────────────────
-      let vY = 110;
-      doc.fontSize(9);
-      const drawValueRow = (label: string, value: any, y: number, isTotal = false) => {
-        doc.font(isTotal ? 'Helvetica-Bold' : 'Helvetica').text(`${label}------------------R$`, rightColX, y);
-        doc.text(Number(value || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }), rightColX + 110, y, { align: 'right', width: 60 });
+        // ─── QUADRO DE VALORES (DIREITA) ────────────────────────────────────
+        let vY = startY + 110;
+        doc.fontSize(9);
+        const drawValueRow = (label: string, value: any, y: number, isTotal = false) => {
+          doc.font(isTotal ? 'Helvetica-Bold' : 'Helvetica').text(`${label}------------------R$`, rightColX, y);
+          doc.text(Number(value || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }), rightColX + 110, y, { align: 'right', width: 60 });
+        };
+
+        drawValueRow('Aluguel', receipt.contrato.valorAluguel, vY);
+        vY += rowHeight;
+        drawValueRow('Desconto', receipt.descontos, vY);
+        vY += rowHeight;
+        drawValueRow('Condomínio', receipt.valorCondominio, vY);
+        vY += rowHeight;
+        drawValueRow('I P T U', receipt.valorIptu, vY);
+        vY += rowHeight;
+        drawValueRow('Água', receipt.valorAgua, vY);
+        vY += rowHeight;
+        drawValueRow('Luz', receipt.valorLuz, vY);
+        vY += rowHeight;
+        drawValueRow('Outros Débitos', receipt.outrosDebitos, vY);
+
+        vY += 10;
+        doc.moveTo(rightColX, vY).lineTo(rightColX + 175, vY).stroke();
+        vY += 10;
+        drawValueRow('TOTAL', receipt.valorLiquido, vY, true);
+        doc.rect(rightColX - 5, startY + 105, 185, vY - (startY + 90)).stroke();
+
+        // ─── INFOS DO CONTRATO (ESQUERDA) ──────────────────────────────────
+        let infoY = startY + 110;
+        const dataFim = new Date(receipt.contrato.dataFim);
+        const dataInicio = new Date(receipt.contrato.dataInicio);
+
+        doc.font('Helvetica-Bold').fontSize(9).text('Venc. CONTRATO:', mainX, infoY);
+        doc.font('Helvetica').text(dataFim.toLocaleDateString('pt-BR'), mainX + 90, infoY);
+
+        infoY += 15;
+        doc.font('Helvetica-Bold').text('Próximo Reajuste:', mainX, infoY);
+        const hojeReajuste = new Date();
+        const proximoReajuste = new Date(dataInicio);
+        while (proximoReajuste <= hojeReajuste) {
+          proximoReajuste.setFullYear(proximoReajuste.getFullYear() + 1);
+        }
+        const reajusteStr = proximoReajuste.toLocaleString('pt-BR', { month: 'short', year: '2-digit' }).replace('.', '');
+        doc.font('Helvetica').text(reajusteStr, mainX + 90, infoY);
+
+        infoY += 25;
+        doc.font('Helvetica-Bold').fontSize(10).text('Código    :-', mainX, infoY);
+        doc.font('Helvetica').text(receipt.contrato.numeroContrato || 'N/A', mainX + 60, infoY);
+
+        infoY += 15;
+        doc.font('Helvetica-Bold').text('Locatário :-', mainX, infoY);
+        doc.font('Helvetica').text(receipt.contrato.inquilino.nome.toUpperCase(), mainX + 70, infoY);
+
+        infoY += 15;
+        doc.font('Helvetica-Bold').text('Endereço :-', mainX, infoY);
+        const imovel = receipt.contrato.imovel;
+        const linha1 = `${imovel.endereco}${imovel.numero ? `, ${imovel.numero}` : ''}`;
+        const linha2 = [
+          imovel.complemento ? `${imovel.complemento} ` : '',
+          imovel.bairro ? ` - ${imovel.bairro}` : '',
+          imovel.cep ? ` - CEP: ${imovel.cep}` : ''
+        ].join('');
+
+        doc.font('Helvetica').text(linha1, mainX + 70, infoY, { width: 300 });
+        doc.text(linha2, mainX + 70, infoY + 12, { width: 300 });
+
+        infoY += 35;
+        doc.font('Helvetica-Bold').text('CPF: ', mainX, infoY);
+        doc.font('Helvetica').text(receipt.contrato.inquilino.cpfCnpj, mainX + 30, infoY);
+
+        // ─── TEXTO CENTRAL ──────────────────────────────────────────────────
+        const midY = startY + 250;
+        doc.font('Helvetica').fontSize(10).text('Recebemos a importância acima de aluguel e acrescentamos demais acessórios :-', mainX, midY);
+        doc.text(`Correspondente ao vencimento em, ${new Date(receipt.dataVencimento).toLocaleDateString('pt-BR')}`, mainX, midY + 15);
+
+        const extenso = `[${valorPorExtenso(Number(receipt.valorLiquido))}]`;
+        doc.font('Helvetica').fontSize(10).text('o valor de R$', mainX, midY + 40);
+        doc.font('Helvetica-Bold').text(extenso, mainX + 70, midY + 40, { width: 330 });
+
+        // ─── DATA ──────────────────────────────────────────────────────────
+        const hoje = new Date();
+        const dataStr = `São Paulo, ${hoje.getDate()} de ${hoje.toLocaleString('pt-BR', { month: 'long' })} de ${hoje.getFullYear()}`;
+        doc.font('Helvetica').fontSize(10).text(dataStr, mainX, midY + 70, { align: 'right', width: 500 });
+
+        // ─── ASSINATURAS ──────────────────────────────────────────────────
+        const footerY = startY + 350;
+        doc.moveTo(mainX, footerY).lineTo(mainX + 220, footerY).stroke();
+        doc.font('Helvetica-Bold').fontSize(9).text(receipt.contrato.imovel.owner.nome.toUpperCase(), mainX, footerY + 5, { align: 'center', width: 220 });
+
+        doc.moveTo(330, footerY).lineTo(550, footerY).stroke();
+        doc.font('Helvetica-Bold').fontSize(9).text('TIANA IMÓVEIS', 330, footerY + 5, { align: 'center', width: 220 });
       };
 
-      drawValueRow('Aluguel', receipt.contrato.valorAluguel, vY);
-      vY += rowHeight;
-      drawValueRow('Desconto', receipt.descontos, vY);
-      vY += rowHeight;
-      drawValueRow('Condomínio', receipt.valorCondominio, vY);
-      vY += rowHeight;
-      drawValueRow('I P T U', receipt.valorIptu, vY);
-      vY += rowHeight;
-      drawValueRow('Água', receipt.valorAgua, vY);
-      vY += rowHeight;
-      drawValueRow('Luz', receipt.valorLuz, vY);
-      vY += rowHeight;
-      drawValueRow('Outros Débitos', receipt.outrosDebitos, vY);
-
-      vY += 10;
-      doc.moveTo(rightColX, vY).lineTo(rightColX + 175, vY).stroke();
-      vY += 10;
-      drawValueRow('TOTAL', receipt.valorLiquido, vY, true);
-      doc.rect(rightColX - 5, 105, 185, vY - 90).stroke();
-
-      // ─── INFOS DO CONTRATO (ESQUERDA) ──────────────────────────────────
-      let infoY = 110;
-      const dataFim = new Date(receipt.contrato.dataFim);
-      const dataInicio = new Date(receipt.contrato.dataInicio);
-
-      doc.font('Helvetica-Bold').fontSize(9).text('Venc. CONTRATO:', mainX, infoY);
-      doc.font('Helvetica').text(dataFim.toLocaleDateString('pt-BR'), mainX + 90, infoY);
-
-      infoY += 15;
-      doc.font('Helvetica-Bold').text('Próximo Reajuste:', mainX, infoY);
-      const hojeReajuste = new Date();
-      const proximoReajuste = new Date(dataInicio);
-      while (proximoReajuste <= hojeReajuste) {
-        proximoReajuste.setFullYear(proximoReajuste.getFullYear() + 1);
-      }
-      const reajusteStr = proximoReajuste.toLocaleString('pt-BR', { month: 'short', year: '2-digit' }).replace('.', '');
-      doc.font('Helvetica').text(reajusteStr, mainX + 90, infoY);
-
-      infoY += 25;
-      doc.font('Helvetica-Bold').fontSize(10).text('Código    :-', mainX, infoY);
-      doc.font('Helvetica').text(receipt.contrato.numeroContrato || 'N/A', mainX + 60, infoY);
-
-      infoY += 15;
-      doc.font('Helvetica-Bold').text('Proprietário', mainX, infoY);
-      doc.text(':-', mainX + 70, infoY);
-      doc.font('Helvetica').text(receipt.contrato.imovel.owner.nome.toUpperCase(), mainX + 85, infoY);
-
-      infoY += 15;
-      doc.font('Helvetica-Bold').text('Locatário :-', mainX, infoY);
-      doc.font('Helvetica').text(receipt.contrato.inquilino.nome.toUpperCase(), mainX + 70, infoY);
-
-      infoY += 15;
-      doc.font('Helvetica-Bold').text('Endereço :-', mainX, infoY);
-      const imovel = receipt.contrato.imovel;
-      const linha1 = `${imovel.endereco}${imovel.numero ? `, ${imovel.numero}` : ''}`;
-      const linha2 = [
-        imovel.complemento ? `${imovel.complemento} ` : '',
-        imovel.bairro ? ` - ${imovel.bairro}` : '',
-        imovel.cep ? ` - CEP: ${imovel.cep}` : ''
-      ].join('');
-
-      doc.font('Helvetica').text(linha1, mainX + 70, infoY, { width: 300 });
-      doc.text(linha2, mainX + 70, infoY + 12, { width: 300 });
-
-      infoY += 35;
-      doc.font('Helvetica-Bold').text('CPF: ', mainX, infoY);
-      doc.font('Helvetica').text(receipt.contrato.inquilino.cpfCnpj, mainX + 30, infoY);
-
-      // ─── TEXTO CENTRAL ──────────────────────────────────────────────────
-      const midY = 250;
-      doc.font('Helvetica').fontSize(10).text('Recebemos a importância acima de aluguel e acrescentamos demais acessórios :-', mainX, midY);
-      doc.text(`Correspondente ao vencimento em, ${new Date(receipt.dataVencimento).toLocaleDateString('pt-BR')}`, mainX, midY + 15);
-
-      const extenso = `[${valorPorExtenso(Number(receipt.valorLiquido))}]`;
-      doc.font('Helvetica').fontSize(10).text('o valor de R$', mainX, midY + 40);
-      doc.font('Helvetica-Bold').text(extenso, mainX + 70, midY + 40, { width: 330 });
-
-      // ─── DATA (CORRIGIDA E ALINHADA) ────────────────────────────────────
-      const hoje = new Date();
-      const dataStr = `São Paulo, ${hoje.getDate()} de ${hoje.toLocaleString('pt-BR', { month: 'long' })} de ${hoje.getFullYear()}`;
-      doc.font('Helvetica').fontSize(10).text(dataStr, mainX, midY + 70, { align: 'right', width: 500 });
-
-      // ─── ASSINATURAS (DUPLAS) ──────────────────────────────────────────
-      const footerY = 350;
-      // Linha Locador
-      doc.moveTo(mainX, footerY).lineTo(mainX + 220, footerY).stroke();
-      doc.font('Helvetica-Bold').fontSize(9).text(receipt.contrato.imovel.owner.nome.toUpperCase(), mainX, footerY + 5, { align: 'center', width: 220 });
-
-      // Linha Imobiliária
-      doc.moveTo(330, footerY).lineTo(550, footerY).stroke();
-      doc.font('Helvetica-Bold').fontSize(9).text('TIANA IMÓVEIS', 330, footerY + 5, { align: 'center', width: 220 });
-
-      // ─── LEMBRETE (CENTRALIZADO) ───────────────────────────────────────
-      if (receipt.observacoes) {
-        doc.fontSize(10).font('Helvetica-Bold').text('** LEMBRETE **', 0, footerY + 40, { align: 'center', width: 600 });
-        doc.font('Helvetica').fontSize(10).text(receipt.observacoes, 50, footerY + 55, { align: 'center', width: 500 });
-      }
+      // Desenha as duas vias
+      renderPage(0);
+      doc.moveDown();
+      doc.addPage();
+      renderPage(0);
 
       doc.end();
     });
