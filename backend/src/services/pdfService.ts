@@ -133,8 +133,6 @@ export class PDFService {
       doc.text('Fone/Fax: (11) 3731-3276 - 3735-1466', mainX, 85);
 
       doc.font('Helvetica-Bold').fontSize(11).text('RECIBO DE PAGAMENTO DE ALUGUEL', 350, 60, { align: 'right', width: 200 });
-      // Adicionar Data de Emissão abaixo do título do recibo
-      doc.font('Helvetica').fontSize(9).text(`Emissão: ${new Date().toLocaleDateString('pt-BR')}`, 350, 75, { align: 'right', width: 200 });
 
       // ─── QUADRO DE VALORES (DIREITA) ────────────────────────────────────
       let vY = 110;
