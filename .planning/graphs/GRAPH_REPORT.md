@@ -1,16 +1,16 @@
-# Graph Report - SmartImob  (2026-05-21)
+# Graph Report - SmartImob  (2026-05-22)
 
 ## Corpus Check
-- 75 files · ~378,727 words
+- 75 files · ~379,544 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 325 nodes · 571 edges · 27 communities (21 shown, 6 thin omitted)
+- 327 nodes · 573 edges · 27 communities (21 shown, 6 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `dd788811`
+- Built from commit: `776b8604`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -82,15 +82,15 @@ Nodes (5): ExpenseController, router, CreateExpenseData, ExpenseService, UpdateE
 
 ### Community 4 - "Community 4"
 Cohesion: 0.12
-Nodes (16): 10. ALERTAS, 1. USUARIOS, 2. PROPRIETARIOS, 3. IMOVEIS, 4. CONTRATOS, 5. INQUILINOS, 6. AUDITORIA, 7. RECIBOS (+8 more)
+Nodes (3): ReceiptController, router, PDFService
 
 ### Community 5 - "Community 5"
-Cohesion: 0.14
-Nodes (5): ContractController, router, ContractService, CreateContractData, createContractSchema
+Cohesion: 0.12
+Nodes (16): 10. ALERTAS, 1. USUARIOS, 2. PROPRIETARIOS, 3. IMOVEIS, 4. CONTRATOS, 5. INQUILINOS, 6. AUDITORIA, 7. RECIBOS (+8 more)
 
 ### Community 6 - "Community 6"
 Cohesion: 0.14
-Nodes (3): ReceiptController, router, PDFService
+Nodes (5): ContractController, router, ContractService, CreateContractData, createContractSchema
 
 ### Community 7 - "Community 7"
 Cohesion: 0.12
@@ -149,4 +149,4 @@ _Questions this graph is uniquely positioned to answer:_
 - **Should `Community 4` be split into smaller, more focused modules?**
   _Cohesion score 0.12 - nodes in this community are weakly interconnected._
 - **Should `Community 5` be split into smaller, more focused modules?**
-  _Cohesion score 0.14 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.12 - nodes in this community are weakly interconnected._
