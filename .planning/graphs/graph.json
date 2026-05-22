@@ -31,6 +31,42 @@
       "norm_label": "main()"
     },
     {
+      "label": "seed_manual.ts",
+      "file_type": "code",
+      "source_file": "backend/scripts/seed_manual.ts",
+      "source_location": "L1",
+      "id": "backend_scripts_seed_manual_ts",
+      "community": 1,
+      "norm_label": "seed_manual.ts"
+    },
+    {
+      "label": "main()",
+      "file_type": "code",
+      "source_file": "backend/scripts/seed_manual.ts",
+      "source_location": "L4",
+      "id": "scripts_seed_manual_main",
+      "community": 1,
+      "norm_label": "main()"
+    },
+    {
+      "label": "verificar_banco.ts",
+      "file_type": "code",
+      "source_file": "backend/scripts/verificar_banco.ts",
+      "source_location": "L1",
+      "id": "backend_scripts_verificar_banco_ts",
+      "community": 1,
+      "norm_label": "verificar_banco.ts"
+    },
+    {
+      "label": "main()",
+      "file_type": "code",
+      "source_file": "backend/scripts/verificar_banco.ts",
+      "source_location": "L3",
+      "id": "scripts_verificar_banco_main",
+      "community": 1,
+      "norm_label": "main()"
+    },
+    {
       "label": "server.ts",
       "file_type": "code",
       "source_file": "backend/src/server.ts",
@@ -43,7 +79,7 @@
       "label": "app",
       "file_type": "code",
       "source_file": "backend/src/server.ts",
-      "source_location": "L16",
+      "source_location": "L17",
       "id": "src_server_app",
       "community": 1,
       "norm_label": "app"
@@ -243,43 +279,88 @@
       "source_file": "backend/src/controllers/receiptController.ts",
       "source_location": "L1",
       "id": "backend_src_controllers_receiptcontroller_ts",
-      "community": 10,
+      "community": 6,
       "norm_label": "receiptcontroller.ts"
+    },
+    {
+      "label": "generateReceiptNumber()",
+      "file_type": "code",
+      "source_file": "backend/src/controllers/receiptController.ts",
+      "source_location": "L5",
+      "id": "controllers_receiptcontroller_generatereceiptnumber",
+      "community": 6,
+      "norm_label": "generatereceiptnumber()"
     },
     {
       "label": "ReceiptController",
       "file_type": "code",
       "source_file": "backend/src/controllers/receiptController.ts",
-      "source_location": "L5",
+      "source_location": "L7",
       "id": "controllers_receiptcontroller_receiptcontroller",
-      "community": 10,
+      "community": 6,
       "norm_label": "receiptcontroller"
+    },
+    {
+      "label": ".listAll()",
+      "file_type": "code",
+      "source_file": "backend/src/controllers/receiptController.ts",
+      "source_location": "L8",
+      "id": "controllers_receiptcontroller_receiptcontroller_listall",
+      "community": 6,
+      "norm_label": ".listall()"
+    },
+    {
+      "label": ".create()",
+      "file_type": "code",
+      "source_file": "backend/src/controllers/receiptController.ts",
+      "source_location": "L48",
+      "id": "controllers_receiptcontroller_receiptcontroller_create",
+      "community": 6,
+      "norm_label": ".create()"
+    },
+    {
+      "label": ".preview()",
+      "file_type": "code",
+      "source_file": "backend/src/controllers/receiptController.ts",
+      "source_location": "L107",
+      "id": "controllers_receiptcontroller_receiptcontroller_preview",
+      "community": 6,
+      "norm_label": ".preview()"
+    },
+    {
+      "label": ".cancel()",
+      "file_type": "code",
+      "source_file": "backend/src/controllers/receiptController.ts",
+      "source_location": "L167",
+      "id": "controllers_receiptcontroller_receiptcontroller_cancel",
+      "community": 6,
+      "norm_label": ".cancel()"
     },
     {
       "label": ".downloadPDF()",
       "file_type": "code",
       "source_file": "backend/src/controllers/receiptController.ts",
-      "source_location": "L6",
+      "source_location": "L184",
       "id": "controllers_receiptcontroller_receiptcontroller_downloadpdf",
-      "community": 10,
+      "community": 6,
       "norm_label": ".downloadpdf()"
     },
     {
       "label": ".pay()",
       "file_type": "code",
       "source_file": "backend/src/controllers/receiptController.ts",
-      "source_location": "L36",
+      "source_location": "L214",
       "id": "controllers_receiptcontroller_receiptcontroller_pay",
-      "community": 10,
+      "community": 6,
       "norm_label": ".pay()"
     },
     {
       "label": ".listByContract()",
       "file_type": "code",
       "source_file": "backend/src/controllers/receiptController.ts",
-      "source_location": "L59",
+      "source_location": "L237",
       "id": "controllers_receiptcontroller_receiptcontroller_listbycontract",
-      "community": 10,
+      "community": 6,
       "norm_label": ".listbycontract()"
     },
     {
@@ -522,7 +603,7 @@
       "source_file": "backend/src/routes/recibos.ts",
       "source_location": "L1",
       "id": "backend_src_routes_recibos_ts",
-      "community": 10,
+      "community": 6,
       "norm_label": "recibos.ts"
     },
     {
@@ -531,7 +612,7 @@
       "source_file": "backend/src/routes/recibos.ts",
       "source_location": "L4",
       "id": "routes_recibos_router",
-      "community": 10,
+      "community": 6,
       "norm_label": "router"
     },
     {
@@ -549,6 +630,24 @@
       "source_file": "backend/src/routes/seed.ts",
       "source_location": "L4",
       "id": "routes_seed_router",
+      "community": 1,
+      "norm_label": "router"
+    },
+    {
+      "label": "seed_completo.ts",
+      "file_type": "code",
+      "source_file": "backend/src/routes/seed_completo.ts",
+      "source_location": "L1",
+      "id": "backend_src_routes_seed_completo_ts",
+      "community": 1,
+      "norm_label": "seed_completo.ts"
+    },
+    {
+      "label": "router",
+      "file_type": "code",
+      "source_file": "backend/src/routes/seed_completo.ts",
+      "source_location": "L5",
+      "id": "routes_seed_completo_router",
       "community": 1,
       "norm_label": "router"
     },
@@ -574,7 +673,7 @@
       "label": "ContractService",
       "file_type": "code",
       "source_file": "backend/src/services/contractService.ts",
-      "source_location": "L16",
+      "source_location": "L17",
       "id": "services_contractservice_contractservice",
       "community": 5,
       "norm_label": "contractservice"
@@ -583,7 +682,7 @@
       "label": ".create()",
       "file_type": "code",
       "source_file": "backend/src/services/contractService.ts",
-      "source_location": "L17",
+      "source_location": "L18",
       "id": "services_contractservice_contractservice_create",
       "community": 5,
       "norm_label": ".create()"
@@ -592,7 +691,7 @@
       "label": ".list()",
       "file_type": "code",
       "source_file": "backend/src/services/contractService.ts",
-      "source_location": "L100",
+      "source_location": "L102",
       "id": "services_contractservice_contractservice_list",
       "community": 5,
       "norm_label": ".list()"
@@ -601,7 +700,7 @@
       "label": ".applyAdjustment()",
       "file_type": "code",
       "source_file": "backend/src/services/contractService.ts",
-      "source_location": "L140",
+      "source_location": "L142",
       "id": "services_contractservice_contractservice_applyadjustment",
       "community": 5,
       "norm_label": ".applyadjustment()"
@@ -610,7 +709,7 @@
       "label": ".getById()",
       "file_type": "code",
       "source_file": "backend/src/services/contractService.ts",
-      "source_location": "L184",
+      "source_location": "L186",
       "id": "services_contractservice_contractservice_getbyid",
       "community": 5,
       "norm_label": ".getbyid()"
@@ -754,7 +853,7 @@
       "label": ".getRepasses()",
       "file_type": "code",
       "source_file": "backend/src/services/financialService.ts",
-      "source_location": "L146",
+      "source_location": "L147",
       "id": "services_financialservice_financialservice_getrepasses",
       "community": 2,
       "norm_label": ".getrepasses()"
@@ -763,7 +862,7 @@
       "label": ".getFluxoCaixa()",
       "file_type": "code",
       "source_file": "backend/src/services/financialService.ts",
-      "source_location": "L238",
+      "source_location": "L241",
       "id": "services_financialservice_financialservice_getfluxocaixa",
       "community": 2,
       "norm_label": ".getfluxocaixa()"
@@ -772,7 +871,7 @@
       "label": ".getResumo()",
       "file_type": "code",
       "source_file": "backend/src/services/financialService.ts",
-      "source_location": "L306",
+      "source_location": "L309",
       "id": "services_financialservice_financialservice_getresumo",
       "community": 2,
       "norm_label": ".getresumo()"
@@ -783,25 +882,34 @@
       "source_file": "backend/src/services/pdfService.ts",
       "source_location": "L1",
       "id": "backend_src_services_pdfservice_ts",
-      "community": 10,
+      "community": 6,
       "norm_label": "pdfservice.ts"
+    },
+    {
+      "label": "formatBRL()",
+      "file_type": "code",
+      "source_file": "backend/src/services/pdfService.ts",
+      "source_location": "L3",
+      "id": "services_pdfservice_formatbrl",
+      "community": 6,
+      "norm_label": "formatbrl()"
     },
     {
       "label": "PDFService",
       "file_type": "code",
       "source_file": "backend/src/services/pdfService.ts",
-      "source_location": "L3",
+      "source_location": "L5",
       "id": "services_pdfservice_pdfservice",
-      "community": 10,
+      "community": 6,
       "norm_label": "pdfservice"
     },
     {
       "label": ".generateReceiptPDF()",
       "file_type": "code",
       "source_file": "backend/src/services/pdfService.ts",
-      "source_location": "L4",
+      "source_location": "L6",
       "id": "services_pdfservice_pdfservice_generatereceiptpdf",
-      "community": 10,
+      "community": 6,
       "norm_label": ".generatereceiptpdf()"
     },
     {
@@ -1006,7 +1114,7 @@
       "label": "createContractSchema",
       "file_type": "code",
       "source_file": "backend/src/validators/schemas.ts",
-      "source_location": "L147",
+      "source_location": "L148",
       "id": "validators_schemas_createcontractschema",
       "community": 5,
       "norm_label": "createcontractschema"
@@ -1015,7 +1123,7 @@
       "label": "updateContractSchema",
       "file_type": "code",
       "source_file": "backend/src/validators/schemas.ts",
-      "source_location": "L152",
+      "source_location": "L153",
       "id": "validators_schemas_updatecontractschema",
       "community": 1,
       "norm_label": "updatecontractschema"
@@ -1152,7 +1260,7 @@
       "source_file": "frontend/src/app/clientes/novo/page.tsx",
       "source_location": "L1",
       "id": "frontend_src_app_clientes_novo_page_tsx",
-      "community": 6,
+      "community": 0,
       "norm_label": "page.tsx"
     },
     {
@@ -1161,7 +1269,7 @@
       "source_file": "frontend/src/app/clientes/novo/page.tsx",
       "source_location": "L11",
       "id": "novo_page_novoclientepage",
-      "community": 6,
+      "community": 0,
       "norm_label": "novoclientepage()"
     },
     {
@@ -1329,6 +1437,78 @@
     {
       "label": "page.tsx",
       "file_type": "code",
+      "source_file": "frontend/src/app/financeiro/recibos/page.tsx",
+      "source_location": "L1",
+      "id": "frontend_src_app_financeiro_recibos_page_tsx",
+      "community": 0,
+      "norm_label": "page.tsx"
+    },
+    {
+      "label": "Contrato",
+      "file_type": "code",
+      "source_file": "frontend/src/app/financeiro/recibos/page.tsx",
+      "source_location": "L10",
+      "id": "recibos_page_contrato",
+      "community": 0,
+      "norm_label": "contrato"
+    },
+    {
+      "label": "Recibo",
+      "file_type": "code",
+      "source_file": "frontend/src/app/financeiro/recibos/page.tsx",
+      "source_location": "L16",
+      "id": "recibos_page_recibo",
+      "community": 0,
+      "norm_label": "recibo"
+    },
+    {
+      "label": "RecibosPage()",
+      "file_type": "code",
+      "source_file": "frontend/src/app/financeiro/recibos/page.tsx",
+      "source_location": "L28",
+      "id": "recibos_page_recibospage",
+      "community": 0,
+      "norm_label": "recibospage()"
+    },
+    {
+      "label": "page.tsx",
+      "file_type": "code",
+      "source_file": "frontend/src/app/financeiro/recibos/novo/page.tsx",
+      "source_location": "L1",
+      "id": "frontend_src_app_financeiro_recibos_novo_page_tsx",
+      "community": 0,
+      "norm_label": "page.tsx"
+    },
+    {
+      "label": "Contrato",
+      "file_type": "code",
+      "source_file": "frontend/src/app/financeiro/recibos/novo/page.tsx",
+      "source_location": "L12",
+      "id": "novo_page_contrato",
+      "community": 0,
+      "norm_label": "contrato"
+    },
+    {
+      "label": "BANCOS_BRASILEIROS",
+      "file_type": "code",
+      "source_file": "frontend/src/app/financeiro/recibos/novo/page.tsx",
+      "source_location": "L23",
+      "id": "novo_page_bancos_brasileiros",
+      "community": 0,
+      "norm_label": "bancos_brasileiros"
+    },
+    {
+      "label": "NovoReciboPage()",
+      "file_type": "code",
+      "source_file": "frontend/src/app/financeiro/recibos/novo/page.tsx",
+      "source_location": "L35",
+      "id": "novo_page_novorecibopage",
+      "community": 0,
+      "norm_label": "novorecibopage()"
+    },
+    {
+      "label": "page.tsx",
+      "file_type": "code",
       "source_file": "frontend/src/app/financeiro/relatorios/page.tsx",
       "source_location": "L1",
       "id": "frontend_src_app_financeiro_relatorios_page_tsx",
@@ -1375,7 +1555,7 @@
       "label": "RepassesPage()",
       "file_type": "code",
       "source_file": "frontend/src/app/financeiro/repasses/page.tsx",
-      "source_location": "L28",
+      "source_location": "L29",
       "id": "repasses_page_repassespage",
       "community": 0,
       "norm_label": "repassespage()"
@@ -1510,7 +1690,7 @@
       "label": "Sidebar()",
       "file_type": "code",
       "source_file": "frontend/src/components/Navigation.tsx",
-      "source_location": "L14",
+      "source_location": "L15",
       "id": "components_navigation_sidebar",
       "community": 13,
       "norm_label": "sidebar()"
@@ -1519,7 +1699,7 @@
       "label": "Header()",
       "file_type": "code",
       "source_file": "frontend/src/components/Navigation.tsx",
-      "source_location": "L44",
+      "source_location": "L45",
       "id": "components_navigation_header",
       "community": 13,
       "norm_label": "header()"
@@ -1530,7 +1710,7 @@
       "source_file": "frontend/src/components/clientes/ClientForm.tsx",
       "source_location": "L1",
       "id": "frontend_src_components_clientes_clientform_tsx",
-      "community": 6,
+      "community": 9,
       "norm_label": "clientform.tsx"
     },
     {
@@ -1539,7 +1719,7 @@
       "source_file": "frontend/src/components/clientes/ClientForm.tsx",
       "source_location": "L12",
       "id": "clientes_clientform_isvalidcpfcnpj",
-      "community": 6,
+      "community": 9,
       "norm_label": "isvalidcpfcnpj()"
     },
     {
@@ -1548,7 +1728,7 @@
       "source_file": "frontend/src/components/clientes/ClientForm.tsx",
       "source_location": "L18",
       "id": "clientes_clientform_clientschema",
-      "community": 6,
+      "community": 9,
       "norm_label": "clientschema"
     },
     {
@@ -1557,7 +1737,7 @@
       "source_file": "frontend/src/components/clientes/ClientForm.tsx",
       "source_location": "L30",
       "id": "clientes_clientform_clientformdata",
-      "community": 6,
+      "community": 9,
       "norm_label": "clientformdata"
     },
     {
@@ -1566,7 +1746,7 @@
       "source_file": "frontend/src/components/clientes/ClientForm.tsx",
       "source_location": "L32",
       "id": "clientes_clientform_clientformprops",
-      "community": 6,
+      "community": 9,
       "norm_label": "clientformprops"
     },
     {
@@ -1575,7 +1755,7 @@
       "source_file": "frontend/src/components/clientes/ClientForm.tsx",
       "source_location": "L38",
       "id": "clientes_clientform_clientform",
-      "community": 6,
+      "community": 9,
       "norm_label": "clientform()"
     },
     {
@@ -1636,7 +1816,7 @@
       "label": "ContractFormData",
       "file_type": "code",
       "source_file": "frontend/src/components/contratos/ContractForm.tsx",
-      "source_location": "L22",
+      "source_location": "L23",
       "id": "contratos_contractform_contractformdata",
       "community": 0,
       "norm_label": "contractformdata"
@@ -1645,7 +1825,7 @@
       "label": "ContractFormProps",
       "file_type": "code",
       "source_file": "frontend/src/components/contratos/ContractForm.tsx",
-      "source_location": "L24",
+      "source_location": "L25",
       "id": "contratos_contractform_contractformprops",
       "community": 0,
       "norm_label": "contractformprops"
@@ -1654,7 +1834,7 @@
       "label": "ContractForm()",
       "file_type": "code",
       "source_file": "frontend/src/components/contratos/ContractForm.tsx",
-      "source_location": "L29",
+      "source_location": "L30",
       "id": "contratos_contractform_contractform",
       "community": 0,
       "norm_label": "contractform()"
@@ -1665,7 +1845,7 @@
       "source_file": "frontend/src/components/imoveis/PropertyForm.tsx",
       "source_location": "L1",
       "id": "frontend_src_components_imoveis_propertyform_tsx",
-      "community": 6,
+      "community": 9,
       "norm_label": "propertyform.tsx"
     },
     {
@@ -1674,7 +1854,7 @@
       "source_file": "frontend/src/components/imoveis/PropertyForm.tsx",
       "source_location": "L12",
       "id": "imoveis_propertyform_propertyschema",
-      "community": 6,
+      "community": 9,
       "norm_label": "propertyschema"
     },
     {
@@ -1683,7 +1863,7 @@
       "source_file": "frontend/src/components/imoveis/PropertyForm.tsx",
       "source_location": "L43",
       "id": "imoveis_propertyform_propertyformdata",
-      "community": 6,
+      "community": 9,
       "norm_label": "propertyformdata"
     },
     {
@@ -1692,7 +1872,7 @@
       "source_file": "frontend/src/components/imoveis/PropertyForm.tsx",
       "source_location": "L45",
       "id": "imoveis_propertyform_propertyformprops",
-      "community": 6,
+      "community": 9,
       "norm_label": "propertyformprops"
     },
     {
@@ -1701,7 +1881,7 @@
       "source_file": "frontend/src/components/imoveis/PropertyForm.tsx",
       "source_location": "L51",
       "id": "imoveis_propertyform_propertyform",
-      "community": 6,
+      "community": 9,
       "norm_label": "propertyform()"
     },
     {
@@ -1822,10 +2002,19 @@
       "norm_label": "cardtitle"
     },
     {
-      "label": "CardContent",
+      "label": "CardDescription",
       "file_type": "code",
       "source_file": "frontend/src/components/ui/Card.tsx",
       "source_location": "L46",
+      "id": "ui_card_carddescription",
+      "community": 0,
+      "norm_label": "carddescription"
+    },
+    {
+      "label": "CardContent",
+      "file_type": "code",
+      "source_file": "frontend/src/components/ui/Card.tsx",
+      "source_location": "L58",
       "id": "ui_card_cardcontent",
       "community": 0,
       "norm_label": "cardcontent"
@@ -1834,7 +2023,7 @@
       "label": "CardFooter",
       "file_type": "code",
       "source_file": "frontend/src/components/ui/Card.tsx",
-      "source_location": "L54",
+      "source_location": "L66",
       "id": "ui_card_cardfooter",
       "community": 0,
       "norm_label": "cardfooter"
@@ -1872,7 +2061,7 @@
       "source_file": "frontend/src/hooks/useViaCEP.ts",
       "source_location": "L1",
       "id": "frontend_src_hooks_useviacep_ts",
-      "community": 6,
+      "community": 9,
       "norm_label": "useviacep.ts"
     },
     {
@@ -1881,7 +2070,7 @@
       "source_file": "frontend/src/hooks/useViaCEP.ts",
       "source_location": "L3",
       "id": "hooks_useviacep_viacepaddress",
-      "community": 6,
+      "community": 9,
       "norm_label": "viacepaddress"
     },
     {
@@ -1890,7 +2079,7 @@
       "source_file": "frontend/src/hooks/useViaCEP.ts",
       "source_location": "L13",
       "id": "hooks_useviacep_useviacep",
-      "community": 6,
+      "community": 9,
       "norm_label": "useviacep()"
     },
     {
@@ -1964,6 +2153,15 @@
       "id": "lib_utils_formatcurrency",
       "community": 0,
       "norm_label": "formatcurrency()"
+    },
+    {
+      "label": "formatDate()",
+      "file_type": "code",
+      "source_file": "frontend/src/lib/utils.ts",
+      "source_location": "L48",
+      "id": "lib_utils_formatdate",
+      "community": 0,
+      "norm_label": "formatdate()"
     },
     {
       "label": "DER.md",
@@ -2196,7 +2394,7 @@
       "source_file": "HISTORY.md",
       "source_location": "L1",
       "id": "history_md",
-      "community": 9,
+      "community": 10,
       "norm_label": "history.md"
     },
     {
@@ -2205,7 +2403,7 @@
       "source_file": "HISTORY.md",
       "source_location": "L1",
       "id": "smartimob_history_smartimob_hist\u00f3rico_de_desenvolvimento",
-      "community": 9,
+      "community": 10,
       "norm_label": "smartimob - historico de desenvolvimento"
     },
     {
@@ -2214,7 +2412,7 @@
       "source_file": "HISTORY.md",
       "source_location": "L7",
       "id": "smartimob_history_fase_4_gest\u00e3o_financeira_2026_05_21",
-      "community": 9,
+      "community": 10,
       "norm_label": "fase 4: gestao financeira (2026-05-21)"
     },
     {
@@ -2223,7 +2421,7 @@
       "source_file": "HISTORY.md",
       "source_location": "L9",
       "id": "smartimob_history_arquitetura_implementada",
-      "community": 9,
+      "community": 10,
       "norm_label": "arquitetura implementada"
     },
     {
@@ -2232,7 +2430,7 @@
       "source_file": "HISTORY.md",
       "source_location": "L44",
       "id": "smartimob_history_fase_3_estabiliza\u00e7\u00e3o_2026_05_21",
-      "community": 9,
+      "community": 10,
       "norm_label": "fase 3: estabilizacao (2026-05-21)"
     },
     {
@@ -2241,7 +2439,7 @@
       "source_file": "HISTORY.md",
       "source_location": "L46",
       "id": "smartimob_history_desafios_t\u00e9cnicos_superados",
-      "community": 9,
+      "community": 10,
       "norm_label": "desafios tecnicos superados"
     },
     {
@@ -2250,7 +2448,7 @@
       "source_file": "HISTORY.md",
       "source_location": "L48",
       "id": "smartimob_history_1_serializa\u00e7\u00e3o_de_campos_decimal_prisma_node_js",
-      "community": 9,
+      "community": 10,
       "norm_label": "1. serializacao de campos `decimal` (prisma + node.js)"
     },
     {
@@ -2259,7 +2457,7 @@
       "source_file": "HISTORY.md",
       "source_location": "L52",
       "id": "smartimob_history_2_hydration_mismatch_ssr_next_js_14",
-      "community": 9,
+      "community": 10,
       "norm_label": "2. hydration mismatch & ssr (next.js 14+)"
     },
     {
@@ -2268,7 +2466,7 @@
       "source_file": "HISTORY.md",
       "source_location": "L59",
       "id": "smartimob_history_3_processos_fantasmas_e_conex\u00e3o_de_banco",
-      "community": 9,
+      "community": 10,
       "norm_label": "3. processos fantasmas e conexao de banco"
     },
     {
@@ -2277,7 +2475,7 @@
       "source_file": "HISTORY.md",
       "source_location": "L66",
       "id": "smartimob_history_evolu\u00e7\u00e3o_da_interface",
-      "community": 9,
+      "community": 10,
       "norm_label": "evolucao da interface"
     },
     {
@@ -2286,7 +2484,7 @@
       "source_file": "HISTORY.md",
       "source_location": "L72",
       "id": "smartimob_history_pr\u00f3ximos_passos",
-      "community": 9,
+      "community": 10,
       "norm_label": "proximos passos"
     },
     {
@@ -2756,6 +2954,48 @@
       "relation": "imports_from",
       "context": "import",
       "confidence": "EXTRACTED",
+      "source_file": "backend/scripts/seed_manual.ts",
+      "source_location": "L1",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "backend_scripts_seed_manual_ts",
+      "target": "backend_src_lib_prisma_ts"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/scripts/seed_manual.ts",
+      "source_location": "L4",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "backend_scripts_seed_manual_ts",
+      "target": "scripts_seed_manual_main"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/scripts/verificar_banco.ts",
+      "source_location": "L1",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "backend_scripts_verificar_banco_ts",
+      "target": "backend_src_lib_prisma_ts"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/scripts/verificar_banco.ts",
+      "source_location": "L3",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "backend_scripts_verificar_banco_ts",
+      "target": "scripts_verificar_banco_main"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
       "source_file": "backend/src/server.ts",
       "source_location": "L4",
       "weight": 1.0,
@@ -2863,6 +3103,17 @@
       "target": "backend_src_routes_seed_ts"
     },
     {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/src/server.ts",
+      "source_location": "L13",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "backend_src_server_ts",
+      "target": "backend_src_routes_seed_completo_ts"
+    },
+    {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "backend/src/server.ts",
@@ -2934,8 +3185,8 @@
       "source_location": "L2",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "backend_src_routes_contratos_ts",
-      "target": "backend_src_controllers_contractcontroller_ts"
+      "source": "backend_src_controllers_contractcontroller_ts",
+      "target": "backend_src_routes_contratos_ts"
     },
     {
       "relation": "method",
@@ -2985,8 +3236,8 @@
       "source_location": "L2",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "backend_src_routes_contratos_ts",
-      "target": "controllers_contractcontroller_contractcontroller"
+      "source": "controllers_contractcontroller_contractcontroller",
+      "target": "backend_src_routes_contratos_ts"
     },
     {
       "relation": "imports_from",
@@ -3028,8 +3279,8 @@
       "source_location": "L2",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "backend_src_routes_despesas_ts",
-      "target": "backend_src_controllers_expensecontroller_ts"
+      "source": "backend_src_controllers_expensecontroller_ts",
+      "target": "backend_src_routes_despesas_ts"
     },
     {
       "relation": "method",
@@ -3099,8 +3350,8 @@
       "source_location": "L2",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "backend_src_routes_despesas_ts",
-      "target": "controllers_expensecontroller_expensecontroller"
+      "source": "controllers_expensecontroller_expensecontroller",
+      "target": "backend_src_routes_despesas_ts"
     },
     {
       "relation": "imports_from",
@@ -3142,8 +3393,8 @@
       "source_location": "L2",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "backend_src_routes_financeiro_ts",
-      "target": "backend_src_controllers_financialcontroller_ts"
+      "source": "backend_src_controllers_financialcontroller_ts",
+      "target": "backend_src_routes_financeiro_ts"
     },
     {
       "relation": "method",
@@ -3203,8 +3454,8 @@
       "source_location": "L2",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "backend_src_routes_financeiro_ts",
-      "target": "controllers_financialcontroller_financialcontroller"
+      "source": "controllers_financialcontroller_financialcontroller",
+      "target": "backend_src_routes_financeiro_ts"
     },
     {
       "relation": "imports_from",
@@ -3247,6 +3498,16 @@
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "backend_src_controllers_receiptcontroller_ts",
+      "target": "controllers_receiptcontroller_generatereceiptnumber"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/src/controllers/receiptController.ts",
+      "source_location": "L5",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "backend_src_controllers_receiptcontroller_ts",
       "target": "controllers_receiptcontroller_receiptcontroller"
     },
     {
@@ -3257,8 +3518,48 @@
       "source_location": "L2",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "backend_src_routes_recibos_ts",
-      "target": "backend_src_controllers_receiptcontroller_ts"
+      "source": "backend_src_controllers_receiptcontroller_ts",
+      "target": "backend_src_routes_recibos_ts"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/src/controllers/receiptController.ts",
+      "source_location": "L8",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "controllers_receiptcontroller_receiptcontroller",
+      "target": "controllers_receiptcontroller_receiptcontroller_listall"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/src/controllers/receiptController.ts",
+      "source_location": "L48",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "controllers_receiptcontroller_receiptcontroller",
+      "target": "controllers_receiptcontroller_receiptcontroller_create"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/src/controllers/receiptController.ts",
+      "source_location": "L107",
+      "weight": 1.0,
+      "source": "controllers_receiptcontroller_receiptcontroller",
+      "target": "controllers_receiptcontroller_receiptcontroller_preview",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/src/controllers/receiptController.ts",
+      "source_location": "L86",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "controllers_receiptcontroller_receiptcontroller",
+      "target": "controllers_receiptcontroller_receiptcontroller_cancel"
     },
     {
       "relation": "method",
@@ -3298,8 +3599,8 @@
       "source_location": "L2",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "backend_src_routes_recibos_ts",
-      "target": "controllers_receiptcontroller_receiptcontroller"
+      "source": "controllers_receiptcontroller_receiptcontroller",
+      "target": "backend_src_routes_recibos_ts"
     },
     {
       "relation": "contains",
@@ -3329,8 +3630,8 @@
       "source_location": "L2",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "backend_src_routes_clientes_ts",
-      "target": "backend_src_lib_prisma_ts"
+      "source": "backend_src_lib_prisma_ts",
+      "target": "backend_src_routes_clientes_ts"
     },
     {
       "relation": "imports_from",
@@ -3340,8 +3641,8 @@
       "source_location": "L2",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "backend_src_routes_imoveis_ts",
-      "target": "backend_src_lib_prisma_ts"
+      "source": "backend_src_lib_prisma_ts",
+      "target": "backend_src_routes_imoveis_ts"
     },
     {
       "relation": "imports_from",
@@ -3351,8 +3652,8 @@
       "source_location": "L2",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "backend_src_routes_proprietarios_ts",
-      "target": "backend_src_lib_prisma_ts"
+      "source": "backend_src_lib_prisma_ts",
+      "target": "backend_src_routes_proprietarios_ts"
     },
     {
       "relation": "imports_from",
@@ -3362,7 +3663,18 @@
       "source_location": "L2",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "backend_src_routes_seed_ts",
+      "source": "backend_src_lib_prisma_ts",
+      "target": "backend_src_routes_seed_ts"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/src/routes/seed_completo.ts",
+      "source_location": "L2",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "backend_src_routes_seed_completo_ts",
       "target": "backend_src_lib_prisma_ts"
     },
     {
@@ -3373,8 +3685,8 @@
       "source_location": "L1",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "backend_src_services_contractservice_ts",
-      "target": "backend_src_lib_prisma_ts"
+      "source": "backend_src_lib_prisma_ts",
+      "target": "backend_src_services_contractservice_ts"
     },
     {
       "relation": "imports_from",
@@ -3384,8 +3696,8 @@
       "source_location": "L1",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "backend_src_services_expenseservice_ts",
-      "target": "backend_src_lib_prisma_ts"
+      "source": "backend_src_lib_prisma_ts",
+      "target": "backend_src_services_expenseservice_ts"
     },
     {
       "relation": "imports_from",
@@ -3395,8 +3707,8 @@
       "source_location": "L1",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "backend_src_services_financialservice_ts",
-      "target": "backend_src_lib_prisma_ts"
+      "source": "backend_src_lib_prisma_ts",
+      "target": "backend_src_services_financialservice_ts"
     },
     {
       "relation": "contains",
@@ -3702,6 +4014,16 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": "backend/src/routes/seed_completo.ts",
+      "source_location": "L5",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "backend_src_routes_seed_completo_ts",
+      "target": "routes_seed_completo_router"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
       "source_file": "backend/src/services/contractService.ts",
       "source_location": "L4",
       "weight": 1.0,
@@ -3867,8 +4189,8 @@
       "source_location": "L129",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "services_expenseservice_expenseservice_markaspaid",
-      "target": "services_expenseservice_expenseservice_update"
+      "source": "services_expenseservice_expenseservice_update",
+      "target": "services_expenseservice_expenseservice_markaspaid"
     },
     {
       "relation": "imports_from",
@@ -3901,6 +4223,27 @@
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "backend_src_services_financialservice_ts",
+      "target": "utils_financial_constantes"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/src/services/financialService.ts",
+      "source_location": "L5",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "backend_src_services_financialservice_ts",
+      "target": "services_financialservice_financialservice"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/src/services/financialService.ts",
+      "source_location": "L2",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "backend_src_services_financialservice_ts",
       "target": "utils_financial_calcularcomissao"
     },
     {
@@ -3913,27 +4256,6 @@
       "confidence_score": 1.0,
       "source": "backend_src_services_financialservice_ts",
       "target": "utils_financial_calcularrepasse"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "backend/src/services/financialService.ts",
-      "source_location": "L2",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "backend_src_services_financialservice_ts",
-      "target": "utils_financial_constantes"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "backend/src/services/financialService.ts",
-      "source_location": "L5",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "backend_src_services_financialservice_ts",
-      "target": "services_financialservice_financialservice"
     },
     {
       "relation": "method",
@@ -4028,6 +4350,16 @@
       "weight": 1.0,
       "source": "services_financialservice_financialservice_getrepasses",
       "target": "utils_financial_calcularrepasse"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/src/services/pdfService.ts",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "backend_src_services_pdfservice_ts",
+      "target": "services_pdfservice_formatbrl",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -4137,8 +4469,8 @@
       "source_location": "L16",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "utils_financial_estavencido",
-      "target": "utils_financial_getdiasatraso"
+      "source": "utils_financial_getdiasatraso",
+      "target": "utils_financial_estavencido"
     },
     {
       "relation": "calls",
@@ -4148,8 +4480,8 @@
       "source_location": "L21",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "utils_financial_calcularjuros",
-      "target": "utils_financial_getdiasatraso"
+      "source": "utils_financial_getdiasatraso",
+      "target": "utils_financial_calcularjuros"
     },
     {
       "relation": "calls",
@@ -4159,8 +4491,8 @@
       "source_location": "L28",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "utils_financial_calcularmulta",
-      "target": "utils_financial_getdiasatraso"
+      "source": "utils_financial_getdiasatraso",
+      "target": "utils_financial_calcularmulta"
     },
     {
       "relation": "calls",
@@ -4170,8 +4502,8 @@
       "source_location": "L45",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "utils_financial_calculartotaldevido",
-      "target": "utils_financial_getdiasatraso"
+      "source": "utils_financial_getdiasatraso",
+      "target": "utils_financial_calculartotaldevido"
     },
     {
       "relation": "calls",
@@ -4181,8 +4513,8 @@
       "source_location": "L47",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "utils_financial_calculartotaldevido",
-      "target": "utils_financial_calcularjuros"
+      "source": "utils_financial_calcularjuros",
+      "target": "utils_financial_calculartotaldevido"
     },
     {
       "relation": "calls",
@@ -4192,8 +4524,8 @@
       "source_location": "L46",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "utils_financial_calculartotaldevido",
-      "target": "utils_financial_calcularmulta"
+      "source": "utils_financial_calcularmulta",
+      "target": "utils_financial_calculartotaldevido"
     },
     {
       "relation": "calls",
@@ -4203,8 +4535,8 @@
       "source_location": "L64",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "utils_financial_calcularrepasse",
-      "target": "utils_financial_calcularcomissao"
+      "source": "utils_financial_calcularcomissao",
+      "target": "utils_financial_calcularrepasse"
     },
     {
       "relation": "contains",
@@ -4354,8 +4686,8 @@
       "source_location": "L46",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "validators_schemas_isvalidcpfcnpj",
-      "target": "validators_schemas_isvalidcpf"
+      "source": "validators_schemas_isvalidcpf",
+      "target": "validators_schemas_isvalidcpfcnpj"
     },
     {
       "relation": "calls",
@@ -4365,8 +4697,8 @@
       "source_location": "L47",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "validators_schemas_isvalidcpfcnpj",
-      "target": "validators_schemas_isvalidcnpj"
+      "source": "validators_schemas_isvalidcnpj",
+      "target": "validators_schemas_isvalidcpfcnpj"
     },
     {
       "relation": "contains",
@@ -5579,6 +5911,330 @@
       "source_location": "L103",
       "weight": 1.0,
       "source": "inadimplencia_page_inadimplenciapage",
+      "target": "lib_utils_formatcurrency"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/app/financeiro/recibos/page.tsx",
+      "source_location": "L6",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "frontend_src_app_financeiro_recibos_page_tsx",
+      "target": "frontend_src_components_ui_card_tsx"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/app/financeiro/recibos/page.tsx",
+      "source_location": "L6",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "frontend_src_app_financeiro_recibos_page_tsx",
+      "target": "ui_card_card"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/app/financeiro/recibos/page.tsx",
+      "source_location": "L6",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "frontend_src_app_financeiro_recibos_page_tsx",
+      "target": "ui_card_cardcontent"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/app/financeiro/recibos/page.tsx",
+      "source_location": "L6",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "frontend_src_app_financeiro_recibos_page_tsx",
+      "target": "ui_card_cardheader"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/app/financeiro/recibos/page.tsx",
+      "source_location": "L6",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "frontend_src_app_financeiro_recibos_page_tsx",
+      "target": "ui_card_cardtitle"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/app/financeiro/recibos/page.tsx",
+      "source_location": "L7",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "frontend_src_app_financeiro_recibos_page_tsx",
+      "target": "frontend_src_components_ui_button_tsx"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/app/financeiro/recibos/page.tsx",
+      "source_location": "L7",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "frontend_src_app_financeiro_recibos_page_tsx",
+      "target": "ui_button_button"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/app/financeiro/recibos/page.tsx",
+      "source_location": "L8",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "frontend_src_app_financeiro_recibos_page_tsx",
+      "target": "frontend_src_lib_utils_ts"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/app/financeiro/recibos/page.tsx",
+      "source_location": "L8",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "frontend_src_app_financeiro_recibos_page_tsx",
+      "target": "lib_utils_formatcurrency"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/app/financeiro/recibos/page.tsx",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "frontend_src_app_financeiro_recibos_page_tsx",
+      "target": "lib_utils_formatdate",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/app/financeiro/recibos/page.tsx",
+      "source_location": "L10",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "frontend_src_app_financeiro_recibos_page_tsx",
+      "target": "recibos_page_contrato"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/app/financeiro/recibos/page.tsx",
+      "source_location": "L16",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "frontend_src_app_financeiro_recibos_page_tsx",
+      "target": "recibos_page_recibo"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/app/financeiro/recibos/page.tsx",
+      "source_location": "L28",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "frontend_src_app_financeiro_recibos_page_tsx",
+      "target": "recibos_page_recibospage"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/app/financeiro/recibos/novo/page.tsx",
+      "source_location": "L7",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "frontend_src_app_financeiro_recibos_novo_page_tsx",
+      "target": "frontend_src_components_ui_card_tsx"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/app/financeiro/recibos/novo/page.tsx",
+      "source_location": "L7",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "frontend_src_app_financeiro_recibos_novo_page_tsx",
+      "target": "ui_card_card"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/app/financeiro/recibos/novo/page.tsx",
+      "source_location": "L7",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "frontend_src_app_financeiro_recibos_novo_page_tsx",
+      "target": "ui_card_cardcontent"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/app/financeiro/recibos/novo/page.tsx",
+      "source_location": "L7",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "frontend_src_app_financeiro_recibos_novo_page_tsx",
+      "target": "ui_card_cardheader"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/app/financeiro/recibos/novo/page.tsx",
+      "source_location": "L7",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "frontend_src_app_financeiro_recibos_novo_page_tsx",
+      "target": "ui_card_cardtitle"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/app/financeiro/recibos/novo/page.tsx",
+      "source_location": "L7",
+      "weight": 1.0,
+      "source": "frontend_src_app_financeiro_recibos_novo_page_tsx",
+      "target": "ui_card_carddescription",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/app/financeiro/recibos/novo/page.tsx",
+      "source_location": "L7",
+      "weight": 1.0,
+      "source": "frontend_src_app_financeiro_recibos_novo_page_tsx",
+      "target": "ui_card_cardfooter",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/app/financeiro/recibos/novo/page.tsx",
+      "source_location": "L8",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "frontend_src_app_financeiro_recibos_novo_page_tsx",
+      "target": "frontend_src_components_ui_button_tsx"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/app/financeiro/recibos/novo/page.tsx",
+      "source_location": "L8",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "frontend_src_app_financeiro_recibos_novo_page_tsx",
+      "target": "ui_button_button"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/app/financeiro/recibos/novo/page.tsx",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "frontend_src_app_financeiro_recibos_novo_page_tsx",
+      "target": "frontend_src_components_ui_input_tsx",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/app/financeiro/recibos/novo/page.tsx",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "frontend_src_app_financeiro_recibos_novo_page_tsx",
+      "target": "ui_input_input",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/app/financeiro/recibos/novo/page.tsx",
+      "source_location": "L10",
+      "weight": 1.0,
+      "source": "frontend_src_app_financeiro_recibos_novo_page_tsx",
+      "target": "frontend_src_lib_utils_ts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/app/financeiro/recibos/novo/page.tsx",
+      "source_location": "L10",
+      "weight": 1.0,
+      "source": "frontend_src_app_financeiro_recibos_novo_page_tsx",
+      "target": "lib_utils_formatcurrency",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/app/financeiro/recibos/novo/page.tsx",
+      "source_location": "L10",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "frontend_src_app_financeiro_recibos_novo_page_tsx",
+      "target": "novo_page_contrato"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/app/financeiro/recibos/novo/page.tsx",
+      "source_location": "L23",
+      "weight": 1.0,
+      "source": "frontend_src_app_financeiro_recibos_novo_page_tsx",
+      "target": "novo_page_bancos_brasileiros",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/app/financeiro/recibos/novo/page.tsx",
+      "source_location": "L20",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "frontend_src_app_financeiro_recibos_novo_page_tsx",
+      "target": "novo_page_novorecibopage"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "frontend/src/app/financeiro/recibos/novo/page.tsx",
+      "source_location": "L255",
+      "weight": 1.0,
+      "source": "novo_page_novorecibopage",
       "target": "lib_utils_formatcurrency"
     },
     {
@@ -7407,6 +8063,16 @@
       "source_file": "frontend/src/components/ui/Card.tsx",
       "source_location": "L46",
       "weight": 1.0,
+      "source": "frontend_src_components_ui_card_tsx",
+      "target": "ui_card_carddescription",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/components/ui/Card.tsx",
+      "source_location": "L46",
+      "weight": 1.0,
       "confidence_score": 1.0,
       "source": "frontend_src_components_ui_card_tsx",
       "target": "ui_card_cardcontent"
@@ -7542,6 +8208,16 @@
       "confidence_score": 1.0,
       "source": "frontend_src_lib_utils_ts",
       "target": "lib_utils_formatcurrency"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/lib/utils.ts",
+      "source_location": "L48",
+      "weight": 1.0,
+      "source": "frontend_src_lib_utils_ts",
+      "target": "lib_utils_formatdate",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -8285,5 +8961,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "5fbbfc27b71b58db55770c460a2cdbe96043be6d"
+  "built_at_commit": "dd78881156d00131d986ac9bdaf486537f295115"
 }

@@ -78,12 +78,38 @@
       "PowerShell(npm run dev --prefix \"c:\\\\Users\\\\Usuario\\\\source\\\\repos\\\\SmartImob\\\\backend\")",
       "mcp__plugin_prisma_Prisma-Local__migrate-status",
       "Bash(curl -X POST https://aws-1-us-east-2.pooler.supabase.com/rest/v1/rpc/exec_sql -H 'apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9' -H 'Content-Type: application/json' -d '{\"sql\": \"ALTER TABLE \\\\\"CONTRATOS\\\\\" ADD COLUMN IF NOT EXISTS \\\\\"percentual_comissao\\\\\" DECIMAL DEFAULT 8;\"}')",
-      "PowerShell(cd c:\\\\Users\\\\Usuario\\\\source\\\\repos\\\\SmartImob\\\\backend; npx ts-node -e \"import { PrismaClient } from '@prisma/client'; const prisma = new PrismaClient\\(\\); prisma.contract.findMany\\({ select: { numeroContrato: true, valorAluguel: true, percentualComissao: true } }\\).then\\(c => console.log\\(JSON.stringify\\(c, null, 2\\)\\)\\).finally\\(\\(\\) => prisma.\\\\$disconnect\\(\\)\\)\")"
+      "PowerShell(cd c:\\\\Users\\\\Usuario\\\\source\\\\repos\\\\SmartImob\\\\backend; npx ts-node -e \"import { PrismaClient } from '@prisma/client'; const prisma = new PrismaClient\\(\\); prisma.contract.findMany\\({ select: { numeroContrato: true, valorAluguel: true, percentualComissao: true } }\\).then\\(c => console.log\\(JSON.stringify\\(c, null, 2\\)\\)\\).finally\\(\\(\\) => prisma.\\\\$disconnect\\(\\)\\)\")",
+      "Bash(npx pdf-parse *)",
+      "PowerShell(npm i -g pdf-parse-cli)",
+      "PowerShell(pdf-parse C:\\\\Users\\\\Usuario\\\\source\\\\repos\\\\SmartImob\\\\SmarImob.pdf)",
+      "Bash(npx pdf-parse-cli *)",
+      "Bash(npm i *)",
+      "Bash(node read_pdf.js)",
+      "Bash(rm read_pdf.*)",
+      "Bash(node -e 'const { PrismaClient } = require\\('\\\\''@prisma/client'\\\\''\\); const prisma = new PrismaClient\\(\\); async function main\\(\\) { const count = await prisma.receipt.count\\(\\); console.log\\('\\\\''Total Recibos no DB:'\\\\'', count\\); const receipts = await prisma.receipt.findMany\\({ take: 5, include: { contrato: true } }\\); console.log\\(JSON.stringify\\(receipts, null, 2\\)\\); } main\\(\\).catch\\(console.error\\).finally\\(\\(\\) => prisma.$disconnect\\(\\)\\);')",
+      "Bash(node dist/server.js)",
+      "Bash(node backend/dist/server.js)",
+      "Bash(node -e 'const { PrismaClient } = require\\('\\\\''@prisma/client'\\\\''\\); const prisma = new PrismaClient\\(\\); async function main\\(\\) { await prisma.$executeRaw`ALTER TABLE \"RECIBOS\" ADD COLUMN IF NOT EXISTS \"valor_iptu\" DECIMAL DEFAULT 0;`; await prisma.$executeRaw`ALTER TABLE \"RECIBOS\" ADD COLUMN IF NOT EXISTS \"valor_condominio\" DECIMAL DEFAULT 0;`; await prisma.$executeRaw`ALTER TABLE \"RECIBOS\" ADD COLUMN IF NOT EXISTS \"valor_agua\" DECIMAL DEFAULT 0;`; await prisma.$executeRaw`ALTER TABLE \"RECIBOS\" ADD COLUMN IF NOT EXISTS \"valor_luz\" DECIMAL DEFAULT 0;`; await prisma.$executeRaw`ALTER TABLE \"RECIBOS\" ADD COLUMN IF NOT EXISTS \"outros_debitos\" DECIMAL DEFAULT 0;`; await prisma.$executeRaw`ALTER TABLE \"RECIBOS\" ADD COLUMN IF NOT EXISTS \"forma_pagamento\" TEXT DEFAULT '\\\\''Transferência Bancária'\\\\'';`; console.log\\('\\\\''Tabela RECIBOS atualizada com sucesso'\\\\''\\); } main\\(\\).catch\\(console.error\\).finally\\(\\(\\) => prisma.$disconnect\\(\\)\\);')",
+      "Bash(taskkill /F /IM node.exe)",
+      "Bash(node .\\\\backend\\\\dist\\\\server.js)",
+      "Bash(node backend\\\\dist\\\\server.js)",
+      "Bash(dir /s /b server.js)",
+      "Bash(curl -s http://localhost:3001/api/recibos)",
+      "Bash(curl -X POST http://localhost:3001/api/recibos -H 'Content-Type: application/json' -d '{ *)",
+      "Bash(curl -I http://localhost:3001/api/recibos/c62659e0-4553-47a9-87e6-cdfdd9efaf18/pdf)",
+      "Bash(curl -X POST http://localhost:3001/api/recibos/preview -H 'Content-Type: application/json' -d '{ *)",
+      "Bash(curl -v -X POST http://localhost:3001/api/recibos/preview -H 'Content-Type: application/json' -d '{ *)",
+      "Bash(curl -s -X POST http://localhost:3001/api/recibos/preview -H 'Content-Type: application/json' -d '{ *)",
+      "Bash(curl -s http://localhost:3001/api/recibos/)",
+      "Bash(curl -s http://localhost:3001/api/recibos/preview)",
+      "Bash(taskkill /F /PID 35232)",
+      "PowerShell(Stop-Process -Id 35232 -Force)"
     ],
     "additionalDirectories": [
       "c:\\Users\\Usuario\\source\\repos\\SmartImob\\.planning",
       "C:\\Users\\Usuario\\source\\repos\\SmartImob\\frontend\\src\\app\\contratos",
-      "C:\\Users\\Usuario\\source\\repos\\SmartImob\\frontend\\src\\app\\proprietarios"
+      "C:\\Users\\Usuario\\source\\repos\\SmartImob\\frontend\\src\\app\\proprietarios",
+      "C:\\Users\\Usuario\\source\\repos\\SmartImob"
     ]
   }
 }
