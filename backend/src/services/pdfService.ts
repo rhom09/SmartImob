@@ -190,7 +190,15 @@ export class PDFService {
 
       infoY += 15;
       doc.font('Helvetica-Bold').text('Endereço :-', mainX, infoY);
-      doc.font('Helvetica').text(receipt.contrato.imovel.endereco, mainX + 60, infoY, { width: 300 });
+      const imovel = receipt.contrato.imovel;
+      const enderecoCompleto = [
+        imovel.endereco,
+        imovel.numero ? `, ${imovel.numero}` : '',
+        imovel.complemento ? ` - ${imovel.complemento}` : '',
+        imovel.bairro ? ` - ${imovel.bairro}` : '',
+        imovel.cep ? ` - CEP: ${imovel.cep}` : ''
+      ].join('');
+      doc.font('Helvetica').text(enderecoCompleto, mainX + 60, infoY, { width: 300 });
 
       infoY += 25;
       doc.font('Helvetica-Bold').text('CPF: ', mainX, infoY);
