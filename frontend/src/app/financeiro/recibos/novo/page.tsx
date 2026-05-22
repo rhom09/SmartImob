@@ -120,13 +120,31 @@ export default function NovoReciboPage() {
 
   const selectedContrato = useMemo(() => contratos.find(c => c.id === contratoId), [contratoId, contratos]);
 
+  const fetchFinancialDefaults = async (imovelId: string) => {
+    try {
+      const res = await fetch(`http://localhost:3001/api/imoveis/${imovelId}/defaults`);
+      if (res.ok) {
+        const defaults = await res.json();
+        setValorIptu(Number(defaults.valorIptu) || 0);
+        setValorCondominio(Number(defaults.valorCondominio) || 0);
+        setValorAgua(Number(defaults.valorAgua) || 0);
+        setValorLuz(Number(defaults.valorLuz) || 0);
+        setOutrosDebitos(Number(defaults.outrosDebitos) || 0);
+        setDescontos(Number(defaults.descontos) || 0);
+      }
+    } catch (error) {
+      console.error("Erro ao buscar defaults:", error);
+    }
+  };
+
   useEffect(() => {
     if (selectedContrato) {
       const diaVencimento = selectedContrato.diaVencimento || 10;
       const data = new Date(referenciaAno, referenciaMes - 1, diaVencimento);
       setDataVencimento(data.toISOString().split('T')[0]);
-      setValorIptu(Number(selectedContrato.valorIptu) || 0);
-      setValorCondominio(Number(selectedContrato.valorCondominio) || 0);
+
+      // Busca defaults financeiros do imóvel vinculado ao contrato
+      fetchFinancialDefaults(selectedContrato.imovel.id);
     }
   }, [selectedContrato, referenciaMes, referenciaAno]);
 

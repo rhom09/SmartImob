@@ -27,6 +27,7 @@ app.get('/health', (_req, res) => {
 
 // ─── API Routes ──────────────────────────────────────────────────────
 app.use('/api/proprietarios', proprietariosRouter);
+console.log('Mounting /api/imoveis...');
 app.use('/api/imoveis', imoveisRouter);
 app.use('/api/clientes', clientesRouter);
 app.use('/api/contratos', contratosRouter);

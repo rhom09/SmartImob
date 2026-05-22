@@ -240,4 +240,30 @@ router.delete('/:id', async (req: Request, res: Response) => {
   }
 });
 
+router.get('/:id/defaults', async (req: Request, res: Response) => {
+  try {
+    const id = typeof req.params.id === 'string' ? req.params.id : (req.params.id ? req.params.id[0] : '');
+    if (!id) return res.status(400).json({ message: 'ID inválido' });
+
+    const property = await prisma.property.findUnique({
+      where: { id },
+      select: {
+        valorCondominio: true,
+        valorIptu: true,
+        valorAgua: true,
+        valorLuz: true,
+        outrosDebitos: true,
+        descontos: true,
+      },
+    });
+
+    if (!property) return res.status(404).json({ message: 'Imóvel não encontrado' });
+
+    return res.json(property);
+  } catch (error) {
+    console.error('Erro ao buscar valores padrão:', error);
+    return res.status(500).json({ message: 'Erro interno do servidor' });
+  }
+});
+
 export default router;
