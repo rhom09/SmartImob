@@ -125,12 +125,23 @@ export class ReceiptController {
 
       const contrato = await prisma.contract.findUnique({
         where: { id: contratoId },
-        include: { inquilino: true, imovel: true }
+        include: {
+          inquilino: true,
+          imovel: {
+            include: {
+              owner: true
+            }
+          }
+        }
       });
 
       if (!contrato) {
         return res.status(404).json({ message: 'Contrato não encontrado' });
       }
+
+      console.log('Dados do contrato carregados:', JSON.stringify(contrato, null, 2));
+      console.log('Imóvel:', contrato.imovel);
+      console.log('Proprietário (Owner):', contrato.imovel?.owner);
 
       // Mock de um objeto Receipt para o PDFService
       const mockReceipt: any = {
@@ -192,7 +203,11 @@ export class ReceiptController {
           contrato: {
             include: {
               inquilino: true,
-              imovel: true
+              imovel: {
+                include: {
+                  owner: true
+                }
+              }
             }
           }
         }
