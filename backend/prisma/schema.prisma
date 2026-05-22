@@ -265,6 +265,13 @@ model Receipt {
   status         StatusRecibo @default(PENDENTE)
   numeroRecibo   String       @unique @map("numero_recibo")
   observacoes    String?
+  valorIptu      Decimal      @default(0) @map("valor_iptu")
+  valorCondominio Decimal     @default(0) @map("valor_condominio")
+  valorAgua      Decimal      @default(0) @map("valor_agua")
+  valorLuz       Decimal      @default(0) @map("valor_luz")
+  outrosDebitos  Decimal      @default(0) @map("outros_debitos")
+  formaPagamento String?      @default("Transferência Bancária") @map("forma_pagamento")
+  comprovanteUrl String?      @map("comprovante_url")
   createdAt      DateTime     @default(now()) @map("data_criacao")
   updatedAt      DateTime     @updatedAt @map("data_atualizacao")
 

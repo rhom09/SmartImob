@@ -180,6 +180,13 @@ export default function FinanceiroPage() {
                 <ArrowRight size={14} className="ml-auto" />
               </Button>
             </Link>
+            <Link href="/financeiro/recibos">
+              <Button variant="outline" className="w-full gap-2 h-12 justify-start">
+                <Receipt size={18} className="text-primary" />
+                <span>Recibos</span>
+                <ArrowRight size={14} className="ml-auto" />
+              </Button>
+            </Link>
             <Link href="/financeiro/relatorios">
               <Button variant="outline" className="w-full gap-2 h-12 justify-start">
                 <BarChart3 size={18} className="text-on-surface-variant" />
