@@ -193,6 +193,7 @@ router.put('/:id', async (req: Request, res: Response) => {
       data: parsed.data,
       include: { owner: true },
     });
+    console.log("Property updated successfully:", property);
 
     return res.json(property);
   } catch (error: any) {

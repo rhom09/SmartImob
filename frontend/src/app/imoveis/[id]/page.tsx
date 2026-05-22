@@ -104,10 +104,12 @@ export default function DetalhesImovelPage() {
           </div>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline" className="gap-2">
-            <Edit size={18} />
-            Editar
-          </Button>
+          <Link href={`/imoveis/${id}/editar`}>
+            <Button variant="outline" className="gap-2">
+              <Edit size={18} />
+              Editar
+            </Button>
+          </Link>
           <Button variant="error" className="gap-2" onClick={handleDelete}>
             <Trash2 size={18} />
             Excluir
@@ -303,6 +305,22 @@ export default function DetalhesImovelPage() {
                 <div>
                   <p className="text-[10px] font-bold text-on-primary/60 uppercase">IPTU</p>
                   <p className="text-sm font-bold">{formatCurrency(property.valorIptu || 0)}</p>
+                </div>
+                <div>
+                  <p className="text-[10px] font-bold text-on-primary/60 uppercase">Água</p>
+                  <p className="text-sm font-bold">{formatCurrency(property.valorAgua || 0)}</p>
+                </div>
+                <div>
+                  <p className="text-[10px] font-bold text-on-primary/60 uppercase">Luz</p>
+                  <p className="text-sm font-bold">{formatCurrency(property.valorLuz || 0)}</p>
+                </div>
+                <div>
+                  <p className="text-[10px] font-bold text-on-primary/60 uppercase">Outros Débitos</p>
+                  <p className="text-sm font-bold">{formatCurrency(property.outrosDebitos || 0)}</p>
+                </div>
+                <div>
+                  <p className="text-[10px] font-bold text-on-primary/60 uppercase text-error-container">Descontos</p>
+                  <p className="text-sm font-bold text-error-container">-{formatCurrency(property.descontos || 0)}</p>
                 </div>
               </div>
             </CardContent>

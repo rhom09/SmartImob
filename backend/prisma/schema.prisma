@@ -162,14 +162,17 @@ model Property {
   // Valores
   valorVenda      Decimal? @map("valor_venda")
   valorLocacao    Decimal? @map("valor_locacao")
-  valorCondominio Decimal? @map("valor_condominio")
-  valorIptu       Decimal? @map("valor_iptu")
-
-  status      StatusImovel @default(VAGO)
-  observacoes String?
-  deletedAt   DateTime?    @map("deleted_at")
-  createdAt   DateTime     @default(now()) @map("data_criacao")
-  updatedAt   DateTime     @updatedAt @map("data_atualizacao")
+  valorCondominio Decimal? @default(0) @map("valor_condominio")
+  valorIptu       Decimal? @default(0) @map("valor_iptu")
+  status          StatusImovel @default(VAGO)
+  observacoes     String?
+  valorAgua       Decimal? @default(0) @map("valor_agua")
+  valorLuz        Decimal? @default(0) @map("valor_luz")
+  outrosDebitos   Decimal? @default(0) @map("outros_debitos")
+  descontos       Decimal? @default(0) @map("descontos")
+  deletedAt       DateTime? @map("deleted_at")
+  createdAt       DateTime @default(now()) @map("data_criacao")
+  updatedAt       DateTime @updatedAt @map("data_atualizacao")
 
   owner     Owner           @relation(fields: [ownerId], references: [id])
   fotos     PropertyPhoto[]

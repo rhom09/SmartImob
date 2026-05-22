@@ -83,10 +83,14 @@ export const createPropertySchema = z.object({
   vagas: z.number().int().min(0).optional(),
 
   // Valores
-  valorVenda: z.number().positive().optional(),
-  valorLocacao: z.number().positive().optional(),
-  valorCondominio: z.number().min(0).optional(),
-  valorIptu: z.number().min(0).optional(),
+  valorVenda: z.coerce.number().min(0).optional(),
+  valorLocacao: z.coerce.number().min(0).optional(),
+  valorCondominio: z.coerce.number().min(0).optional(),
+  valorIptu: z.coerce.number().min(0).optional(),
+  valorAgua: z.coerce.number().min(0).optional(),
+  valorLuz: z.coerce.number().min(0).optional(),
+  outrosDebitos: z.coerce.number().min(0).optional(),
+  descontos: z.coerce.number().min(0).optional(),
 
   observacoes: z.string().optional(),
 });

@@ -24,18 +24,22 @@ const propertySchema = z.object({
   codigo: z.string().optional(),
 
   // Características
-  areaTotal: z.coerce.number().positive().optional(),
-  areaConstruida: z.coerce.number().positive().optional(),
-  quartos: z.coerce.number().int().min(0).optional(),
-  suites: z.coerce.number().int().min(0).optional(),
-  banheiros: z.coerce.number().int().min(0).optional(),
-  vagas: z.coerce.number().int().min(0).optional(),
+  areaTotal: z.preprocess((val) => (val === "" || val === null ? undefined : val), z.coerce.number().min(0).optional()),
+  areaConstruida: z.preprocess((val) => (val === "" || val === null ? undefined : val), z.coerce.number().min(0).optional()),
+  quartos: z.preprocess((val) => (val === "" || val === null ? undefined : val), z.coerce.number().int().min(0).optional()),
+  suites: z.preprocess((val) => (val === "" || val === null ? undefined : val), z.coerce.number().int().min(0).optional()),
+  banheiros: z.preprocess((val) => (val === "" || val === null ? undefined : val), z.coerce.number().int().min(0).optional()),
+  vagas: z.preprocess((val) => (val === "" || val === null ? undefined : val), z.coerce.number().int().min(0).optional()),
 
   // Valores
-  valorVenda: z.coerce.number().positive().optional(),
-  valorLocacao: z.coerce.number().positive().optional(),
-  valorCondominio: z.coerce.number().min(0).optional(),
-  valorIptu: z.coerce.number().min(0).optional(),
+  valorVenda: z.preprocess((val) => (val === "" || val === null ? undefined : val), z.coerce.number().min(0).optional()),
+  valorLocacao: z.preprocess((val) => (val === "" || val === null ? undefined : val), z.coerce.number().min(0).optional()),
+  valorCondominio: z.preprocess((val) => (val === "" || val === null ? undefined : val), z.coerce.number().min(0).optional()),
+  valorIptu: z.preprocess((val) => (val === "" || val === null ? undefined : val), z.coerce.number().min(0).optional()),
+  valorAgua: z.preprocess((val) => (val === "" || val === null ? undefined : val), z.coerce.number().min(0).optional()),
+  valorLuz: z.preprocess((val) => (val === "" || val === null ? undefined : val), z.coerce.number().min(0).optional()),
+  outrosDebitos: z.preprocess((val) => (val === "" || val === null ? undefined : val), z.coerce.number().min(0).optional()),
+  descontos: z.preprocess((val) => (val === "" || val === null ? undefined : val), z.coerce.number().min(0).optional()),
 
   observacoes: z.string().optional(),
 });
@@ -57,9 +61,11 @@ export function PropertyForm({ initialData, onSubmit, isLoading }: PropertyFormP
     handleSubmit,
     setValue,
     watch,
-    formState: { errors },
+    reset,
+    formState: { errors, isValid, isSubmitting },
   } = useForm<PropertyFormData>({
     resolver: zodResolver(propertySchema) as any,
+    mode: "onChange",
     defaultValues: initialData || {
       tipo: "CASA",
       finalidade: "LOCACAO",
@@ -68,8 +74,34 @@ export function PropertyForm({ initialData, onSubmit, isLoading }: PropertyFormP
     },
   });
 
+  useEffect(() => {
+    if (Object.keys(errors).length > 0) {
+      console.log("Validation Errors:", errors);
+    }
+  }, [errors]);
+
   const cepValue = watch("cep");
   const { address, loading: loadingCEP } = useViaCEP(cepValue);
+
+  useEffect(() => {
+    if (initialData) {
+      // Limpar campos que podem vir como null do banco para evitar erro de validação do Zod
+      const cleanedData = { ...initialData };
+      Object.keys(cleanedData).forEach(key => {
+        if (cleanedData[key] === null) {
+          cleanedData[key] = undefined;
+        }
+      });
+
+      reset(cleanedData);
+      if (initialData.ownerId) {
+        setValue("ownerId", initialData.ownerId);
+      }
+      if (initialData.owner) {
+        setOwnerSearch(initialData.owner.nome);
+      }
+    }
+  }, [initialData, reset, setValue]);
 
   useEffect(() => {
     if (address) {
@@ -98,7 +130,7 @@ export function PropertyForm({ initialData, onSubmit, isLoading }: PropertyFormP
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
       {/* Proprietário */}
-      <section className="space-y-4">
+      <section className={`space-y-4 ${initialData ? 'hidden' : ''}`}>
         <h4 className="text-sm font-bold uppercase tracking-wider text-on-surface-variant">Proprietário</h4>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-1.5">
@@ -220,19 +252,35 @@ export function PropertyForm({ initialData, onSubmit, isLoading }: PropertyFormP
 
       {/* Valores */}
       <section className="space-y-4 pt-4 border-t border-outline-variant">
-        <h4 className="text-sm font-bold uppercase tracking-wider text-on-surface-variant">Valores</h4>
+        <h4 className="text-sm font-bold uppercase tracking-wider text-on-surface-variant">Valores e Despesas Mensais</h4>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-          <Input type="number" label="Valor Venda (R$)" {...register("valorVenda")} />
-          <Input type="number" label="Valor Aluguel (R$)" {...register("valorLocacao")} />
-          <Input type="number" label="Condomínio (R$)" {...register("valorCondominio")} />
-          <Input type="number" label="IPTU (R$)" {...register("valorIptu")} />
+          <Input type="number" step="0.01" label="Valor Venda (R$)" {...register("valorVenda")} />
+          <Input type="number" step="0.01" label="Valor Aluguel (R$)" {...register("valorLocacao")} />
+          <Input type="number" step="0.01" label="Condomínio (R$)" {...register("valorCondominio")} />
+          <Input type="number" step="0.01" label="IPTU (R$)" {...register("valorIptu")} />
+          <Input type="number" step="0.01" label="Água (R$)" {...register("valorAgua")} />
+          <Input type="number" step="0.01" label="Luz (R$)" {...register("valorLuz")} />
+          <Input type="number" step="0.01" label="Outros Débitos (R$)" {...register("outrosDebitos")} />
+          <Input type="number" step="0.01" label="Descontos (R$)" {...register("descontos")} />
         </div>
       </section>
 
-      <div className="flex justify-end gap-3 pt-6 border-t border-outline-variant">
-        <Button type="submit" isLoading={isLoading} size="lg">
-          {initialData ? "Salvar Alterações" : "Cadastrar Imóvel"}
-        </Button>
+      <div className="flex flex-col gap-3 pt-6 border-t border-outline-variant">
+        {!isValid && (
+          <p className="text-xs font-bold text-error text-right uppercase animate-pulse">
+            Preencha todos os campos obrigatórios para salvar
+          </p>
+        )}
+        <div className="flex justify-end gap-3">
+          <Button
+            type="submit"
+            isLoading={isLoading || isSubmitting}
+            size="lg"
+            disabled={!isValid}
+          >
+            {initialData ? "Salvar Alterações" : "Cadastrar Imóvel"}
+          </Button>
+        </div>
       </div>
     </form>
   );
