@@ -93,7 +93,7 @@ export class PDFService {
       doc.moveDown();
 
       doc.text(`Mês de Referência: ${receipt.referenciaMes.toString().padStart(2, '0')}/${receipt.referenciaAno}`);
-      doc.text(`Vencimento: ${new Date(receipt.dataVencimento).toLocaleDateString('pt-BR')}`);
+      doc.text(`Vencimento: ${new Date(receipt.dataVencimento).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' })}`);
       if (receipt.formaPagamento) {
         doc.text(`Forma de Pagamento: ${receipt.formaPagamento}`);
       }
@@ -133,6 +133,8 @@ export class PDFService {
       doc.text('Fone/Fax: (11) 3731-3276 - 3735-1466', mainX, 85);
 
       doc.font('Helvetica-Bold').fontSize(11).text('RECIBO DE PAGAMENTO DE ALUGUEL', 350, 60, { align: 'right', width: 200 });
+      // Adicionar Data de Emissão abaixo do título do recibo
+      doc.font('Helvetica').fontSize(9).text(`Emissão: ${new Date().toLocaleDateString('pt-BR')}`, 350, 75, { align: 'right', width: 200 });
 
       // ─── QUADRO DE VALORES (DIREITA) ────────────────────────────────────
       let vY = 110;
@@ -185,22 +187,28 @@ export class PDFService {
       doc.font('Helvetica').text(receipt.contrato.numeroContrato || 'N/A', mainX + 60, infoY);
 
       infoY += 15;
+      doc.font('Helvetica-Bold').text('Proprietário :-', mainX, infoY);
+      doc.font('Helvetica').text(receipt.contrato.imovel.owner.nome.toUpperCase(), mainX + 60, infoY);
+
+      infoY += 15;
       doc.font('Helvetica-Bold').text('Locatário :-', mainX, infoY);
       doc.font('Helvetica').text(receipt.contrato.inquilino.nome.toUpperCase(), mainX + 60, infoY);
 
       infoY += 15;
       doc.font('Helvetica-Bold').text('Endereço :-', mainX, infoY);
       const imovel = receipt.contrato.imovel;
-      const enderecoCompleto = [
-        imovel.endereco,
-        imovel.numero ? `, ${imovel.numero}` : '',
-        imovel.complemento ? ` - ${imovel.complemento}` : '',
+      // Quebrar em duas linhas conforme solicitado
+      const linha1 = `${imovel.endereco}${imovel.numero ? `, ${imovel.numero}` : ''}`;
+      const linha2 = [
+        imovel.complemento ? `${imovel.complemento} ` : '',
         imovel.bairro ? ` - ${imovel.bairro}` : '',
         imovel.cep ? ` - CEP: ${imovel.cep}` : ''
       ].join('');
-      doc.font('Helvetica').text(enderecoCompleto, mainX + 60, infoY, { width: 300 });
 
-      infoY += 25;
+      doc.font('Helvetica').text(linha1, mainX + 60, infoY, { width: 300 });
+      doc.text(linha2, mainX + 60, infoY + 12, { width: 300 });
+
+      infoY += 30; // Ajustado para dar espaço devido às duas linhas de endereço
       doc.font('Helvetica-Bold').text('CPF: ', mainX, infoY);
       doc.font('Helvetica').text(receipt.contrato.inquilino.cpfCnpj, mainX + 30, infoY);
 
@@ -221,11 +229,14 @@ export class PDFService {
       const dataStr = `São Paulo, ${hoje.getDate()} de ${hoje.toLocaleString('pt-BR', { month: 'long' })} de ${hoje.getFullYear()}`;
       doc.font('Helvetica').fontSize(10).text(dataStr, 330, midY + 40, { align: 'right', width: 220 });
 
+      // Nova linha para a data de vencimento, conforme solicitado
+      doc.font('Helvetica').fontSize(9).text(`Vencimento: ${new Date(receipt.dataVencimento).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' })}`, 330, midY + 55, { align: 'right', width: 220 });
+
       // ─── ASSINATURAS (DUPLAS) ──────────────────────────────────────────
       const footerY = 350;
       // Linha Locador
       doc.moveTo(mainX, footerY).lineTo(mainX + 220, footerY).stroke();
-      doc.font('Helvetica-Bold').fontSize(9).text('LOCADOR (PROPRIETÁRIO)', mainX, footerY + 5, { align: 'center', width: 220 });
+      doc.font('Helvetica-Bold').fontSize(9).text(receipt.contrato.imovel.owner.nome.toUpperCase(), mainX, footerY + 5, { align: 'center', width: 220 });
 
       // Linha Imobiliária
       doc.moveTo(330, footerY).lineTo(550, footerY).stroke();
