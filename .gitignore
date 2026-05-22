@@ -59,3 +59,7 @@ graphify-out/
 
 # Claude
 .claude/settings.local.json
+.planning/debug/
+.planning/graphs/
+backend/backend/
+backend/schema_current.prisma

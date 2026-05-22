@@ -270,13 +270,17 @@ Plans:
 
 ---
 
-## Fase 4: Gestão Financeira
+## Fase 4: Gestão Financeira e de Recibos
 
-**Objetivo**: Implementar módulo completo de gestão financeira.
+**Objetivo**: Implementar módulo completo de gestão financeira e de recibos.
 
 **Duração estimada**: 2 semanas
 
-**Dependências**: Fase 3 (Contratos)
+**Plans:** 2 plans
+
+Plans:
+- [x] 04-01-PLAN.md — Módulo de Recibos: emissão, gestão, cancelamento e PDF.
+- [x] 04-02-PLAN.md — Gestão Financeira: inadimplência, repasses, fluxo de caixa.
 
 ### Entregáveis
 
