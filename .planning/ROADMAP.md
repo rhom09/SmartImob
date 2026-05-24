@@ -540,9 +540,9 @@ Plans:
 | 0 | Setup e Infraestrutura | 1-2 semanas | ✅ Concluído |
 | 1 | Gestão de Imóveis | 2-3 semanas | ✅ Concluído |
 | 2 | Gestão de Clientes | 1-2 semanas | ✅ Concluído |
-| 3 | Gestão de Contratos | 2-3 semanas | 🟡 Em planejamento |
-| 4 | Gestão Financeira | 2 semanas | 🔴 Não iniciado |
-| 5 | Relatórios e Dashboards | 1-2 semanas | 🔴 Não iniciado |
+| 3 | Gestão de Contratos | 2-3 semanas | ✅ Concluído |
+| 4 | Gestão Financeira | 2 semanas | ✅ Concluído |
+| 5 | Relatórios e Dashboards | 1-2 semanas | 🟡 Em planejamento |
 | 6 | Sistema de Notificações | 1 semana | 🔴 Não iniciado |
 | 7 | Integração WhatsApp | 1-2 semanas | 🔴 Não iniciado |
 | 8 | Melhorias e Polimento | 1 semana | 🔴 Não iniciado |
