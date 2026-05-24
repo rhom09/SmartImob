@@ -23,6 +23,11 @@ router.post('/', async (req: Request, res: Response) => {
       data: {
         ...parsed.data,
         cpfCnpj: parsed.data.cpfCnpj.replace(/\D/g, ''),
+        formaPagamento: parsed.data.formaPagamento,
+        chavePix: parsed.data.chavePix,
+        banco: parsed.data.banco,
+        agencia: parsed.data.agencia,
+        conta: parsed.data.conta,
       },
     });
 

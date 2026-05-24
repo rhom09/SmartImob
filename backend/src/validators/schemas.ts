@@ -55,6 +55,11 @@ export const createOwnerSchema = z.object({
   telefone: z.string().optional(),
   email: z.string().email('Email inválido').optional().or(z.literal('')),
   endereco: z.string().optional(),
+  formaPagamento: z.enum(["Transferência Bancária", "PIX"]).optional(),
+  chavePix: z.string().optional(),
+  banco: z.string().optional(),
+  agencia: z.string().optional(),
+  conta: z.string().optional(),
 });
 
 export const updateOwnerSchema = createOwnerSchema.partial();

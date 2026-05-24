@@ -266,4 +266,23 @@ router.get('/:id/defaults', async (req: Request, res: Response) => {
   }
 });
 
+router.get('/:id/owner', async (req: Request, res: Response) => {
+  try {
+    const id = typeof req.params.id === 'string' ? req.params.id : '';
+    if (!id) return res.status(400).json({ message: 'ID inválido' });
+
+    const property = await prisma.property.findUnique({
+      where: { id },
+      include: { owner: true },
+    });
+
+    if (!property || !property.owner) return res.status(404).json({ message: 'Imóvel ou proprietário não encontrado' });
+
+    return res.json(property.owner);
+  } catch (error) {
+    console.error('Erro ao buscar proprietário do imóvel:', error);
+    return res.status(500).json({ message: 'Erro interno do servidor' });
+  }
+});
+
 export default router;

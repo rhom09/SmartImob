@@ -227,6 +227,17 @@ export class PDFService {
 
         doc.moveTo(330, footerY).lineTo(550, footerY).stroke();
         doc.font('Helvetica-Bold').fontSize(9).text('TIANA IMÓVEIS', 330, footerY + 5, { align: 'center', width: 220 });
+
+        // ─── DADOS BANCÁRIOS (NOVO) ──────────────────────────────────────────
+        const bancoY = footerY + 40;
+        doc.font('Helvetica-Bold').fontSize(8).text('INFORMAÇÕES DE PAGAMENTO:', mainX, bancoY);
+        doc.font('Helvetica').fontSize(8);
+        const owner = receipt.contrato.imovel.owner;
+        if (receipt.formaPagamento === 'PIX') {
+          doc.text(`PIX: ${owner.chavePix || 'Não informada'}`);
+        } else {
+          doc.text(`Banco: ${owner.banco || '—'} | Agência: ${owner.agencia || '—'} | Conta: ${owner.conta || '—'}`);
+        }
       };
 
       // Desenha as duas vias

@@ -11,7 +11,7 @@ SmartImob é uma plataforma web moderna e intuitiva que centraliza todas as oper
 - 🏠 **Gestão de Imóveis**: Cadastro completo com fotos, características e localização
 - 👥 **Gestão de Clientes**: Controle de proprietários, inquilinos e interessados
 - 📄 **Gestão de Contratos**: Contratos de locação e venda com documentos anexos
-- 💰 **Gestão Financeira**: Controle de pagamentos, recebimentos e comissões
+- 💰 **Gestão Financeira**: Controle de pagamentos, recebimentos, comissões e configuração bancária de proprietários (PIX/Bancário)
 - 📊 **Relatórios e Dashboards**: Visualização de métricas e indicadores
 - 🔔 **Sistema de Notificações**: Alertas automáticos para vencimentos
 - 💬 **Integração WhatsApp**: Comunicação direta com clientes

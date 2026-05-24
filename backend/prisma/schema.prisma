@@ -131,6 +131,12 @@ model Owner {
   createdAt DateTime    @default(now()) @map("data_criacao")
   updatedAt DateTime    @updatedAt @map("data_atualizacao")
 
+  formaPagamento String? @map("forma_pagamento")
+  chavePix       String? @map("chave_pix")
+  banco          String?
+  agencia        String?
+  conta          String?
+
   imoveis Property[]
 
   @@map("PROPRIETARIOS")
@@ -273,7 +279,7 @@ model Receipt {
   valorAgua      Decimal      @default(0) @map("valor_agua")
   valorLuz       Decimal      @default(0) @map("valor_luz")
   outrosDebitos  Decimal      @default(0) @map("outros_debitos")
-  formaPagamento String?      @default("Transferência Bancária") @map("forma_pagamento")
+  formaPagamento String?      @map("forma_pagamento")
   comprovanteUrl String?      @map("comprovante_url")
   createdAt      DateTime     @default(now()) @map("data_criacao")
   updatedAt      DateTime     @updatedAt @map("data_atualizacao")

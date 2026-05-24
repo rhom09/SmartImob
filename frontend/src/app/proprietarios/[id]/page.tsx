@@ -145,6 +145,40 @@ export default function DetalhesProprietarioPage() {
                   <p className="text-sm font-medium text-on-surface leading-relaxed">{owner.endereco || "Não informado"}</p>
                 </div>
               </div>
+
+              {/* Informações de Pagamento */}
+              <div className="pt-5 border-t border-outline-variant/30 space-y-4">
+                <div>
+                  <p className="text-[10px] uppercase font-bold text-on-surface-variant mb-1">Forma de Pagamento</p>
+                  <p className="text-sm font-medium text-on-surface">{owner.formaPagamento || "Não informado"}</p>
+                </div>
+
+                {owner.formaPagamento === "PIX" && (
+                  <div>
+                    <p className="text-[10px] uppercase font-bold text-on-surface-variant mb-1">Chave PIX</p>
+                    <p className="text-sm font-medium text-on-surface">{owner.chavePix || "Não informado"}</p>
+                  </div>
+                )}
+
+                {owner.formaPagamento === "Transferência Bancária" && (
+                  <>
+                    <div>
+                      <p className="text-[10px] uppercase font-bold text-on-surface-variant mb-1">Banco</p>
+                      <p className="text-sm font-medium text-on-surface">{owner.banco || "Não informado"}</p>
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <p className="text-[10px] uppercase font-bold text-on-surface-variant mb-1">Agência</p>
+                        <p className="text-sm font-medium text-on-surface">{owner.agencia || "—"}</p>
+                      </div>
+                      <div>
+                        <p className="text-[10px] uppercase font-bold text-on-surface-variant mb-1">Conta</p>
+                        <p className="text-sm font-medium text-on-surface">{owner.conta || "—"}</p>
+                      </div>
+                    </div>
+                  </>
+                )}
+              </div>
             </CardContent>
           </Card>
         </div>

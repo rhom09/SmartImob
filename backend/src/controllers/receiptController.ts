@@ -94,7 +94,10 @@ export class ReceiptController {
           valorAgua: Number(valorAgua || 0),
           valorLuz: Number(valorLuz || 0),
           outrosDebitos: Number(outrosDebitos || 0),
-          formaPagamento: formaPagamento || 'Transferência Bancária'
+          formaPagamento: (await prisma.contract.findUnique({
+            where: { id: contratoId },
+            include: { imovel: { include: { owner: true } } }
+          }))?.imovel.owner.formaPagamento || 'Transferência Bancária'
         }
       });
       return res.status(201).json(receipt);

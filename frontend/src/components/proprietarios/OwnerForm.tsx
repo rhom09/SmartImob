@@ -19,6 +19,11 @@ const ownerSchema = z.object({
   telefone: z.string().optional(),
   email: z.string().email("Email inválido").optional().or(z.literal("")),
   endereco: z.string().optional(),
+  formaPagamento: z.enum(["Transferência Bancária", "PIX"]).optional(),
+  chavePix: z.string().optional(),
+  banco: z.string().optional(),
+  agencia: z.string().optional(),
+  conta: z.string().optional(),
 });
 
 type OwnerFormData = z.infer<typeof ownerSchema>;
@@ -37,6 +42,7 @@ export function OwnerForm({ initialData, onSubmit, isLoading }: OwnerFormProps) 
     register,
     handleSubmit,
     setValue,
+    watch,
     formState: { errors },
   } = useForm<OwnerFormData>({
     resolver: zodResolver(ownerSchema) as any,
@@ -46,8 +52,15 @@ export function OwnerForm({ initialData, onSubmit, isLoading }: OwnerFormProps) 
       telefone: "",
       email: "",
       endereco: "",
+      formaPagamento: "Transferência Bancária",
+      chavePix: "",
+      banco: "",
+      agencia: "",
+      conta: "",
     },
   });
+
+  const watchFormaPagamento = watch("formaPagamento");
 
   const handleCpfCnpjChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.replace(/\D/g, "");
@@ -109,6 +122,48 @@ export function OwnerForm({ initialData, onSubmit, isLoading }: OwnerFormProps) 
             {...register("endereco")}
           />
         </div>
+
+        <div className="space-y-2">
+          <label className="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Forma de Pagamento Preferencial</label>
+          <select
+            {...register("formaPagamento")}
+            className="w-full px-3 py-2 bg-surface border border-border rounded-lg text-sm"
+          >
+            <option value="Transferência Bancária">Transferência Bancária</option>
+            <option value="PIX">PIX</option>
+          </select>
+          {errors.formaPagamento && (
+            <p className="text-xs text-error mt-1">{errors.formaPagamento.message}</p>
+          )}
+        </div>
+
+        {watchFormaPagamento === "Transferência Bancária" && (
+          <>
+            <div className="space-y-2">
+              <label className="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Banco</label>
+              <select
+                {...register("banco")}
+                className="w-full px-3 py-2 bg-surface border border-border rounded-lg text-sm"
+              >
+                <option value="">Selecione um banco</option>
+                <option value="001 - Banco do Brasil S.A.">001 - Banco do Brasil</option>
+                <option value="104 - Caixa Econômica Federal">104 - Caixa Econômica</option>
+                <option value="237 - Bradesco">237 - Bradesco</option>
+                <option value="341 - Itaú Unibanco">341 - Itaú Unibanco</option>
+                <option value="033 - Santander">033 - Santander</option>
+                <option value="260 - Nu Pagamentos (Nubank)">260 - Nubank</option>
+                <option value="077 - Banco Inter">077 - Banco Inter</option>
+                <option value="336 - C6 Bank">336 - C6 Bank</option>
+              </select>
+            </div>
+            <Input label="Agência" placeholder="Ex: 1234-5" {...register("agencia")} />
+            <Input label="Conta" placeholder="Ex: 67890-1" {...register("conta")} />
+          </>
+        )}
+
+        {watchFormaPagamento === "PIX" && (
+          <Input label="Chave PIX" placeholder="Ex: email@exemplo.com ou CPF" {...register("chavePix")} />
+        )}
       </div>
 
       <div className="flex justify-end gap-3">

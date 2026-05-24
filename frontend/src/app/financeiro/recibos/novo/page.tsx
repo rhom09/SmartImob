@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, Save, Plus, Trash2, Eye, Building, User, Calendar, CreditCard, Info } from "lucide-react";
+import { ArrowLeft, Plus, Eye, CreditCard, Info } from "lucide-react";
 import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
@@ -12,7 +12,7 @@ import { formatCurrency } from "@/lib/utils";
 interface Contrato {
   id: string;
   inquilino: { nome: string };
-  imovel: { endereco: string };
+  imovel: { id: string; endereco: string };
   valorAluguel: string | number;
   taxaAdministracao: string | number;
   valorCondominio?: string | number;
@@ -20,23 +20,13 @@ interface Contrato {
   diaVencimento?: number;
 }
 
-const BANCOS_BRASILEIROS = [
-  { code: "001", name: "Banco do Brasil" },
-  { code: "033", name: "Santander" },
-  { code: "104", name: "Caixa Econômica Federal" },
-  { code: "237", name: "Bradesco" },
-  { code: "341", name: "Itaú Unibanco" },
-  { code: "077", name: "Inter" },
-  { code: "260", name: "Nubank" },
-  { code: "336", name: "C6 Bank" },
-  { code: "290", name: "PagBank" },
-];
-
 export default function NovoReciboPage() {
   const router = useRouter();
   const [contratos, setContratos] = useState<Contrato[]>([]);
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [previwing, setPreviewing] = useState(false);
+  const [ownerDetails, setOwnerDetails] = useState<any>(null);
 
   // Form State
   const [contratoId, setContratoId] = useState("");
@@ -44,6 +34,7 @@ export default function NovoReciboPage() {
   const [referenciaAno, setReferenciaAno] = useState(new Date().getFullYear());
   const [dataVencimento, setDataVencimento] = useState("");
   const [observacoes, setObservacoes] = useState("");
+  const [comprovanteUrl, setComprovanteUrl] = useState("");
 
   // Valores Detalhados
   const [valorIPTU, setValorIptu] = useState(0);
@@ -53,17 +44,21 @@ export default function NovoReciboPage() {
   const [outrosDebitos, setOutrosDebitos] = useState(0);
   const [descontos, setDescontos] = useState(0);
 
-  // Pagamento
-  const [formaPagamento, setFormaPagamento] = useState("Transferência Bancária");
-  const [banco, setBanco] = useState("Banco do Brasil");
-  const [agencia, setAgencia] = useState("");
-  const [conta, setConta] = useState("");
-
   useEffect(() => {
     fetchContratos();
   }, []);
 
-  const [previwing, setPreviewing] = useState(false);
+  const fetchOwnerDetails = async (imovelId: string) => {
+    try {
+      const res = await fetch(`http://localhost:3001/api/imoveis/${imovelId}/owner`);
+      if (res.ok) {
+        const data = await res.json();
+        setOwnerDetails(data);
+      }
+    } catch (error) {
+      console.error("Erro ao buscar dados do proprietário:", error);
+    }
+  };
 
   const handlePreview = async () => {
     if (!contratoId) {
@@ -87,10 +82,10 @@ export default function NovoReciboPage() {
           observacoes,
           valorIptu: valorIPTU,
           valorCondominio,
-          valorAgua: valorAgua,
-          valorLuz: valorLuz,
+          valorAgua,
+          valorLuz,
           outrosDebitos,
-          formaPagamento: `${formaPagamento}${banco ? ' - ' + banco : ''}${agencia ? ' (Ag: ' + agencia + ')' : ''}${conta ? ' (Cc: ' + conta + ')' : ''}`
+          comprovanteUrl
         })
       });
 
@@ -142,9 +137,8 @@ export default function NovoReciboPage() {
       const diaVencimento = selectedContrato.diaVencimento || 10;
       const data = new Date(referenciaAno, referenciaMes - 1, diaVencimento);
       setDataVencimento(data.toISOString().split('T')[0]);
-
-      // Busca defaults financeiros do imóvel vinculado ao contrato
       fetchFinancialDefaults(selectedContrato.imovel.id);
+      fetchOwnerDetails(selectedContrato.imovel.id);
     }
   }, [selectedContrato, referenciaMes, referenciaAno]);
 
@@ -181,16 +175,15 @@ export default function NovoReciboPage() {
           valorAgua,
           valorLuz,
           outrosDebitos,
-          formaPagamento: `${formaPagamento}${banco ? ' - ' + banco : ''}${agencia ? ' (Ag: ' + agencia + ')' : ''}${conta ? ' (Cc: ' + conta + ')' : ''}`
+          comprovanteUrl
         })
       });
 
-      const result = await res.json();
-      if (res.ok) {
-        router.push("/financeiro/recibos");
-      } else {
+      if (!res.ok) {
+        const result = await res.json();
         throw new Error(result.message || "Erro ao salvar recibo");
       }
+      router.push("/financeiro/recibos");
     } catch (error: any) {
       console.error(error);
       alert(error.message || "Ocorreu um erro ao gerar o recibo.");
@@ -201,7 +194,6 @@ export default function NovoReciboPage() {
 
   return (
     <div className="space-y-6 pb-20">
-      {/* Header */}
       <div className="flex justify-between items-center">
         <div className="flex items-center gap-4">
           <Link href="/financeiro/recibos">
@@ -215,12 +207,7 @@ export default function NovoReciboPage() {
           </div>
         </div>
         <div className="flex gap-2">
-          <Button
-            variant="outline"
-            className="gap-2"
-            onClick={handlePreview}
-            disabled={previwing || !contratoId}
-          >
+          <Button variant="outline" className="gap-2" onClick={handlePreview} disabled={previwing || !contratoId}>
             <Eye size={18} />
             {previwing ? "Gerando..." : "Visualizar Prévia"}
           </Button>
@@ -229,7 +216,6 @@ export default function NovoReciboPage() {
 
       <form id="recibo-form" onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 space-y-6">
-          {/* Dados do Contrato */}
           <Card>
             <CardHeader>
               <CardTitle className="text-base">Dados do Contrato</CardTitle>
@@ -247,286 +233,82 @@ export default function NovoReciboPage() {
                   >
                     <option value="">Selecione um contrato</option>
                     {contratos.map(c => (
-                      <option key={c.id} value={c.id}>
-                        {c.inquilino?.nome} - {c.imovel?.endereco}
-                      </option>
+                      <option key={c.id} value={c.id}>{c.inquilino?.nome} - {c.imovel?.endereco}</option>
                     ))}
                   </select>
                 </div>
-
                 {selectedContrato && (
                   <div className="md:col-span-2 grid grid-cols-2 md:grid-cols-4 gap-4 p-4 bg-surface-container-low rounded-lg border border-outline-variant mb-2">
-                    <div className="space-y-1">
-                      <p className="text-[10px] font-bold text-on-surface-variant uppercase">Inquilino</p>
-                      <p className="text-xs font-medium">{selectedContrato.inquilino.nome}</p>
-                    </div>
-                    <div className="space-y-1">
-                      <p className="text-[10px] font-bold text-on-surface-variant uppercase">Imóvel</p>
-                      <p className="text-xs font-medium truncate" title={selectedContrato.imovel.endereco}>{selectedContrato.imovel.endereco}</p>
-                    </div>
-                    <div className="space-y-1">
-                      <p className="text-[10px] font-bold text-on-surface-variant uppercase">Vencimento Original</p>
-                      <p className="text-xs font-medium">Dia {selectedContrato.diaVencimento || 10}</p>
-                    </div>
-                    <div className="space-y-1">
-                      <p className="text-[10px] font-bold text-on-surface-variant uppercase">Aluguel Base</p>
-                      <p className="text-xs font-medium">{formatCurrency(selectedContrato.valorAluguel)}</p>
-                    </div>
+                    <div className="space-y-1"><p className="text-[10px] font-bold text-on-surface-variant uppercase">Inquilino</p><p className="text-xs font-medium">{selectedContrato.inquilino.nome}</p></div>
+                    <div className="space-y-1"><p className="text-[10px] font-bold text-on-surface-variant uppercase">Imóvel</p><p className="text-xs font-medium truncate">{selectedContrato.imovel.endereco}</p></div>
+                    <div className="space-y-1"><p className="text-[10px] font-bold text-on-surface-variant uppercase">Vencimento Original</p><p className="text-xs font-medium">Dia {selectedContrato.diaVencimento || 10}</p></div>
+                    <div className="space-y-1"><p className="text-[10px] font-bold text-on-surface-variant uppercase">Aluguel Base</p><p className="text-xs font-medium">{formatCurrency(selectedContrato.valorAluguel)}</p></div>
                   </div>
                 )}
-
                 <div className="space-y-2">
                   <label className="text-xs font-bold uppercase text-on-surface-variant tracking-wider">Mês de Referência *</label>
-                  <select
-                    value={referenciaMes}
-                    onChange={(e) => setReferenciaMes(Number(e.target.value))}
-                    className="w-full px-4 py-2 bg-surface border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 text-on-surface"
-                  >
-                    {Array.from({length: 12}, (_, i) => i + 1).map(m => (
-                      <option key={m} value={m}>{m.toString().padStart(2, '0')}</option>
-                    ))}
+                  <select value={referenciaMes} onChange={(e) => setReferenciaMes(Number(e.target.value))} className="w-full px-4 py-2 bg-surface border border-border rounded-lg text-sm">
+                    {Array.from({length: 12}, (_, i) => i + 1).map(m => (<option key={m} value={m}>{m.toString().padStart(2, '0')}</option>))}
                   </select>
                 </div>
-
                 <div className="space-y-2">
                   <label className="text-xs font-bold uppercase text-on-surface-variant tracking-wider">Ano de Referência *</label>
-                  <input
-                    type="number"
-                    value={referenciaAno}
-                    onChange={(e) => setReferenciaAno(Number(e.target.value))}
-                    className="w-full px-4 py-2 bg-surface border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 text-on-surface"
-                    required
-                  />
+                  <input type="number" value={referenciaAno} onChange={(e) => setReferenciaAno(Number(e.target.value))} className="w-full px-4 py-2 bg-surface border border-border rounded-lg text-sm" required />
                 </div>
-
                 <div className="space-y-2">
                   <label className="text-xs font-bold uppercase text-on-surface-variant tracking-wider">Data do Vencimento *</label>
-                  <Input
-                    type="date"
-                    value={dataVencimento}
-                    onChange={(e) => setDataVencimento(e.target.value)}
-                    required
-                  />
+                  <Input type="date" value={dataVencimento} onChange={(e) => setDataVencimento(e.target.value)} required />
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          {/* Valores do Recibo */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <Card>
-              <CardHeader>
-                <CardTitle className="text-base">Valores do Recibo</CardTitle>
-              </CardHeader>
+              <CardHeader><CardTitle className="text-base">Valores do Recibo</CardTitle></CardHeader>
               <CardContent className="space-y-3">
-                <div className="flex justify-between items-center text-sm">
-                  <span className="text-on-surface-variant">Aluguel</span>
-                  <span className="font-medium">{formatCurrency(totais.aluguel)}</span>
-                </div>
+                <div className="flex justify-between text-sm"><span className="text-on-surface-variant">Aluguel</span><span className="font-medium">{formatCurrency(totais.aluguel)}</span></div>
                 <div className="space-y-1.5">
-                  <div className="flex justify-between items-center text-sm">
-                    <label className="text-on-surface-variant">IPTU</label>
-                    <input
-                      type="number"
-                      step="0.01"
-                      className="w-24 text-right bg-transparent border-b border-outline-variant focus:border-primary outline-none py-0.5"
-                      value={valorIPTU}
-                      onChange={(e) => setValorIptu(Number(e.target.value))}
-                    />
-                  </div>
-                  <div className="flex justify-between items-center text-sm">
-                    <label className="text-on-surface-variant">Condomínio</label>
-                    <input
-                      type="number"
-                      step="0.01"
-                      className="w-24 text-right bg-transparent border-b border-outline-variant focus:border-primary outline-none py-0.5"
-                      value={valorCondominio}
-                      onChange={(e) => setValorCondominio(Number(e.target.value))}
-                    />
-                  </div>
-                  <div className="flex justify-between items-center text-sm">
-                    <label className="text-on-surface-variant">Água</label>
-                    <input
-                      type="number"
-                      step="0.01"
-                      className="w-24 text-right bg-transparent border-b border-outline-variant focus:border-primary outline-none py-0.5"
-                      value={valorAgua}
-                      onChange={(e) => setValorAgua(Number(e.target.value))}
-                    />
-                  </div>
-                  <div className="flex justify-between items-center text-sm">
-                    <label className="text-on-surface-variant">Luz</label>
-                    <input
-                      type="number"
-                      step="0.01"
-                      className="w-24 text-right bg-transparent border-b border-outline-variant focus:border-primary outline-none py-0.5"
-                      value={valorLuz}
-                      onChange={(e) => setValorLuz(Number(e.target.value))}
-                    />
-                  </div>
-                  <div className="flex justify-between items-center text-sm">
-                    <label className="text-on-surface-variant">Outros Débitos</label>
-                    <input
-                      type="number"
-                      step="0.01"
-                      className="w-24 text-right bg-transparent border-b border-outline-variant focus:border-primary outline-none py-0.5"
-                      value={outrosDebitos}
-                      onChange={(e) => setOutrosDebitos(Number(e.target.value))}
-                    />
-                  </div>
-                  <div className="flex justify-between items-center text-sm text-error">
-                    <label>(-) Descontos</label>
-                    <input
-                      type="number"
-                      step="0.01"
-                      className="w-24 text-right bg-transparent border-b border-error/50 focus:border-error outline-none py-0.5 text-error"
-                      value={descontos}
-                      onChange={(e) => setDescontos(Number(e.target.value))}
-                    />
-                  </div>
+                  <div className="flex justify-between items-center text-sm"><label className="text-on-surface-variant">IPTU</label><input type="number" step="0.01" className="w-24 text-right bg-transparent border-b border-outline-variant outline-none" value={valorIPTU} onChange={(e) => setValorIptu(Number(e.target.value))} /></div>
+                  <div className="flex justify-between items-center text-sm"><label className="text-on-surface-variant">Condomínio</label><input type="number" step="0.01" className="w-24 text-right bg-transparent border-b border-outline-variant outline-none" value={valorCondominio} onChange={(e) => setValorCondominio(Number(e.target.value))} /></div>
+                  <div className="flex justify-between items-center text-sm"><label className="text-on-surface-variant">Água</label><input type="number" step="0.01" className="w-24 text-right bg-transparent border-b border-outline-variant outline-none" value={valorAgua} onChange={(e) => setValorAgua(Number(e.target.value))} /></div>
+                  <div className="flex justify-between items-center text-sm"><label className="text-on-surface-variant">Luz</label><input type="number" step="0.01" className="w-24 text-right bg-transparent border-b border-outline-variant outline-none" value={valorLuz} onChange={(e) => setValorLuz(Number(e.target.value))} /></div>
+                  <div className="flex justify-between items-center text-sm"><label className="text-on-surface-variant">Outros Débitos</label><input type="number" step="0.01" className="w-24 text-right bg-transparent border-b border-outline-variant outline-none" value={outrosDebitos} onChange={(e) => setOutrosDebitos(Number(e.target.value))} /></div>
+                  <div className="flex justify-between items-center text-sm text-error"><label>(-) Descontos</label><input type="number" step="0.01" className="w-24 text-right bg-transparent border-b border-error outline-none" value={descontos} onChange={(e) => setDescontos(Number(e.target.value))} /></div>
                 </div>
-                <div className="pt-3 border-t border-outline-variant flex justify-between items-center">
-                  <span className="font-bold text-sm">Valor Líquido</span>
-                  <span className="font-bold text-primary">{formatCurrency(totais.liquido)}</span>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Forma de Pagamento */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-base">Forma de Pagamento</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-2">
-                  <label className="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Tipo de Pagamento</label>
-                  <select
-                    value={formaPagamento}
-                    onChange={(e) => setFormaPagamento(e.target.value)}
-                    className="w-full px-3 py-2 bg-surface border border-border rounded-lg text-sm"
-                  >
-                    <option value="Transferência Bancária">Transferência Bancária</option>
-                    <option value="PIX">PIX</option>
-                    <option value="Dinheiro">Dinheiro</option>
-                    <option value="Boleto">Boleto</option>
-                  </select>
-                </div>
-                <div className="space-y-2">
-                  <label className="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Banco</label>
-                  <select
-                    value={banco}
-                    onChange={(e) => setBanco(e.target.value)}
-                    className="w-full px-3 py-2 bg-surface border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 text-on-surface"
-                  >
-                    <option value="">Selecione um banco</option>
-                    {BANCOS_BRASILEIROS.map(b => (
-                      <option key={b.code} value={b.name}>{b.name}</option>
-                    ))}
-                  </select>
-                </div>
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="space-y-2">
-                    <label className="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Agência</label>
-                    <Input value={agencia} onChange={(e) => setAgencia(e.target.value)} placeholder="1234-5" />
+                <div className="pt-3 border-t flex justify-between"><span className="font-bold text-sm">Valor Líquido</span><span className="font-bold text-primary">{formatCurrency(totais.liquido)}</span></div>
+                {ownerDetails && (
+                  <div className="mt-4 pt-3 border-t border-outline-variant/30">
+                    <p className="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider mb-2">Informações de Pagamento (Proprietário)</p>
+                    <p className="text-xs text-on-surface font-medium">{ownerDetails.formaPagamento}</p>
+                    {ownerDetails.formaPagamento === "PIX" ? (
+                      <p className="text-xs text-secondary mt-1">Chave: {ownerDetails.chavePix}</p>
+                    ) : (
+                      <p className="text-xs text-secondary mt-1">
+                        {ownerDetails.banco} | Ag: {ownerDetails.agencia} | Cc: {ownerDetails.conta}
+                      </p>
+                    )}
                   </div>
-                  <div className="space-y-2">
-                    <label className="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Conta</label>
-                    <Input value={conta} onChange={(e) => setConta(e.target.value)} placeholder="67890-1" />
-                  </div>
-                </div>
-                <div className="space-y-2 pt-2">
-                  <label className="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Comprovante</label>
-                  <div className="flex items-center gap-3">
-                    <label className="flex items-center gap-2 px-4 py-2 bg-primary/10 text-primary rounded-lg border border-primary/20 cursor-pointer hover:bg-primary/20 transition-colors">
-                      <Plus size={18} />
-                      <span className="text-sm font-bold">Anexar Comprovante</span>
-                      <input type="file" className="hidden" accept=".pdf,.png,.jpg,.jpeg" onChange={(e) => {
-                        const file = e.target.files?.[0];
-                        if (file) {
-                          alert(`Arquivo "${file.name}" selecionado. (Implementação de upload em andamento)`);
-                        }
-                      }} />
-                    </label>
-                    <span className="text-[10px] text-on-surface-variant">PNG, JPG ou PDF até 5MB</span>
-                  </div>
-                </div>
+                )}
               </CardContent>
             </Card>
           </div>
         </div>
 
-        {/* Resumo Financeiro Sidebar */}
         <div className="space-y-6">
-          <Card className="bg-primary/5 border-primary/20">
-            <CardHeader>
-              <CardTitle className="text-base flex items-center gap-2">
-                <CreditCard size={20} className="text-primary" />
-                Resumo Financeiro
-              </CardTitle>
-            </CardHeader>
+          <Card className="bg-primary/5">
+            <CardHeader><CardTitle className="text-base flex items-center gap-2"><CreditCard size={20} className="text-primary"/>Resumo</CardTitle></CardHeader>
             <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <div className="flex justify-between text-sm">
-                  <span className="text-on-surface-variant">Valor Bruto</span>
-                  <span className="font-medium">{formatCurrency(totais.bruto)}</span>
-                </div>
-                <div className="flex justify-between text-sm text-error">
-                  <span>(-) Descontos</span>
-                  <span>{formatCurrency(descontos)}</span>
-                </div>
-                <div className="flex justify-between text-sm text-on-surface-variant">
-                  <span>(-) Abatimentos</span>
-                  <span>R$ 0,00</span>
-                </div>
-              </div>
-              <div className="pt-4 border-t border-primary/20 space-y-1">
-                <p className="text-xs font-bold text-primary uppercase">Valor Líquido</p>
-                <p className="text-3xl font-bold text-primary">{formatCurrency(totais.liquido)}</p>
-              </div>
+              <p className="text-3xl font-bold text-primary">{formatCurrency(totais.liquido)}</p>
             </CardContent>
-            <CardFooter className="pt-0">
-              <div className="flex items-start gap-2 p-3 bg-white/50 rounded-lg border border-primary/10">
-                <Info size={16} className="text-primary shrink-0 mt-0.5" />
-                <p className="text-[10px] text-on-surface-variant leading-relaxed">
-                  Este recibo será registrado no histórico e ficará disponível para download em PDF após a emissão.
-                </p>
-              </div>
-            </CardFooter>
           </Card>
-
           <Card>
-            <CardHeader>
-              <CardTitle className="text-base">Observações (Opcional)</CardTitle>
-            </CardHeader>
+            <CardHeader><CardTitle className="text-base">Observações</CardTitle></CardHeader>
             <CardContent>
-              <textarea
-                value={observacoes}
-                onChange={(e) => setObservacoes(e.target.value)}
-                rows={4}
-                className="w-full px-4 py-2 bg-surface border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 text-on-surface resize-none"
-                placeholder="Adicione informações adicionais que aparecerão no recibo..."
-              />
+              <textarea value={observacoes} onChange={(e) => setObservacoes(e.target.value)} rows={4} className="w-full px-4 py-2 bg-surface border rounded-lg text-sm" placeholder="Observações..." />
             </CardContent>
           </Card>
-
-          <div className="flex flex-col gap-3">
-            <Button
-              type="submit"
-              form="recibo-form"
-              className="w-full gap-2 h-12 text-base font-bold shadow-lg shadow-primary/20"
-              disabled={saving || !contratoId}
-            >
-              {saving ? "Gerando..." : "Emitir Recibo"}
-            </Button>
-            <Button
-              type="button"
-              variant="ghost"
-              onClick={() => router.push("/financeiro/recibos")}
-              className="w-full"
-            >
-              Cancelar
-            </Button>
-          </div>
+          <Button type="submit" className="w-full h-12" disabled={saving || !contratoId}>{saving ? "Gerando..." : "Emitir Recibo"}</Button>
         </div>
       </form>
     </div>
