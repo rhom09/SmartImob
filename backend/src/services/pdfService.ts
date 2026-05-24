@@ -110,6 +110,7 @@ export class PDFService {
   }
 
   static async generateReceiptPDF(receipt: any): Promise<Buffer> {
+    console.log("PDFService - Objeto Receipt recebido:", JSON.stringify(receipt, null, 2));
     return new Promise((resolve, reject) => {
       const doc = new PDFDocument({
         margin: 0,
@@ -138,29 +139,43 @@ export class PDFService {
         // ─── QUADRO DE VALORES (DIREITA) ────────────────────────────────────
         let vY = startY + 110;
         doc.fontSize(9);
-        const drawValueRow = (label: string, value: any, y: number, isTotal = false) => {
+        const drawValueRow = (label: string, value: any, y: number, isTotal = false, isDesconto = false) => {
           doc.font(isTotal ? 'Helvetica-Bold' : 'Helvetica').text(`${label}------------------R$`, rightColX, y);
-          doc.text(Number(value || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }), rightColX + 110, y, { align: 'right', width: 60 });
+          const numValue = Number(value || 0);
+          const formattedValue = isDesconto && numValue > 0
+            ? `- ${numValue.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+            : numValue.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+          doc.text(formattedValue, rightColX + 110, y, { align: 'right', width: 60 });
         };
 
-        drawValueRow('Aluguel', receipt.contrato.valorAluguel, vY);
+        const valAluguel = Number(receipt.contrato.valorAluguel || 0);
+        const valCond = Number(receipt.valorCondominio > 0 ? receipt.valorCondominio : receipt.contrato.imovel.valorCondominio || 0);
+        const valIptu = Number(receipt.valorIptu > 0 ? receipt.valorIptu : receipt.contrato.imovel.valorIptu || 0);
+        const valAgua = Number(receipt.valorAgua > 0 ? receipt.valorAgua : receipt.contrato.imovel.valorAgua || 0);
+        const valLuz = Number(receipt.valorLuz > 0 ? receipt.valorLuz : receipt.contrato.imovel.valorLuz || 0);
+        const valOutros = Number(receipt.outrosDebitos > 0 ? receipt.outrosDebitos : receipt.contrato.imovel.outrosDebitos || 0);
+        const valDesconto = Number(receipt.descontos > 0 ? receipt.descontos : receipt.contrato.imovel.descontos || 0);
+
+        const total = valAluguel + valCond + valIptu + valAgua + valLuz + valOutros - valDesconto;
+
+        drawValueRow('Aluguel', valAluguel, vY);
         vY += rowHeight;
-        drawValueRow('Desconto', receipt.descontos, vY);
+        drawValueRow('Condomínio', valCond, vY);
         vY += rowHeight;
-        drawValueRow('Condomínio', receipt.valorCondominio, vY);
+        drawValueRow('I P T U', valIptu, vY);
         vY += rowHeight;
-        drawValueRow('I P T U', receipt.valorIptu, vY);
+        drawValueRow('Água', valAgua, vY);
         vY += rowHeight;
-        drawValueRow('Água', receipt.valorAgua, vY);
+        drawValueRow('Luz', valLuz, vY);
         vY += rowHeight;
-        drawValueRow('Luz', receipt.valorLuz, vY);
+        drawValueRow('Outros Débitos', valOutros, vY);
         vY += rowHeight;
-        drawValueRow('Outros Débitos', receipt.outrosDebitos, vY);
+        drawValueRow('Desconto', valDesconto, vY, false, true);
 
         vY += 10;
         doc.moveTo(rightColX, vY).lineTo(rightColX + 175, vY).stroke();
         vY += 10;
-        drawValueRow('TOTAL', receipt.valorLiquido, vY, true);
+        drawValueRow('TOTAL', total, vY, true);
         doc.rect(rightColX - 5, startY + 105, 185, vY - (startY + 90)).stroke();
 
         // ─── INFOS DO CONTRATO (ESQUERDA) ──────────────────────────────────
@@ -211,7 +226,7 @@ export class PDFService {
         doc.font('Helvetica').fontSize(10).text('Recebemos a importância acima de aluguel e acrescentamos demais acessórios :-', mainX, midY);
         doc.text(`Correspondente ao vencimento em, ${new Date(receipt.dataVencimento).toLocaleDateString('pt-BR')}`, mainX, midY + 15);
 
-        const extenso = `[${valorPorExtenso(Number(receipt.valorLiquido))}]`;
+        const extenso = `[${valorPorExtenso(total)}]`;
         doc.font('Helvetica').fontSize(10).text('o valor de R$', mainX, midY + 40);
         doc.font('Helvetica-Bold').text(extenso, mainX + 70, midY + 40, { width: 330 });
 

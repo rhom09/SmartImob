@@ -14,7 +14,7 @@ progress:
 
 # Estado do Projeto - SmartImob
 
-**Última atualização**: 2026-05-21T12:00:00.000Z
+**Última atualização**: 2026-05-24T00:00:00.000Z
 
 ---
 
@@ -85,6 +85,12 @@ progress:
 - ✅ Frontend: Relatórios Financeiros com tabs (Comissões, Repasses, Despesas).
 - ✅ Navegação atualizada com ícone "Financeiro" na sidebar.
 - 📈 Progresso geral atualizado para 56%.
+
+### 2026-05-24 (Ajustes Finais Financeiro)
+- ✅ Integração de Dados Bancários/PIX no perfil do Proprietário.
+- ✅ PDF de Recibos com detalhamento completo (IPTU, Condomínio, taxas, descontos).
+- ✅ Correção do cálculo total e valor por extenso no PDF.
+- ✅ Integração do link de Recibos no Menu Lateral.
 
 ### 2026-05-21 (Estabilização)
 - ✅ Estabilização total da Fase 3 e módulos centrais.
