@@ -9,6 +9,7 @@ import contratosRouter from './routes/contratos';
 import recibosRouter from './routes/recibos';
 import despesasRouter from './routes/despesas';
 import financeiroRouter from './routes/financeiro';
+import dashboardRouter from './routes/dashboard';
 import seedRouter from './routes/seed';
 import seedCompletoRouter from './routes/seed_completo';
 
@@ -34,6 +35,7 @@ app.use('/api/contratos', contratosRouter);
 app.use('/api/recibos', recibosRouter);
 app.use('/api/despesas', despesasRouter);
 app.use('/api/financeiro', financeiroRouter);
+app.use('/api/dashboard', dashboardRouter);
 app.use('/api/seed', seedRouter);
 app.use('/api/seed-completo', seedCompletoRouter);
 

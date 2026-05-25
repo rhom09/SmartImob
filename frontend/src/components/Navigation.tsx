@@ -2,7 +2,7 @@ import { Home, Building2, Users, FileText, Settings, LogOut, Bell, Search, UserC
 import Link from "next/link";
 
 const menuItems = [
-  { icon: Home, label: "Dashboard", href: "/" },
+  { icon: Home, label: "Dashboard", href: "/dashboard" },
   { icon: Building2, label: "Imóveis", href: "/imoveis" },
   { icon: UserCheck, label: "Proprietários", href: "/proprietarios" },
   { icon: Users, label: "Clientes", href: "/clientes" },

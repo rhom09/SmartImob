@@ -1,11 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { DollarSign, TrendingUp, TrendingDown, AlertTriangle, ArrowRight, Receipt, BarChart3, PieChart } from "lucide-react";
+import { DollarSign, TrendingUp, TrendingDown, AlertTriangle, ArrowRight, Receipt, BarChart3 } from "lucide-react";
 import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { formatCurrency } from "@/lib/utils";
+import { SimpleBarChart } from "@/components/dashboard/Charts";
+import { StatCard } from "@/components/dashboard/ui/StatCard";
 
 export const dynamic = "force-dynamic";
 
@@ -20,22 +22,28 @@ interface FinancialSummary {
 
 export default function FinanceiroPage() {
   const [resumo, setResumo] = useState<FinancialSummary | null>(null);
+  const [fluxoCaixa, setFluxoCaixa] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
-    fetchResumo();
+    fetchData();
   }, []);
 
-  const fetchResumo = async () => {
+  const fetchData = async () => {
     setLoading(true);
     try {
-      const response = await fetch("http://localhost:3001/api/financeiro/resumo");
-      const result = await response.json();
-      setResumo(result);
+      const [resumoRes, fluxoRes] = await Promise.all([
+        fetch("http://localhost:3001/api/financeiro/resumo"),
+        fetch("http://localhost:3001/api/financeiro/fluxo-caixa?dataInicio=2026-01-01&dataFim=2026-12-31")
+      ]);
+      const resumoData = await resumoRes.json();
+      const fluxoData = await fluxoRes.json();
+      setResumo(resumoData);
+      setFluxoCaixa(fluxoData.meses.map((m: any) => ({ name: m.label, value: m.saldo })));
     } catch (error) {
-      console.error("Erro ao carregar resumo financeiro:", error);
+      console.error("Erro ao carregar dados financeiros:", error);
     } finally {
       setLoading(false);
     }
@@ -60,97 +68,64 @@ export default function FinanceiroPage() {
 
       {/* Cards de Métricas */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-xs font-bold uppercase text-on-surface-variant tracking-wider">Receita (Comissões)</p>
-                <p className="text-2xl font-bold text-success mt-1">
-                  {formatCurrency(resumo?.receitas.comissoes || 0)}
-                </p>
-              </div>
-              <div className="w-10 h-10 rounded-full bg-success/10 flex items-center justify-center">
-                <TrendingUp size={20} className="text-success" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-xs font-bold uppercase text-on-surface-variant tracking-wider">Aluguéis Recebidos</p>
-                <p className="text-2xl font-bold text-secondary mt-1">
-                  {formatCurrency(resumo?.receitas.alugueisPagos || 0)}
-                </p>
-              </div>
-              <div className="w-10 h-10 rounded-full bg-secondary/10 flex items-center justify-center">
-                <DollarSign size={20} className="text-secondary" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-xs font-bold uppercase text-on-surface-variant tracking-wider">Despesas</p>
-                <p className="text-2xl font-bold text-on-surface mt-1">
-                  {formatCurrency(resumo?.despesas.despesasImoveis || 0)}
-                </p>
-              </div>
-              <div className="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center">
-                <TrendingDown size={20} className="text-on-surface-variant" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-xs font-bold uppercase text-on-surface-variant tracking-wider">Inadimplência</p>
-                <p className="text-2xl font-bold text-error mt-1">
-                  {formatCurrency(resumo?.inadimplencia.valorTotal || 0)}
-                </p>
-                <p className="text-xs text-error/70 mt-0.5">
-                  {resumo?.inadimplencia.quantidadeContratos || 0} contrato(s)
-                </p>
-              </div>
-              <div className="w-10 h-10 rounded-full bg-error/10 flex items-center justify-center">
-                <AlertTriangle size={20} className="text-error" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+        <StatCard
+          label="Receita (Comissões)"
+          value={formatCurrency(resumo?.receitas.comissoes || 0)}
+          icon={TrendingUp}
+          variant="success"
+        />
+        <StatCard
+          label="Aluguéis Recebidos"
+          value={formatCurrency(resumo?.receitas.alugueisPagos || 0)}
+          icon={DollarSign}
+          variant="secondary"
+        />
+        <StatCard
+          label="Despesas"
+          value={formatCurrency(resumo?.despesas.despesasImoveis || 0)}
+          icon={TrendingDown}
+          variant="default"
+        />
+        <StatCard
+          label="Inadimplência"
+          value={formatCurrency(resumo?.inadimplencia.valorTotal || 0)}
+          icon={AlertTriangle}
+          variant="error"
+          sublabel={`${resumo?.inadimplencia.quantidadeContratos || 0} contrato(s)`}
+        />
       </div>
 
       {/* Indicadores Secundários */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Card>
-          <CardContent className="p-6">
-            <p className="text-xs font-bold uppercase text-on-surface-variant tracking-wider">Contratos Ativos</p>
-            <p className="text-3xl font-bold text-on-surface mt-2">{resumo?.contratosAtivos || 0}</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-6">
-            <p className="text-xs font-bold uppercase text-on-surface-variant tracking-wider">Recibos Pendentes (Mês)</p>
-            <p className="text-3xl font-bold text-warning mt-2">{resumo?.recibosPendentesMes || 0}</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-6">
-            <p className="text-xs font-bold uppercase text-on-surface-variant tracking-wider">Saldo Líquido</p>
-            <p className={`text-3xl font-bold mt-2 ${(resumo?.saldoLiquido || 0) >= 0 ? 'text-success' : 'text-error'}`}>
-              {formatCurrency(resumo?.saldoLiquido || 0)}
-            </p>
-          </CardContent>
-        </Card>
+        <StatCard
+          label="Contratos Ativos"
+          value={resumo?.contratosAtivos || 0}
+          icon={Receipt}
+          variant="default"
+        />
+        <StatCard
+          label="Recibos Pendentes (Mês)"
+          value={resumo?.recibosPendentesMes || 0}
+          icon={AlertTriangle}
+          variant="warning"
+        />
+        <StatCard
+          label="Saldo Líquido"
+          value={formatCurrency(resumo?.saldoLiquido || 0)}
+          icon={DollarSign}
+          variant={(resumo?.saldoLiquido || 0) >= 0 ? 'success' : 'error'}
+        />
       </div>
+
+      {/* Gráfico de Fluxo de Caixa */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Fluxo de Caixa (Mensal)</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <SimpleBarChart data={fluxoCaixa} />
+        </CardContent>
+      </Card>
 
       {/* Ações Rápidas */}
       <Card>

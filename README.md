@@ -102,3 +102,11 @@ Este projeto √© privado e propriet√°rio.
 ---
 
 **Desenvolvido com ‚ù§Ô∏è para modernizar a gest√£o imobili√°ria**
+### Fase 5: Dashboard e Relat√≥rios
+- Novo m√≥dulo de Dashboard financeiro com m√©tricas em tempo real (taxa de vac√¢ncia, novos contratos).
+- Rota protegida  integrada com o backend.
+- Exporta√ß√£o de relat√≥rios financeiros consolidada em Excel e PDF.
+### Fase 5: Dashboard e RelatÛrios
+- Novo mÛdulo de Dashboard financeiro com mÈtricas em tempo real (taxa de vac‚ncia, novos contratos).
+- Rota protegida /dashboard integrada com o backend.
+- ExportaÁ„o de relatÛrios financeiros consolidada em Excel e PDF.

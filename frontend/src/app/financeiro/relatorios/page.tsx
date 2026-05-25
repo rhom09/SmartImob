@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { formatCurrency } from "@/lib/utils";
+import { exportToExcel, exportToPDF } from "@/lib/exportUtils";
 
 export const dynamic = "force-dynamic";
 
@@ -100,6 +101,29 @@ export default function RelatoriosPage() {
             <Button variant="secondary" className="gap-2" onClick={() => fetchAll()}>
               <BarChart3 size={18} />
               Gerar Relatório
+            </Button>
+            <Button
+              variant="outline"
+              className="gap-2"
+              onClick={() => {
+                const data = activeTab === 'comissoes' ? comissoes : activeTab === 'repasses' ? repasses : despesas;
+                exportToExcel(data, `Relatorio_${activeTab}`);
+              }}
+            >
+              <FileText size={18} />
+              Exportar Excel
+            </Button>
+            <Button
+              variant="outline"
+              className="gap-2"
+              onClick={() => {
+                const data = activeTab === 'comissoes' ? comissoes : activeTab === 'repasses' ? repasses : despesas;
+                const columns = data.length > 0 ? Object.keys(data[0]) : [];
+                exportToPDF(data, `Relatorio_${activeTab}`, columns);
+              }}
+            >
+              <FileText size={18} />
+              Exportar PDF
             </Button>
           </div>
         </CardContent>
