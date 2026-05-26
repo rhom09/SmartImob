@@ -3,7 +3,7 @@
 ## 🧠 Fluxo de Trabalho e Memória
 - **Memória:** Sempre verifique `MEMORY.md` antes de tomar decisões estruturais.
 - **Plano:** Para qualquer alteração significativa, utilize `EnterPlanMode` para garantir alinhamento.
-- **Graphify:** Utilize `/gsd:graphify` (comando GSD) para mapear dependências antes de refatorações.
+- **Graphify:** Utilize `/gsd-graphify` (comando GSD) para mapear dependências antes de refatorações.
 
 ## 🛠️ Regras de Desenvolvimento
 - **Supabase:** Sempre utilize o cliente configurado em `@/lib/supabase` para conexões frontend.
