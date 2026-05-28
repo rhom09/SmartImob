@@ -44,7 +44,7 @@ progress:
 | 2 | Gestão de Clientes | ✅ Concluído | 100% | 2026-05-19 | 2026-05-19 |
 | 3 | Gestão de Contratos | ✅ Concluído | 100% | 2026-05-20 | 2026-05-20 |
 | 4 | Gestão Financeira | ✅ Concluído | 100% | 2026-05-21 | 2026-05-21 |
-| 5 | Relatórios e Dashboards | 🔴 Não iniciado | 0% | - | - |
+| 5 | Relatórios e Dashboards | 🟡 Em progresso | 60% | 2026-05-26 | - |
 | 6 | Sistema de Notificações | 🔴 Não iniciado | 0% | - | - |
 | 7 | Integração WhatsApp | 🔴 Não iniciado | 0% | - | - |
 | 8 | Melhorias e Polimento | 🔴 Não iniciado | 0% | - | - |
@@ -53,38 +53,28 @@ progress:
 
 ## Próximas Ações
 
-1. ⏳ Iniciar Planejamento da Fase 5: Relatórios e Dashboards
-2. ⏳ Implementar Dashboard principal com métricas gerais
-3. ⏳ Implementar gráficos interativos (Recharts)
+1. ⏳ Implementar refinamento estético (CSS/Tailwind) para fidelidade total ao protótipo (`dashboard.png`).
+2. ⏳ Implementar filtros globais por período no Dashboard.
+3. ⏳ Adicionar botões de "Ações Rápidas" (Novo Imóvel, Nova Locação) diretamente no Dashboard.
 
 ---
 
 ## Decisões Importantes
 
-### 2026-05-21 - Cálculos Financeiros
-**Decisão**: Juros de 1% ao mês (pro rata diário) e multa de 2% flat. Comissão padrão de 8%.  
-**Motivo**: Padrão do mercado imobiliário brasileiro para locação.
-
-### 2026-05-20 - Gestão de Reajustes
-**Decisão**: Reajustes atualizam automaticamente parcelas futuras PENDENTES.  
-**Motivo**: Evitar trabalho manual de edição de parcelas após o reajuste anual do contrato.
+### 2026-05-26 - Evolução do Dashboard
+**Decisão**: Implementação de layout em grid de 12 colunas e expansão do backend com endpoints de agregação temporal (`financial-evolution`) e alertas operacionais.
+**Motivo**: Necessidade de transformar o dashboard MVP em uma interface profissional e robusta conforme o protótipo visual fornecido.
 
 ---
 
 ## Histórico de Mudanças
 
-### 2026-05-21 (Fase 4)
-- ✅ Implementação completa da Gestão Financeira.
-- ✅ Utilitários de cálculo: juros (1%/mês), multa (2%), comissão (8%), repasse.
-- ✅ Backend: ExpenseService + ExpenseController (CRUD completo de despesas).
-- ✅ Backend: FinancialService + FinancialController (inadimplência, comissões, repasses, fluxo de caixa, resumo).
-- ✅ Frontend: Dashboard Financeiro com cards de métricas e ações rápidas.
-- ✅ Frontend: Controle de Inadimplência com detalhamento expandível.
-- ✅ Frontend: Gestão de Despesas com formulário inline e CRUD completo.
-- ✅ Frontend: Repasses aos Proprietários com breakdown por contrato.
-- ✅ Frontend: Relatórios Financeiros com tabs (Comissões, Repasses, Despesas).
-- ✅ Navegação atualizada com ícone "Financeiro" na sidebar.
-- 📈 Progresso geral atualizado para 56%.
+### 2026-05-26 (Fase 5 - Dashboard)
+- ✅ Backend: Implementação do `DashboardService` com métodos de agregação de métricas, evolução financeira de 6 meses e alertas operacionais.
+- ✅ Backend: Criação do `DashboardController` e rotas correspondentes (`/stats`, `/chart-data`, `/financial-summary`, `/financial-evolution`, `/operational-alerts`).
+- ✅ Frontend: Reestruturação do `dashboard/page.tsx` para layout em grid de 12 colunas.
+- ✅ Frontend: Criação do componente `FinancialAreaChart` e painel de contratos próximos ao vencimento.
+- ✅ Documentação: Atualização do `CLAUDE.md` com diretrizes de desenvolvimento e preferência de consulta ao grafo de conhecimento.
 
 ### 2026-05-24 (Ajustes Finais Financeiro)
 - ✅ Integração de Dados Bancários/PIX no perfil do Proprietário.
