@@ -26,3 +26,8 @@ Este documento rastreia os ajustes finos necessários para que o Dashboard atinj
 - [x] Frontend: Layout base em Grid 12 colunas.
 - [x] Frontend: Componente base de Gráfico de Área.
 - [x] Integração: Consumo de dados reais do Prisma.
+- [x] Estilização dos StatCards (Bordas, Sombras, Ícones).
+- [x] FinancialAreaChart (Gradientes, Grade, Tooltip).
+- [x] Tabela de Atividades (Formato compacto, Badges).
+- [x] Filtros Globais (UI do seletor de período).
+- [x] Ações Rápidas (Botões no cabeçalho).

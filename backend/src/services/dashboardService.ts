@@ -104,7 +104,8 @@ export class DashboardService {
         id: true,
         numeroContrato: true,
         dataFim: true,
-        inquilino: { select: { nome: true } }
+        inquilino: { select: { nome: true } },
+        imovel: { select: { endereco: true } }
       }
     });
     return alerts;
