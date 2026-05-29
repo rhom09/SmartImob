@@ -22,7 +22,7 @@ export default function RootLayout({
         <Sidebar />
         <div className="lg:pl-sidebar">
           <Header />
-          <main className="pt-16 p-4 md:p-8 min-h-screen">
+          <main className="pt-24 p-4 md:p-8 min-h-screen">
             {children}
           </main>
         </div>

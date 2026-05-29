@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useEffect, useState } from "react";
 import { getApiUrl } from "@/lib/api";
@@ -50,7 +50,7 @@ export default function ClientesPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-on-surface">Clientes</h1>
-          <p className="text-on-surface-variant">GestÃ£o de Inquilinos e Interessados</p>
+          <p className="text-on-surface-variant">Gestão de Inquilinos e Interessados</p>
         </div>
         <Link href="/clientes/novo">
           <Button className="gap-2">
@@ -107,7 +107,7 @@ export default function ClientesPage() {
                     <th scope="col" className="px-6 py-4 font-bold">Documento</th>
                     <th scope="col" className="px-6 py-4 font-bold">Contato</th>
                     <th scope="col" className="px-6 py-4 font-bold">Resumo</th>
-                    <th scope="col" className="px-6 py-4 font-bold text-right">AÃ§Ãµes</th>
+                    <th scope="col" className="px-6 py-4 font-bold text-right">Ações</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -152,7 +152,7 @@ export default function ClientesPage() {
                       <td className="px-6 py-4">
                         <div className="flex flex-col gap-1 text-xs font-medium text-on-surface-variant">
                           <span><strong className="text-on-surface">{client._count?.contratos || 0}</strong> contratos</span>
-                          <span><strong className="text-on-surface">{client._count?.interacoes || 0}</strong> interaÃ§Ãµes</span>
+                          <span><strong className="text-on-surface">{client._count?.interacoes || 0}</strong> interações</span>
                         </div>
                       </td>
                       <td className="px-6 py-4 text-right">
@@ -173,4 +173,3 @@ export default function ClientesPage() {
     </div>
   );
 }
-
