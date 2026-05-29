@@ -33,7 +33,7 @@ router.get('/', authMiddleware, async (req: any, res) => {
 
 // Marcar alerta como lido
 router.patch('/:id/read', authMiddleware, async (req, res) => {
-  const { id } = req.params;
+  const id = req.params.id as string;
   try {
     await prisma.alert.update({
       where: { id },
