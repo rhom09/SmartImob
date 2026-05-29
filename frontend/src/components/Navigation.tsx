@@ -1,9 +1,10 @@
 "use client";
 
-import { Home, Building2, Users, FileText, Settings, LogOut, Bell, Search, UserCheck, DollarSign, Receipt, Menu, X } from "lucide-react";
+import { Home, Building2, Users, FileText, Settings, LogOut, Search, UserCheck, DollarSign, Receipt, Menu, X } from "lucide-react";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
+import { NotificationBell } from "./NotificationBell";
 
 const menuItems = [
   { icon: Home, label: "Dashboard", href: "/dashboard" },
@@ -83,9 +84,7 @@ export function Header() {
         </div>
 
         <div className="flex items-center gap-2 md:gap-4">
-          <button className="p-2 rounded-full hover:bg-surface-container text-on-surface-variant">
-            <Bell size={20} />
-          </button>
+          <NotificationBell />
           <div className="flex items-center gap-3 pl-2 md:pl-4 border-l border-outline-variant">
             <div className="hidden sm:block text-right">
               <p className="text-sm font-semibold text-on-surface leading-tight">Admin</p>
