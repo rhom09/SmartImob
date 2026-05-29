@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { getApiUrl } from "@/lib/api";
 import { useParams, useRouter } from "next/navigation";
 import {
   ArrowLeft,
@@ -41,7 +42,7 @@ export default function DetalhesImovelPage() {
   const fetchProperty = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`http://localhost:3001/api/imoveis/${id}`);
+      const response = await fetch(getApiUrl("/imoveis/${id}"));
       if (!response.ok) throw new Error("Imóvel não encontrado");
       const data = await response.json();
       setProperty(data);
@@ -56,7 +57,7 @@ export default function DetalhesImovelPage() {
     if (!confirm("Tem certeza que deseja excluir este imóvel?")) return;
 
     try {
-      const response = await fetch(`http://localhost:3001/api/imoveis/${id}`, {
+      const response = await fetch(getApiUrl("/imoveis/${id}"), {
         method: "DELETE",
       });
       if (response.ok) {

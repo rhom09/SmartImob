@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { getApiUrl } from "@/lib/api";
 import { BarChart3, TrendingUp, TrendingDown, DollarSign, FileText } from "lucide-react";
 import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
@@ -40,10 +41,10 @@ export default function RelatoriosPage() {
       const qs = queryParams.toString();
 
       const [resumoRes, comissoesRes, repassesRes, despesasRes] = await Promise.all([
-        fetch(`http://localhost:3001/api/financeiro/resumo?${qs}`),
-        fetch(`http://localhost:3001/api/financeiro/comissoes?${qs}`),
-        fetch(`http://localhost:3001/api/financeiro/repasses?${qs}`),
-        fetch(`http://localhost:3001/api/despesas?${qs}&limit=100`),
+        fetch(getApiUrl("/financeiro/resumo?${qs}")),
+        fetch(getApiUrl("/financeiro/comissoes?${qs}")),
+        fetch(getApiUrl("/financeiro/repasses?${qs}")),
+        fetch(getApiUrl("/despesas?${qs}&limit=100")),
       ]);
 
       setResumo(await resumoRes.json());

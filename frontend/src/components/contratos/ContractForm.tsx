@@ -1,6 +1,7 @@
 "use client";
 
 import { useForm } from "react-hook-form";
+import { getApiUrl } from "@/lib/api";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Button } from "@/components/ui/Button";
@@ -49,8 +50,8 @@ export function ContractForm({ onSubmit, isLoading }: ContractFormProps) {
     async function fetchOptions() {
       try {
         const [propsRes, tenantsRes] = await Promise.all([
-          fetch("http://localhost:3001/api/imoveis?status=VAGO"),
-          fetch("http://localhost:3001/api/clientes?tipo=INQUILINO"),
+          fetch(getApiUrl("/imoveis?status=VAGO")),
+          fetch(getApiUrl("/clientes?tipo=INQUILINO")),
         ]);
 
         const propsData = await propsRes.json();

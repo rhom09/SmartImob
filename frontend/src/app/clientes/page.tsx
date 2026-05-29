@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { getApiUrl } from "@/lib/api";
 import { Plus, Search, Users, ExternalLink, Phone, Mail, Filter } from "lucide-react";
 import Link from "next/link";
 import { Card, CardContent, CardHeader } from "@/components/ui/Card";
@@ -29,7 +30,7 @@ export default function ClientesPage() {
       if (params.busca) queryParams.append("busca", params.busca);
       if (params.tipo) queryParams.append("tipo", params.tipo);
 
-      const response = await fetch(`http://localhost:3001/api/clientes?${queryParams.toString()}`);
+      const response = await fetch(getApiUrl("/clientes?${queryParams.toString()}"));
       const result = await response.json();
       setClients(result.data || []);
     } catch (error) {

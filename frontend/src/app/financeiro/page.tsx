@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { getApiUrl } from "@/lib/api";
 import { DollarSign, TrendingUp, TrendingDown, AlertTriangle, ArrowRight, Receipt, BarChart3 } from "lucide-react";
 import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
@@ -35,8 +36,8 @@ export default function FinanceiroPage() {
     setLoading(true);
     try {
       const [resumoRes, fluxoRes] = await Promise.all([
-        fetch("http://localhost:3001/api/financeiro/resumo"),
-        fetch("http://localhost:3001/api/financeiro/fluxo-caixa?dataInicio=2026-01-01&dataFim=2026-12-31")
+        fetch(getApiUrl("/financeiro/resumo")),
+        fetch(getApiUrl("/financeiro/fluxo-caixa?dataInicio=2026-01-01&dataFim=2026-12-31"))
       ]);
       const resumoData = await resumoRes.json();
       const fluxoData = await fluxoRes.json();

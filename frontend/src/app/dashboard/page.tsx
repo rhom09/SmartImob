@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/Button";
 import { formatCurrency } from "@/lib/utils";
 import { SimpleBarChart, FinancialAreaChart } from "@/components/dashboard/Charts";
 import { StatCard } from "@/components/dashboard/ui/StatCard";
+import { getApiUrl } from "@/lib/api";
 import Link from "next/link";
 
 export const dynamic = "force-dynamic";
@@ -32,11 +33,11 @@ export default function DashboardPage() {
       const token = session?.access_token;
 
       const [statsRes, chartRes, financeRes, evolutionRes, alertsRes] = await Promise.all([
-        fetch("http://localhost:3001/api/dashboard/stats", { headers: { 'Authorization': `Bearer ${token}` } }),
-        fetch("http://localhost:3001/api/dashboard/chart-data", { headers: { 'Authorization': `Bearer ${token}` } }),
-        fetch("http://localhost:3001/api/dashboard/financial-summary", { headers: { 'Authorization': `Bearer ${token}` } }),
-        fetch("http://localhost:3001/api/dashboard/financial-evolution", { headers: { 'Authorization': `Bearer ${token}` } }),
-        fetch("http://localhost:3001/api/dashboard/operational-alerts", { headers: { 'Authorization': `Bearer ${token}` } })
+        fetch(getApiUrl("/dashboard/stats"), { headers: { 'Authorization': `Bearer ${token}` } }),
+        fetch(getApiUrl("/dashboard/chart-data"), { headers: { 'Authorization': `Bearer ${token}` } }),
+        fetch(getApiUrl("/dashboard/financial-summary"), { headers: { 'Authorization': `Bearer ${token}` } }),
+        fetch(getApiUrl("/dashboard/financial-evolution"), { headers: { 'Authorization': `Bearer ${token}` } }),
+        fetch(getApiUrl("/dashboard/operational-alerts"), { headers: { 'Authorization': `Bearer ${token}` } })
       ]);
       setMetrics(await statsRes.json());
       const chartDataRes = await chartRes.json();

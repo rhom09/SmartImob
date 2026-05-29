@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { getApiUrl } from "@/lib/api";
 import { useParams, useRouter } from "next/navigation";
 import {
   ArrowLeft,
@@ -36,7 +37,7 @@ export default function DetalhesContratoPage() {
 
   const fetchContract = async () => {
     try {
-      const response = await fetch(`http://localhost:3001/api/contratos/${id}`);
+      const response = await fetch(getApiUrl("/contratos/${id}"));
       if (!response.ok) throw new Error("Contrato não encontrado");
       const data = await response.json();
       setContract(data);
@@ -51,7 +52,7 @@ export default function DetalhesContratoPage() {
     if (!confirm("Confirmar o recebimento desta parcela?")) return;
 
     try {
-      const response = await fetch(`http://localhost:3001/api/recibos/${receiptId}/pagar`, {
+      const response = await fetch(getApiUrl("/recibos/${receiptId}/pagar"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ dataPagamento: new Date().toISOString() })
@@ -72,7 +73,7 @@ export default function DetalhesContratoPage() {
     if (!adjustmentData.novoValor || adjustmentData.novoValor <= 0) return;
 
     try {
-      const response = await fetch(`http://localhost:3001/api/contratos/${id}/reajustar`, {
+      const response = await fetch(getApiUrl("/contratos/${id}/reajustar"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(adjustmentData)
@@ -91,7 +92,7 @@ export default function DetalhesContratoPage() {
 
   const handleDownloadPDF = async (receiptId: string, numeroRecibo: string) => {
     try {
-      window.open(`http://localhost:3001/api/recibos/${receiptId}/pdf?layout=simple`, '_blank');
+      window.open(getApiUrl("/recibos/${receiptId}/pdf?layout=simple"), '_blank');
     } catch (error) {
       alert("Erro ao gerar PDF.");
     }

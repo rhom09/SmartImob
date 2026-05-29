@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { getApiUrl } from "@/lib/api";
 import { useParams, useRouter } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
@@ -22,7 +23,7 @@ export default function EditarImovelPage() {
 
   const fetchProperty = async () => {
     try {
-      const response = await fetch(`http://localhost:3001/api/imoveis/${id}`);
+      const response = await fetch(getApiUrl("/imoveis/${id}"));
       if (!response.ok) throw new Error("Imóvel não encontrado");
       const data = await response.json();
       setProperty(data);
@@ -39,7 +40,7 @@ export default function EditarImovelPage() {
     setSubmitting(true);
     setError(null);
     try {
-      const response = await fetch(`http://localhost:3001/api/imoveis/${id}`, {
+      const response = await fetch(getApiUrl("/imoveis/${id}"), {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

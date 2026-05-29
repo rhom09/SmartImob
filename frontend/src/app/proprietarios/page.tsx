@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { getApiUrl } from "@/lib/api";
 import { Plus, Search, User, Phone, Mail, Building2, ExternalLink } from "lucide-react";
 import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
@@ -22,7 +23,7 @@ export default function ProprietariosPage() {
   const fetchOwners = async (query = "") => {
     setLoading(true);
     try {
-      const response = await fetch(`http://localhost:3001/api/proprietarios?busca=${query}`);
+      const response = await fetch(getApiUrl("/proprietarios?busca=${query}"));
       const result = await response.json();
       setOwners(result.data || []);
     } catch (error) {

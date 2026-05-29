@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { getApiUrl } from "@/lib/api";
 import { AlertTriangle, ChevronDown, ChevronRight, User, Building2, Calendar } from "lucide-react";
 import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
@@ -45,7 +46,7 @@ export default function InadimplenciaPage() {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const response = await fetch("http://localhost:3001/api/financeiro/inadimplencia");
+      const response = await fetch(getApiUrl("/financeiro/inadimplencia"));
       const result = await response.json();
       setData(result);
     } catch (error) {

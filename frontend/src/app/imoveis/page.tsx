@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { getApiUrl } from "@/lib/api";
 import { Plus, Search, Building2, MapPin, Bed, Bath, Car, Maximize2, Tag, Filter } from "lucide-react";
 import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/Card";
@@ -31,7 +32,7 @@ export default function ImoveisPage() {
       if (params.tipo) queryParams.append("tipo", params.tipo);
       if (params.status) queryParams.append("status", params.status);
 
-      const response = await fetch(`http://localhost:3001/api/imoveis?${queryParams.toString()}`, {
+      const response = await fetch(getApiUrl("/imoveis?${queryParams.toString()}"), {
         cache: 'no-store'
       });
       const result = await response.json();

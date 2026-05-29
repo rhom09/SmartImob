@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { getApiUrl } from "@/lib/api";
 import { useState } from "react";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
@@ -17,7 +18,7 @@ export default function NovoProprietarioPage() {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch("http://localhost:3001/api/proprietarios", {
+      const response = await fetch(getApiUrl("/proprietarios"), {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

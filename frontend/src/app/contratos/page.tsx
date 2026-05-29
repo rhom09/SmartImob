@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { getApiUrl } from "@/lib/api";
 import { Plus, Search, FileText, ExternalLink, Calendar, User, Building2 } from "lucide-react";
 import Link from "next/link";
 import { Card, CardContent, CardHeader } from "@/components/ui/Card";
@@ -28,7 +29,7 @@ export default function ContratosPage() {
       if (params.busca) queryParams.append("busca", params.busca);
       if (params.status) queryParams.append("status", params.status);
 
-      const response = await fetch(`http://localhost:3001/api/contratos?${queryParams.toString()}`);
+      const response = await fetch(getApiUrl("/contratos?${queryParams.toString()}"));
       const result = await response.json();
       setContracts(result.items || []);
     } catch (error) {

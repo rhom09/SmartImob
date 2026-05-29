@@ -1,6 +1,7 @@
 "use client";
 
 import { useForm } from "react-hook-form";
+import { getApiUrl } from "@/lib/api";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Button } from "@/components/ui/Button";
@@ -115,7 +116,7 @@ export function PropertyForm({ initialData, onSubmit, isLoading }: PropertyFormP
   useEffect(() => {
     const fetchOwners = async () => {
       try {
-        const response = await fetch(`http://localhost:3001/api/proprietarios?busca=${ownerSearch}&limit=5`);
+        const response = await fetch(getApiUrl("/proprietarios?busca=${ownerSearch}&limit=5"));
         const result = await response.json();
         setOwners(result.data || []);
       } catch (error) {

@@ -3,6 +3,7 @@
 export const dynamic = "force-dynamic";
 
 import { useEffect, useState } from "react";
+import { getApiUrl } from "@/lib/api";
 import { useParams, useRouter } from "next/navigation";
 import {
   ArrowLeft,
@@ -35,7 +36,7 @@ export default function DetalhesProprietarioPage() {
   const fetchOwner = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`http://localhost:3001/api/proprietarios/${id}`);
+      const response = await fetch(getApiUrl("/proprietarios/${id}"));
       if (!response.ok) throw new Error("Proprietário não encontrado");
       const data = await response.json();
       setOwner(data);
@@ -50,7 +51,7 @@ export default function DetalhesProprietarioPage() {
     if (!confirm("Tem certeza que deseja desativar este proprietário?")) return;
 
     try {
-      const response = await fetch(`http://localhost:3001/api/proprietarios/${id}`, {
+      const response = await fetch(getApiUrl("/proprietarios/${id}"), {
         method: "DELETE",
       });
       if (response.ok) {

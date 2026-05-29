@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
+import { getApiUrl } from "@/lib/api";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, Plus, Eye, CreditCard, Info } from "lucide-react";
 import Link from "next/link";
@@ -50,7 +51,7 @@ export default function NovoReciboPage() {
 
   const fetchOwnerDetails = async (imovelId: string) => {
     try {
-      const res = await fetch(`http://localhost:3001/api/imoveis/${imovelId}/owner`);
+      const res = await fetch(getApiUrl("/imoveis/${imovelId}/owner"));
       if (res.ok) {
         const data = await res.json();
         setOwnerDetails(data);
@@ -68,7 +69,7 @@ export default function NovoReciboPage() {
 
     setPreviewing(true);
     try {
-      const res = await fetch("http://localhost:3001/api/recibos/preview", {
+      const res = await fetch(getApiUrl("/recibos/preview"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -104,7 +105,7 @@ export default function NovoReciboPage() {
 
   const fetchContratos = async () => {
     try {
-      const res = await fetch("http://localhost:3001/api/contratos");
+      const res = await fetch(getApiUrl("/contratos"));
       const data = await res.json();
       const items = Array.isArray(data) ? data : data.items || [];
       setContratos(items.filter((c: any) => c.status === "ATIVO"));
@@ -117,7 +118,7 @@ export default function NovoReciboPage() {
 
   const fetchFinancialDefaults = async (imovelId: string) => {
     try {
-      const res = await fetch(`http://localhost:3001/api/imoveis/${imovelId}/defaults`);
+      const res = await fetch(getApiUrl("/imoveis/${imovelId}/defaults"));
       if (res.ok) {
         const defaults = await res.json();
         setValorIptu(Number(defaults.valorIptu) || 0);
@@ -158,7 +159,7 @@ export default function NovoReciboPage() {
 
     setSaving(true);
     try {
-      const res = await fetch("http://localhost:3001/api/recibos", {
+      const res = await fetch(getApiUrl("/recibos"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
