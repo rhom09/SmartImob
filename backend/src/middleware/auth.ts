@@ -15,10 +15,13 @@ export const authMiddleware = (req: AuthRequest, res: Response, next: NextFuncti
   const token = authHeader.split(' ')[1];
 
   if (!token) {
+    console.warn("⚠️ [Auth] Requisição recebida sem token no header Authorization.");
     return res.status(401).json({ message: 'No token provided' });
   }
 
   try {
+    console.log(`🔑 [Auth] Validando token (Início: ${token.substring(0, 15)}... | Tamanho: ${token.length})`);
+
     const secret = (process.env.SUPABASE_JWT_SECRET || process.env.JWT_SECRET || '').trim();
 
     if (!secret) {

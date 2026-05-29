@@ -30,11 +30,16 @@ export function NotificationBell() {
   }, []);
 
   const fetchNotifications = async () => {
-    setLoading(true);
     try {
       const { data: { session } } = await supabase.auth.getSession();
       const token = session?.access_token;
 
+      if (!token) {
+        console.warn("🔔 [NotificationBell] Sessão não encontrada ou token ausente. Pulando busca.");
+        return;
+      }
+
+      setLoading(true);
       const response = await fetch(getApiUrl("/notifications"), {
         headers: { Authorization: `Bearer ${token}` },
       });
