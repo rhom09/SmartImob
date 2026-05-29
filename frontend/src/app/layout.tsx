@@ -20,9 +20,9 @@ export default function RootLayout({
     <html lang="pt-BR" className="h-full antialiased" suppressHydrationWarning>
       <body className="min-h-full bg-background text-on-background" suppressHydrationWarning>
         <Sidebar />
-        <div className="pl-sidebar">
+        <div className="lg:pl-sidebar">
           <Header />
-          <main className="pt-16 p-8 min-h-screen">
+          <main className="pt-16 p-4 md:p-8 min-h-screen">
             {children}
           </main>
         </div>
