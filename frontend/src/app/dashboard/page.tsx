@@ -2,14 +2,14 @@
 
 import { supabase } from "@/lib/supabase";
 import { useEffect, useState } from "react";
-import { DollarSign, TrendingUp, TrendingDown, AlertTriangle, Receipt, BarChart3, Plus, Calendar, Building, UserPlus } from "lucide-react";
+import { DollarSign, TrendingUp, AlertTriangle, BarChart3, Plus, Calendar, Building } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { formatCurrency } from "@/lib/utils";
 import { SimpleBarChart, FinancialAreaChart } from "@/components/dashboard/Charts";
 import { StatCard } from "@/components/dashboard/ui/StatCard";
-import { getApiUrl } from "@/lib/api";
 import Link from "next/link";
+import { getApiUrl } from "@/lib/api";
 
 export const dynamic = "force-dynamic";
 
@@ -39,14 +39,18 @@ export default function DashboardPage() {
         fetch(getApiUrl("/dashboard/financial-evolution"), { headers: { 'Authorization': `Bearer ${token}` } }),
         fetch(getApiUrl("/dashboard/operational-alerts"), { headers: { 'Authorization': `Bearer ${token}` } })
       ]);
-      setMetrics(await statsRes.json());
+
+      const stats = await statsRes.json();
+      setMetrics(stats);
+
       const chartDataRes = await chartRes.json();
       setChartData(chartDataRes.propertiesByStatus);
+
       setFinancialSummary(await financeRes.json());
       setEvolutionData(await evolutionRes.json());
       setAlerts(await alertsRes.json());
     } catch (error) {
-      console.error("Erro ao carregar dashboard:", error);
+      console.error("Erro ao buscar dados do dashboard:", error);
     } finally {
       setLoading(false);
     }
@@ -55,7 +59,7 @@ export default function DashboardPage() {
   if (loading) return (
     <div className="flex flex-col items-center justify-center min-h-[400px] space-y-4">
       <div className="w-10 h-10 border-4 border-secondary border-t-transparent rounded-full animate-spin"></div>
-      <p className="text-on-surface-variant font-medium">Carregando dados estratégicos...</p>
+      <p className="text-on-surface-variant font-medium text-lg">Carregando dados estratégicos...</p>
     </div>
   );
 
@@ -85,15 +89,15 @@ export default function DashboardPage() {
           </div>
 
           <Link href="/imoveis/novo">
-            <Button size="sm" className="gap-2 bg-primary hover:bg-primary-container text-on-primary border-none">
+            <Button size="sm" className="gap-2 bg-primary hover:bg-primary-container text-on-primary border-none font-bold">
               <Building size={16} />
-              <span className="hidden sm:inline">Imóvel</span>
+              <span className="hidden sm:inline">Novo Imóvel</span>
             </Button>
           </Link>
           <Link href="/contratos/novo">
-            <Button size="sm" variant="secondary" className="gap-2 border-secondary text-secondary hover:bg-secondary/5">
+            <Button size="sm" variant="secondary" className="gap-2 border-secondary text-secondary hover:bg-secondary/5 font-bold">
               <Plus size={16} />
-              <span className="hidden sm:inline">Contrato</span>
+              <span className="hidden sm:inline">Novo Contrato</span>
             </Button>
           </Link>
         </div>
@@ -131,7 +135,7 @@ export default function DashboardPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         <Card className="lg:col-span-8 shadow-sm border-outline-variant/30 bg-surface-container-lowest">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-lg font-bold text-on-surface">Evolução Financeira (6 meses)</CardTitle>
             <TrendingUp className="text-tertiary-fixed-dim" size={20} />
           </CardHeader>
@@ -139,14 +143,14 @@ export default function DashboardPage() {
         </Card>
 
         <Card className="lg:col-span-4 shadow-sm border-outline-variant/30 bg-surface-container-lowest">
-          <CardHeader>
+          <CardHeader className="pb-2">
             <CardTitle className="text-lg font-bold text-on-surface">Status dos Imóveis</CardTitle>
           </CardHeader>
           <CardContent><SimpleBarChart data={chartData} /></CardContent>
         </Card>
 
         <Card className="lg:col-span-12 shadow-sm border-outline-variant/30 bg-surface-container-lowest overflow-hidden">
-          <CardHeader className="bg-surface-container-low/50 border-b border-outline-variant/20">
+          <CardHeader className="bg-surface-container-low/50 border-b border-outline-variant/20 py-3 px-6">
             <div className="flex items-center justify-between">
               <CardTitle className="text-lg font-bold flex items-center gap-2 text-on-surface">
                 <Calendar size={20} className="text-secondary" />
@@ -157,33 +161,33 @@ export default function DashboardPage() {
           </CardHeader>
           <CardContent className="p-0">
             {alerts.length === 0 ? (
-              <div className="p-8 text-center text-on-surface-variant">Nenhum contrato a vencer nos próximos 30 dias.</div>
+              <div className="p-8 text-center text-on-surface-variant font-medium">Nenhum contrato a vencer nos próximos 30 dias.</div>
             ) : (
               <div className="overflow-x-auto">
-                <table className="w-full text-sm">
+                <table className="w-full text-sm border-collapse">
                   <thead>
                     <tr className="border-b border-outline-variant/20 bg-surface-container-low/30">
-                      <th className="text-left p-4 font-bold text-on-surface-variant uppercase tracking-wider">Inquilino</th>
-                      <th className="text-left p-4 font-bold text-on-surface-variant uppercase tracking-wider">Imóvel</th>
-                      <th className="text-left p-4 font-bold text-on-surface-variant uppercase tracking-wider">Vencimento</th>
-                      <th className="text-right p-4 font-bold text-on-surface-variant uppercase tracking-wider">Ação</th>
+                      <th className="text-left p-4 pl-6 font-bold text-on-surface-variant uppercase tracking-wider text-[10px]">Inquilino</th>
+                      <th className="text-left p-4 font-bold text-on-surface-variant uppercase tracking-wider text-[10px]">Imóvel</th>
+                      <th className="text-left p-4 font-bold text-on-surface-variant uppercase tracking-wider text-[10px]">Vencimento</th>
+                      <th className="text-right p-4 pr-6 font-bold text-on-surface-variant uppercase tracking-wider text-[10px]">Ação</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-outline-variant/10">
                     {alerts.map(a => (
                       <tr key={a.id} className="hover:bg-surface-container-low/50 transition-colors">
-                        <td className="p-4 font-bold text-on-surface">{a.inquilino?.nome || "Inquilino não identificado"}</td>
-                        <td className="p-4 text-on-surface-variant font-medium">{a.imovel?.endereco || "Endereço não identificado"}</td>
+                        <td className="p-4 pl-6 font-bold text-on-surface">{a.inquilino?.nome || "Não identificado"}</td>
+                        <td className="p-4 text-on-surface-variant font-medium text-xs">{a.imovel?.endereco || "Endereço não informado"}</td>
                         <td className="p-4">
-                          <span className={`px-2 py-1 rounded-md text-xs font-bold ${
+                          <span className={`px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider ${
                             new Date(a.dataFim) < new Date() ? 'bg-error-container text-on-error-container' : 'bg-tertiary-fixed text-on-tertiary-fixed'
                           }`}>
                             {new Date(a.dataFim).toLocaleDateString()}
                           </span>
                         </td>
-                        <td className="p-4 text-right">
+                        <td className="p-4 pr-6 text-right">
                           <Link href={`/contratos/${a.id}`}>
-                            <Button variant="ghost" size="sm" className="font-bold text-secondary hover:bg-secondary/10">Renovar</Button>
+                            <Button variant="ghost" size="sm" className="font-bold text-secondary hover:bg-secondary/10 text-xs">Renovar</Button>
                           </Link>
                         </td>
                       </tr>

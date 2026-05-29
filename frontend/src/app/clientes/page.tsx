@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { getApiUrl } from "@/lib/api";
-import { Plus, Search, Users, ExternalLink, Phone, Mail, Filter } from "lucide-react";
+import { Plus, Search, Users, Phone, Mail } from "lucide-react";
 import Link from "next/link";
 import { Card, CardContent, CardHeader } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
@@ -50,7 +50,7 @@ export default function ClientesPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-on-surface">Clientes</h1>
-          <p className="text-on-surface-variant">Gestão de Inquilinos e Interessados</p>
+          <p className="text-on-surface-variant text-sm font-medium">Gestão de Inquilinos e Interessados</p>
         </div>
         <Link href="/clientes/novo">
           <Button className="gap-2">
@@ -71,7 +71,7 @@ export default function ClientesPage() {
               />
             </div>
             <select
-              className="h-10 px-3 rounded-md border border-outline-variant bg-white text-sm"
+              className="h-10 px-3 rounded-md border border-outline-variant bg-white text-sm text-on-surface"
               value={filters.tipo}
               onChange={(e) => setFilters({ ...filters, tipo: e.target.value })}
             >
@@ -100,7 +100,7 @@ export default function ClientesPage() {
             </div>
           ) : (
             <div className="overflow-x-auto -mx-6 -mb-6">
-              <table className="w-full text-sm text-left">
+              <table className="w-full text-sm text-left border-collapse">
                 <thead className="text-xs text-on-surface-variant uppercase bg-surface-container/50 border-y border-outline-variant">
                   <tr>
                     <th scope="col" className="px-6 py-4 font-bold">Nome / Tipo</th>
@@ -110,9 +110,9 @@ export default function ClientesPage() {
                     <th scope="col" className="px-6 py-4 font-bold text-right">Ações</th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody className="divide-y divide-outline-variant/30">
                   {clients.map((client) => (
-                    <tr key={client.id} className="bg-white border-b border-outline-variant hover:bg-surface-container/30 transition-colors">
+                    <tr key={client.id} className="bg-white hover:bg-surface-container/30 transition-colors">
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-3">
                           <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs ${
@@ -144,7 +144,7 @@ export default function ClientesPage() {
                           {client.email && (
                             <div className="flex items-center gap-2 text-xs text-on-surface-variant">
                               <Mail size={12} className="text-primary/60" />
-                              <span>{client.email}</span>
+                              <span className="truncate max-w-[150px] inline-block">{client.email}</span>
                             </div>
                           )}
                         </div>
@@ -157,7 +157,7 @@ export default function ClientesPage() {
                       </td>
                       <td className="px-6 py-4 text-right">
                         <Link href={`/clientes/${client.id}`}>
-                          <Button variant="outline" size="sm" className="h-8 text-xs">
+                          <Button variant="outline" size="sm" className="h-8 text-xs font-bold">
                             Ver Detalhes
                           </Button>
                         </Link>

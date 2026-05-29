@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { getApiUrl } from "@/lib/api";
-import { Plus, Search, Building2, MapPin, Bed, Bath, Car, Maximize2, Tag, Filter } from "lucide-react";
+import { Plus, Building2, Filter } from "lucide-react";
 import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
@@ -67,7 +67,7 @@ export default function ImoveisPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-on-surface">Imóveis</h1>
-          <p className="text-on-surface-variant">Gerencie seu inventário imobiliário</p>
+          <p className="text-on-surface-variant text-sm font-medium">Gerencie seu inventário imobiliário</p>
         </div>
         <Link href="/imoveis/novo">
           <Button className="gap-2">
@@ -88,7 +88,7 @@ export default function ImoveisPage() {
               />
             </div>
             <select
-              className="h-10 px-3 rounded-md border border-outline-variant bg-white text-sm"
+              className="h-10 px-3 rounded-md border border-outline-variant bg-white text-sm text-on-surface"
               value={filters.tipo}
               onChange={(e) => setFilters({ ...filters, tipo: e.target.value })}
             >
@@ -99,7 +99,7 @@ export default function ImoveisPage() {
               <option value="COMERCIAL">Comercial</option>
             </select>
             <select
-              className="h-10 px-3 rounded-md border border-outline-variant bg-white text-sm"
+              className="h-10 px-3 rounded-md border border-outline-variant bg-white text-sm text-on-surface"
               value={filters.status}
               onChange={(e) => setFilters({ ...filters, status: e.target.value })}
             >
@@ -123,7 +123,7 @@ export default function ImoveisPage() {
           <div className="mx-auto w-16 h-16 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant">
             <Building2 size={32} />
           </div>
-          <p className="text-on-surface-variant text-lg">Nenhum imóvel encontrado.</p>
+          <p className="text-on-surface-variant text-lg font-medium">Nenhum imóvel encontrado.</p>
           <Link href="/imoveis/novo">
             <Button variant="outline">Cadastrar primeiro imóvel</Button>
           </Link>
@@ -131,7 +131,7 @@ export default function ImoveisPage() {
       ) : (
         <Card>
           <div className="overflow-x-auto">
-            <table className="w-full text-sm text-left">
+            <table className="w-full text-sm text-left border-collapse">
               <thead className="text-xs text-on-surface-variant uppercase bg-surface-container/50 border-b border-outline-variant">
                 <tr>
                   <th scope="col" className="px-6 py-4 font-bold">Código</th>
@@ -143,22 +143,22 @@ export default function ImoveisPage() {
                   <th scope="col" className="px-6 py-4 font-bold text-right">Ações</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody className="divide-y divide-outline-variant/10">
                 {properties.map((property) => (
-                  <tr key={property.id} className="bg-white border-b border-outline-variant hover:bg-surface-container/30 transition-colors">
+                  <tr key={property.id} className="bg-white hover:bg-surface-container/30 transition-colors">
                     <td className="px-6 py-4 font-medium text-on-surface">
                       {property.codigo ? `#${property.codigo}` : '-'}
                     </td>
                     <td className="px-6 py-4">
                       <div className="font-bold text-on-surface">{property.endereco}, {property.numero}</div>
-                      <div className="text-xs text-on-surface-variant">{property.bairro}, {property.cidade} - {property.estado}</div>
+                      <div className="text-xs text-on-surface-variant font-medium">{property.bairro}, {property.cidade} - {property.estado}</div>
                     </td>
                     <td className="px-6 py-4">
-                      <span className="bg-primary/10 text-primary px-2 py-1 rounded text-xs font-bold uppercase">
+                      <span className="bg-primary/10 text-primary px-2 py-1 rounded text-xs font-bold uppercase tracking-wider">
                         {property.tipo}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-on-surface-variant font-medium">
+                    <td className="px-6 py-4 text-on-surface-variant font-bold uppercase tracking-tighter text-[10px]">
                       {property.finalidade}
                     </td>
                     <td className="px-6 py-4 font-bold text-secondary">
@@ -172,7 +172,7 @@ export default function ImoveisPage() {
                     </td>
                     <td className="px-6 py-4 text-right">
                       <Link href={`/imoveis/${property.id}`}>
-                        <Button variant="outline" size="sm" className="h-8 text-xs">
+                        <Button variant="outline" size="sm" className="h-8 text-xs font-bold">
                           Ver Detalhes
                         </Button>
                       </Link>
