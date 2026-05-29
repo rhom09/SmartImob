@@ -102,7 +102,7 @@ Plans:
 - [ ] PUT /api/imoveis/:id/fotos/reordenar - Reordenar fotos
 - [ ] Implementar otimização de imagens (resize, compressão)
 
-#### 1.4 - Frontend - Listagem
+#### 1.5 - Frontend - Listagem
 - [ ] Criar página de listagem de imóveis
 - [ ] Implementar tabela com paginação
 - [ ] Implementar filtros (tipo, finalidade, status, localização, preço)
@@ -389,6 +389,11 @@ Plans:
 
 **Duração estimada**: 1 semana
 
+**Plans:** 1 plan
+
+Plans:
+- [ ] 06-01-PLAN.md — Sistema de Notificações: Automação de alertas, Resend/Email e Central In-app.
+
 **Dependências**: Fase 3, 4
 
 ### Entregáveis
@@ -479,7 +484,7 @@ Plans:
 - ✅ Usuário consegue enviar mensagens em lote
 - ✅ Sistema registra histórico de mensagens
 - ✅ Usuário consegue gerenciar templates
-- ✅ Templates suportam variáveis dinâmicas
+- ✅ Templates suportam variables dinâmicas
 
 ---
 
@@ -542,8 +547,8 @@ Plans:
 | 2 | Gestão de Clientes | 1-2 semanas | ✅ Concluído |
 | 3 | Gestão de Contratos | 2-3 semanas | ✅ Concluído |
 | 4 | Gestão Financeira | 2 semanas | ✅ Concluído |
-| 5 | Relatórios e Dashboards | 1-2 semanas | 🟡 Em planejamento |
-| 6 | Sistema de Notificações | 1 semana | 🔴 Não iniciado |
+| 5 | Relatórios e Dashboards | 1-2 semanas | ✅ Concluído |
+| 6 | Sistema de Notificações | 1 semana | 🟡 Em planejamento |
 | 7 | Integração WhatsApp | 1-2 semanas | 🔴 Não iniciado |
 | 8 | Melhorias e Polimento | 1 semana | 🔴 Não iniciado |
 
