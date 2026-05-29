@@ -19,11 +19,14 @@ export const authMiddleware = (req: AuthRequest, res: Response, next: NextFuncti
   }
 
   try {
-    console.log("Tentando verificar token:", token.substring(0, 20) + "...");
-    console.log("Segredo configurado no ENV:", process.env.SUPABASE_JWT_SECRET ? "sim" : "não");
+    const secret = (process.env.SUPABASE_JWT_SECRET || process.env.JWT_SECRET || '').trim();
 
-    // Note: Supabase JWT secret should be in SUPABASE_JWT_SECRET env var
-    const decoded = jwt.verify(token, process.env.SUPABASE_JWT_SECRET || 'fallback_secret');
+    if (!secret) {
+      console.error("❌ ERRO: JWT_SECRET não configurado no ambiente!");
+      return res.status(500).json({ message: 'Internal server error: auth config missing' });
+    }
+
+    const decoded = jwt.verify(token, secret);
     req.user = decoded;
     next();
   } catch (error) {
