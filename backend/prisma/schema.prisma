@@ -79,6 +79,9 @@ enum TipoAlerta {
   VENCIMENTO
   REAJUSTE
   RECIBO
+  INADIMPLENCIA
+  INTERESSADO
+  CONTRATO
   OUTROS
 }
 
@@ -116,6 +119,8 @@ model User {
 
   auditoria    Auditoria[]
   interactions Interaction[]
+  alerts       Alert[]
+  notificationPreferences NotificationPreference[]
 
   @@map("USUARIOS")
 }
@@ -325,15 +330,18 @@ model Expense {
 
 model Alert {
   id         String       @id @default(uuid())
-  contratoId String       @map("contrato_id")
+  contratoId String?      @map("contrato_id")
+  usuarioId  String?      @map("usuario_id")
   tipo       TipoAlerta
   mensagem   String
+  link       String?
   dataEvento DateTime     @map("data_evento")
   status     StatusAlerta @default(ATIVO)
   createdAt  DateTime     @default(now()) @map("data_criacao")
   updatedAt  DateTime     @updatedAt @map("data_atualizacao")
 
-  contrato Contract @relation(fields: [contratoId], references: [id])
+  contrato Contract?    @relation(fields: [contratoId], references: [id])
+  usuario  User?        @relation(fields: [usuarioId], references: [id])
 
   @@map("ALERTAS")
 }
@@ -353,3 +361,19 @@ model Auditoria {
 
   @@map("AUDITORIA")
 }
+
+model NotificationPreference {
+  id           String     @id @default(uuid())
+  usuarioId    String     @map("usuario_id")
+  tipoAlerta   TipoAlerta @map("tipo_alerta")
+  emailEnabled Boolean    @default(true) @map("email_enabled")
+  pushEnabled  Boolean    @default(true) @map("push_enabled")
+  createdAt    DateTime   @default(now()) @map("data_criacao")
+  updatedAt    DateTime   @updatedAt @map("data_atualizacao")
+
+  usuario User @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+
+  @@unique([usuarioId, tipoAlerta])
+  @@map("PREFERENCIAS_NOTIFICACAO")
+}
+
