@@ -26,7 +26,21 @@ export const authMiddleware = (req: AuthRequest, res: Response, next: NextFuncti
       return res.status(500).json({ message: 'Internal server error: auth config missing' });
     }
 
-    const decoded = jwt.verify(token, secret);
+    let decoded;
+    try {
+      // Tentativa 1: Validar com string direta (UTF-8)
+      decoded = jwt.verify(token, secret);
+    } catch (utf8Error) {
+      try {
+        // Tentativa 2: Se falhar, tentar como Base64 (Comum no Supabase)
+        const secretBuffer = Buffer.from(secret, 'base64');
+        decoded = jwt.verify(token, secretBuffer);
+      } catch (base64Error) {
+        // Se ambos falharem, relata o erro original
+        throw utf8Error;
+      }
+    }
+
     req.user = decoded;
     next();
   } catch (error) {
