@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState } from "react";
 import { getApiUrl } from "@/lib/api";
@@ -48,7 +48,7 @@ export default function RepassesPage() {
       if (filters.dataInicio) queryParams.append("dataInicio", filters.dataInicio);
       if (filters.dataFim) queryParams.append("dataFim", filters.dataFim);
 
-      const response = await fetch(getApiUrl("/financeiro/repasses?${queryParams.toString()}"));
+      const response = await fetch(getApiUrl(`/financeiro/repasses?${queryParams.toString()}`));
       const result = await response.json();
       setRepasses(result);
     } catch (error) {
@@ -74,8 +74,8 @@ export default function RepassesPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-on-surface">Repasses aos Proprietários</h1>
-          <p className="text-on-surface-variant">Valores a repassar após comissão e despesas</p>
+          <h1 className="text-2xl font-bold text-on-surface">Repasses aos ProprietÃ¡rios</h1>
+          <p className="text-on-surface-variant">Valores a repassar apÃ³s comissÃ£o e despesas</p>
         </div>
         <Link href="/financeiro">
           <Button variant="outline">Voltar ao Financeiro</Button>
@@ -87,7 +87,7 @@ export default function RepassesPage() {
         <CardContent className="p-4">
           <div className="flex gap-4 items-end">
             <Input
-              label="Data Início"
+              label="Data InÃ­cio"
               type="date"
               value={filters.dataInicio}
               onChange={(e) => setFilters({ ...filters, dataInicio: e.target.value })}
@@ -112,20 +112,20 @@ export default function RepassesPage() {
               <p className="text-3xl font-bold text-success mt-1">{formatCurrency(totalGeral)}</p>
             </div>
             <div className="text-sm text-on-surface-variant">
-              {repasses.length} proprietário(s)
+              {repasses.length} proprietÃ¡rio(s)
             </div>
           </div>
         </CardContent>
       </Card>
 
-      {/* Lista de Repasses por Proprietário */}
+      {/* Lista de Repasses por ProprietÃ¡rio */}
       {repasses.length === 0 ? (
         <Card>
           <CardContent className="py-12 text-center space-y-3">
             <div className="mx-auto w-12 h-12 rounded-full bg-surface-container flex items-center justify-center">
               <DollarSign size={24} className="text-on-surface-variant" />
             </div>
-            <p className="text-on-surface-variant">Nenhum repasse encontrado no período.</p>
+            <p className="text-on-surface-variant">Nenhum repasse encontrado no perÃ­odo.</p>
           </CardContent>
         </Card>
       ) : (
@@ -155,9 +155,9 @@ export default function RepassesPage() {
                     <thead className="text-xs text-on-surface-variant uppercase bg-surface-container/50 border-y border-outline-variant">
                       <tr>
                         <th className="px-4 py-3 font-bold">Contrato</th>
-                        <th className="px-4 py-3 font-bold">Imóvel</th>
+                        <th className="px-4 py-3 font-bold">ImÃ³vel</th>
                         <th className="px-4 py-3 font-bold">Aluguel</th>
-                        <th className="px-4 py-3 font-bold">Comissão</th>
+                        <th className="px-4 py-3 font-bold">ComissÃ£o</th>
                         <th className="px-4 py-3 font-bold">Despesas</th>
                         <th className="px-4 py-3 font-bold">Repasse</th>
                       </tr>
@@ -198,3 +198,4 @@ export default function RepassesPage() {
     </div>
   );
 }
+

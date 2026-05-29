@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect } from "react";
 import { getApiUrl } from "@/lib/api";
@@ -47,7 +47,7 @@ export default function RecibosPage() {
       if (mesFilter) params.append("mes", mesFilter);
       if (anoFilter) params.append("ano", anoFilter);
 
-      const res = await fetch(getApiUrl("/recibos?${params.toString()}"));
+      const res = await fetch(getApiUrl(`/recibos?${params.toString()}`));
       const data = await res.json();
       setRecibos(data);
     } catch (error) {
@@ -65,7 +65,7 @@ export default function RecibosPage() {
   const handlePagar = async (id: string) => {
     if (!confirm("Deseja marcar este recibo como pago?")) return;
     try {
-      await fetch(getApiUrl("/recibos/${id}/pagar"), {
+      await fetch(getApiUrl(`/recibos/${id}/pagar`), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ dataPagamento: new Date().toISOString() })
@@ -79,7 +79,7 @@ export default function RecibosPage() {
   const handleCancelar = async (id: string) => {
     if (!confirm("Deseja cancelar este recibo?")) return;
     try {
-      await fetch(getApiUrl("/recibos/${id}/cancelar"), {
+      await fetch(getApiUrl(`/recibos/${id}/cancelar`), {
         method: "POST",
         headers: { "Content-Type": "application/json" }
       });
@@ -91,7 +91,7 @@ export default function RecibosPage() {
 
   const handleDownload = async (id: string, numero: string) => {
     try {
-      const res = await fetch(getApiUrl("/recibos/${id}/pdf"));
+      const res = await fetch(getApiUrl(`/recibos/${id}/pdf`));
       const blob = await res.blob();
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement("a");
@@ -192,13 +192,13 @@ export default function RecibosPage() {
             <table className="w-full text-sm text-left">
               <thead className="text-xs text-on-surface-variant uppercase bg-surface-container-low border-b border-border">
                 <tr>
-                  <th className="px-6 py-4 font-medium">Nº Recibo</th>
+                  <th className="px-6 py-4 font-medium">NÂº Recibo</th>
                   <th className="px-6 py-4 font-medium">Inquilino</th>
-                  <th className="px-6 py-4 font-medium">Referência</th>
+                  <th className="px-6 py-4 font-medium">ReferÃªncia</th>
                   <th className="px-6 py-4 font-medium">Vencimento</th>
                   <th className="px-6 py-4 font-medium">Valor Liquido</th>
                   <th className="px-6 py-4 font-medium">Status</th>
-                  <th className="px-6 py-4 font-medium text-right">Ações</th>
+                  <th className="px-6 py-4 font-medium text-right">AÃ§Ãµes</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">

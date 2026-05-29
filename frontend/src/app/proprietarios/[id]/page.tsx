@@ -36,7 +36,7 @@ export default function DetalhesProprietarioPage() {
   const fetchOwner = async () => {
     setLoading(true);
     try {
-      const response = await fetch(getApiUrl("/proprietarios/${id}"));
+      const response = await fetch(getApiUrl(`/proprietarios/${id}`));
       if (!response.ok) throw new Error("Proprietário não encontrado");
       const data = await response.json();
       setOwner(data);

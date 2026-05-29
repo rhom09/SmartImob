@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState } from "react";
 import { getApiUrl } from "@/lib/api";
@@ -23,11 +23,11 @@ export default function ProprietariosPage() {
   const fetchOwners = async (query = "") => {
     setLoading(true);
     try {
-      const response = await fetch(getApiUrl("/proprietarios?busca=${query}"));
+      const response = await fetch(getApiUrl(`/proprietarios?busca=${query}`));
       const result = await response.json();
       setOwners(result.data || []);
     } catch (error) {
-      console.error("Erro ao carregar proprietários:", error);
+      console.error("Erro ao carregar proprietÃ¡rios:", error);
     } finally {
       setLoading(false);
     }
@@ -42,13 +42,13 @@ export default function ProprietariosPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-on-surface">Proprietários</h1>
-          <p className="text-on-surface-variant">Gerencie os proprietários dos seus imóveis</p>
+          <h1 className="text-2xl font-bold text-on-surface">ProprietÃ¡rios</h1>
+          <p className="text-on-surface-variant">Gerencie os proprietÃ¡rios dos seus imÃ³veis</p>
         </div>
         <Link href="/proprietarios/novo">
           <Button className="gap-2">
             <Plus size={18} />
-            Novo Proprietário
+            Novo ProprietÃ¡rio
           </Button>
         </Link>
       </div>
@@ -71,15 +71,15 @@ export default function ProprietariosPage() {
         </CardHeader>
         <CardContent>
           {!mounted || loading ? (
-            <div className="py-12 text-center text-on-surface-variant">Carregando proprietários...</div>
+            <div className="py-12 text-center text-on-surface-variant">Carregando proprietÃ¡rios...</div>
           ) : owners.length === 0 ? (
             <div className="py-12 text-center space-y-4">
               <div className="mx-auto w-12 h-12 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant">
                 <User size={24} />
               </div>
-              <p className="text-on-surface-variant">Nenhum proprietário encontrado.</p>
+              <p className="text-on-surface-variant">Nenhum proprietÃ¡rio encontrado.</p>
               <Link href="/proprietarios/novo">
-                <Button variant="outline">Cadastrar primeiro proprietário</Button>
+                <Button variant="outline">Cadastrar primeiro proprietÃ¡rio</Button>
               </Link>
             </div>
           ) : (
@@ -90,8 +90,8 @@ export default function ProprietariosPage() {
                     <th scope="col" className="px-6 py-4 font-bold">Nome</th>
                     <th scope="col" className="px-6 py-4 font-bold">Documento</th>
                     <th scope="col" className="px-6 py-4 font-bold">Contato</th>
-                    <th scope="col" className="px-6 py-4 font-bold">Imóveis</th>
-                    <th scope="col" className="px-6 py-4 font-bold text-right">Ações</th>
+                    <th scope="col" className="px-6 py-4 font-bold">ImÃ³veis</th>
+                    <th scope="col" className="px-6 py-4 font-bold text-right">AÃ§Ãµes</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -148,3 +148,4 @@ export default function ProprietariosPage() {
     </div>
   );
 }
+

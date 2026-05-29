@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState } from "react";
 import { getApiUrl } from "@/lib/api";
@@ -13,8 +13,8 @@ export const dynamic = "force-dynamic";
 
 const TIPOS_DESPESA: Record<string, string> = {
   IPTU: "IPTU",
-  CONDOMINIO: "Condomínio",
-  AGUA: "Água",
+  CONDOMINIO: "CondomÃ­nio",
+  AGUA: "Ãgua",
   LUZ: "Luz",
   OUTROS: "Outros",
 };
@@ -50,7 +50,7 @@ export default function DespesasPage() {
       if (filters.tipo) queryParams.append("tipo", filters.tipo);
       if (filters.status) queryParams.append("status", filters.status);
 
-      const response = await fetch(getApiUrl("/despesas?${queryParams.toString()}"));
+      const response = await fetch(getApiUrl(`/despesas?${queryParams.toString()}`));
       const result = await response.json();
       setDespesas(result.items || []);
     } catch (error) {
@@ -98,7 +98,7 @@ export default function DespesasPage() {
 
   const handlePagar = async (id: string) => {
     try {
-      const response = await fetch(getApiUrl("/despesas/${id}/pagar"), {
+      const response = await fetch(getApiUrl(`/despesas/${id}/pagar`), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({}),
@@ -115,7 +115,7 @@ export default function DespesasPage() {
   const handleDelete = async (id: string) => {
     if (!confirm("Deseja realmente excluir esta despesa?")) return;
     try {
-      const response = await fetch(getApiUrl("/despesas/${id}"), {
+      const response = await fetch(getApiUrl(`/despesas/${id}`), {
         method: "DELETE",
       });
       if (response.ok) {
@@ -141,7 +141,7 @@ export default function DespesasPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-on-surface">Despesas</h1>
-          <p className="text-on-surface-variant">Gestão de despesas dos imóveis</p>
+          <p className="text-on-surface-variant">GestÃ£o de despesas dos imÃ³veis</p>
         </div>
         <div className="flex gap-2">
           <Link href="/financeiro">
@@ -154,7 +154,7 @@ export default function DespesasPage() {
         </div>
       </div>
 
-      {/* Formulário de Nova Despesa */}
+      {/* FormulÃ¡rio de Nova Despesa */}
       {showForm && (
         <Card>
           <CardHeader>
@@ -191,8 +191,8 @@ export default function DespesasPage() {
                 </select>
               </div>
               <Input
-                label="Descrição"
-                placeholder="Descrição da despesa"
+                label="DescriÃ§Ã£o"
+                placeholder="DescriÃ§Ã£o da despesa"
                 value={formData.descricao}
                 onChange={(e) => setFormData({ ...formData, descricao: e.target.value })}
               />
@@ -266,12 +266,12 @@ export default function DespesasPage() {
                 <thead className="text-xs text-on-surface-variant uppercase bg-surface-container/50 border-y border-outline-variant">
                   <tr>
                     <th className="px-6 py-4 font-bold">Tipo</th>
-                    <th className="px-6 py-4 font-bold">Descrição</th>
-                    <th className="px-6 py-4 font-bold">Imóvel / Contrato</th>
+                    <th className="px-6 py-4 font-bold">DescriÃ§Ã£o</th>
+                    <th className="px-6 py-4 font-bold">ImÃ³vel / Contrato</th>
                     <th className="px-6 py-4 font-bold">Vencimento</th>
                     <th className="px-6 py-4 font-bold">Valor</th>
                     <th className="px-6 py-4 font-bold">Status</th>
-                    <th className="px-6 py-4 font-bold text-right">Ações</th>
+                    <th className="px-6 py-4 font-bold text-right">AÃ§Ãµes</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -282,11 +282,11 @@ export default function DespesasPage() {
                           {TIPOS_DESPESA[despesa.tipo] || despesa.tipo}
                         </span>
                       </td>
-                      <td className="px-6 py-4 text-on-surface">{despesa.descricao || "—"}</td>
+                      <td className="px-6 py-4 text-on-surface">{despesa.descricao || "â€”"}</td>
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-1 text-sm">
                           <Building2 size={12} className="text-on-surface-variant" />
-                          <span className="truncate max-w-[200px]">{despesa.contrato?.imovel?.endereco || "—"}</span>
+                          <span className="truncate max-w-[200px]">{despesa.contrato?.imovel?.endereco || "â€”"}</span>
                         </div>
                         <div className="text-xs text-on-surface-variant">
                           Contrato: {despesa.contrato?.numeroContrato}
@@ -335,3 +335,4 @@ export default function DespesasPage() {
     </div>
   );
 }
+

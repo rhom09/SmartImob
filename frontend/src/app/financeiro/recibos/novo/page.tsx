@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect, useMemo } from "react";
 import { getApiUrl } from "@/lib/api";
@@ -51,19 +51,19 @@ export default function NovoReciboPage() {
 
   const fetchOwnerDetails = async (imovelId: string) => {
     try {
-      const res = await fetch(getApiUrl("/imoveis/${imovelId}/owner"));
+      const res = await fetch(getApiUrl(`/imoveis/${imovelId}/owner`));
       if (res.ok) {
         const data = await res.json();
         setOwnerDetails(data);
       }
     } catch (error) {
-      console.error("Erro ao buscar dados do proprietário:", error);
+      console.error("Erro ao buscar dados do proprietÃ¡rio:", error);
     }
   };
 
   const handlePreview = async () => {
     if (!contratoId) {
-      alert("Selecione um contrato para visualizar a prévia");
+      alert("Selecione um contrato para visualizar a prÃ©via");
       return;
     }
 
@@ -90,14 +90,14 @@ export default function NovoReciboPage() {
         })
       });
 
-      if (!res.ok) throw new Error("Erro ao gerar prévia");
+      if (!res.ok) throw new Error("Erro ao gerar prÃ©via");
 
       const blob = await res.blob();
       const url = window.URL.createObjectURL(blob);
       window.open(url, '_blank');
     } catch (error) {
       console.error(error);
-      alert("Não foi possível gerar a prévia do recibo.");
+      alert("NÃ£o foi possÃ­vel gerar a prÃ©via do recibo.");
     } finally {
       setPreviewing(false);
     }
@@ -118,7 +118,7 @@ export default function NovoReciboPage() {
 
   const fetchFinancialDefaults = async (imovelId: string) => {
     try {
-      const res = await fetch(getApiUrl("/imoveis/${imovelId}/defaults"));
+      const res = await fetch(getApiUrl(`/imoveis/${imovelId}/defaults`));
       if (res.ok) {
         const defaults = await res.json();
         setValorIptu(Number(defaults.valorIptu) || 0);
@@ -153,7 +153,7 @@ export default function NovoReciboPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!contratoId || !dataVencimento) {
-      alert("Preencha todos os campos obrigatórios");
+      alert("Preencha todos os campos obrigatÃ³rios");
       return;
     }
 
@@ -210,7 +210,7 @@ export default function NovoReciboPage() {
         <div className="flex gap-2">
           <Button variant="outline" className="gap-2" onClick={handlePreview} disabled={previwing || !contratoId}>
             <Eye size={18} />
-            {previwing ? "Gerando..." : "Visualizar Prévia"}
+            {previwing ? "Gerando..." : "Visualizar PrÃ©via"}
           </Button>
         </div>
       </div>
@@ -220,7 +220,7 @@ export default function NovoReciboPage() {
           <Card>
             <CardHeader>
               <CardTitle className="text-base">Dados do Contrato</CardTitle>
-              <CardDescription>Selecione o contrato e a competência</CardDescription>
+              <CardDescription>Selecione o contrato e a competÃªncia</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -241,19 +241,19 @@ export default function NovoReciboPage() {
                 {selectedContrato && (
                   <div className="md:col-span-2 grid grid-cols-2 md:grid-cols-4 gap-4 p-4 bg-surface-container-low rounded-lg border border-outline-variant mb-2">
                     <div className="space-y-1"><p className="text-[10px] font-bold text-on-surface-variant uppercase">Inquilino</p><p className="text-xs font-medium">{selectedContrato.inquilino.nome}</p></div>
-                    <div className="space-y-1"><p className="text-[10px] font-bold text-on-surface-variant uppercase">Imóvel</p><p className="text-xs font-medium truncate">{selectedContrato.imovel.endereco}</p></div>
+                    <div className="space-y-1"><p className="text-[10px] font-bold text-on-surface-variant uppercase">ImÃ³vel</p><p className="text-xs font-medium truncate">{selectedContrato.imovel.endereco}</p></div>
                     <div className="space-y-1"><p className="text-[10px] font-bold text-on-surface-variant uppercase">Vencimento Original</p><p className="text-xs font-medium">Dia {selectedContrato.diaVencimento || 10}</p></div>
                     <div className="space-y-1"><p className="text-[10px] font-bold text-on-surface-variant uppercase">Aluguel Base</p><p className="text-xs font-medium">{formatCurrency(selectedContrato.valorAluguel)}</p></div>
                   </div>
                 )}
                 <div className="space-y-2">
-                  <label className="text-xs font-bold uppercase text-on-surface-variant tracking-wider">Mês de Referência *</label>
+                  <label className="text-xs font-bold uppercase text-on-surface-variant tracking-wider">MÃªs de ReferÃªncia *</label>
                   <select value={referenciaMes} onChange={(e) => setReferenciaMes(Number(e.target.value))} className="w-full px-4 py-2 bg-surface border border-border rounded-lg text-sm">
                     {Array.from({length: 12}, (_, i) => i + 1).map(m => (<option key={m} value={m}>{m.toString().padStart(2, '0')}</option>))}
                   </select>
                 </div>
                 <div className="space-y-2">
-                  <label className="text-xs font-bold uppercase text-on-surface-variant tracking-wider">Ano de Referência *</label>
+                  <label className="text-xs font-bold uppercase text-on-surface-variant tracking-wider">Ano de ReferÃªncia *</label>
                   <input type="number" value={referenciaAno} onChange={(e) => setReferenciaAno(Number(e.target.value))} className="w-full px-4 py-2 bg-surface border border-border rounded-lg text-sm" required />
                 </div>
                 <div className="space-y-2">
@@ -271,16 +271,16 @@ export default function NovoReciboPage() {
                 <div className="flex justify-between text-sm"><span className="text-on-surface-variant">Aluguel</span><span className="font-medium">{formatCurrency(totais.aluguel)}</span></div>
                 <div className="space-y-1.5">
                   <div className="flex justify-between items-center text-sm"><label className="text-on-surface-variant">IPTU</label><input type="number" step="0.01" className="w-24 text-right bg-transparent border-b border-outline-variant outline-none" value={valorIPTU} onChange={(e) => setValorIptu(Number(e.target.value))} /></div>
-                  <div className="flex justify-between items-center text-sm"><label className="text-on-surface-variant">Condomínio</label><input type="number" step="0.01" className="w-24 text-right bg-transparent border-b border-outline-variant outline-none" value={valorCondominio} onChange={(e) => setValorCondominio(Number(e.target.value))} /></div>
-                  <div className="flex justify-between items-center text-sm"><label className="text-on-surface-variant">Água</label><input type="number" step="0.01" className="w-24 text-right bg-transparent border-b border-outline-variant outline-none" value={valorAgua} onChange={(e) => setValorAgua(Number(e.target.value))} /></div>
+                  <div className="flex justify-between items-center text-sm"><label className="text-on-surface-variant">CondomÃ­nio</label><input type="number" step="0.01" className="w-24 text-right bg-transparent border-b border-outline-variant outline-none" value={valorCondominio} onChange={(e) => setValorCondominio(Number(e.target.value))} /></div>
+                  <div className="flex justify-between items-center text-sm"><label className="text-on-surface-variant">Ãgua</label><input type="number" step="0.01" className="w-24 text-right bg-transparent border-b border-outline-variant outline-none" value={valorAgua} onChange={(e) => setValorAgua(Number(e.target.value))} /></div>
                   <div className="flex justify-between items-center text-sm"><label className="text-on-surface-variant">Luz</label><input type="number" step="0.01" className="w-24 text-right bg-transparent border-b border-outline-variant outline-none" value={valorLuz} onChange={(e) => setValorLuz(Number(e.target.value))} /></div>
-                  <div className="flex justify-between items-center text-sm"><label className="text-on-surface-variant">Outros Débitos</label><input type="number" step="0.01" className="w-24 text-right bg-transparent border-b border-outline-variant outline-none" value={outrosDebitos} onChange={(e) => setOutrosDebitos(Number(e.target.value))} /></div>
+                  <div className="flex justify-between items-center text-sm"><label className="text-on-surface-variant">Outros DÃ©bitos</label><input type="number" step="0.01" className="w-24 text-right bg-transparent border-b border-outline-variant outline-none" value={outrosDebitos} onChange={(e) => setOutrosDebitos(Number(e.target.value))} /></div>
                   <div className="flex justify-between items-center text-sm text-error"><label>(-) Descontos</label><input type="number" step="0.01" className="w-24 text-right bg-transparent border-b border-error outline-none" value={descontos} onChange={(e) => setDescontos(Number(e.target.value))} /></div>
                 </div>
-                <div className="pt-3 border-t flex justify-between"><span className="font-bold text-sm">Valor Líquido</span><span className="font-bold text-primary">{formatCurrency(totais.liquido)}</span></div>
+                <div className="pt-3 border-t flex justify-between"><span className="font-bold text-sm">Valor LÃ­quido</span><span className="font-bold text-primary">{formatCurrency(totais.liquido)}</span></div>
                 {ownerDetails && (
                   <div className="mt-4 pt-3 border-t border-outline-variant/30">
-                    <p className="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider mb-2">Informações de Pagamento (Proprietário)</p>
+                    <p className="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider mb-2">InformaÃ§Ãµes de Pagamento (ProprietÃ¡rio)</p>
                     <p className="text-xs text-on-surface font-medium">{ownerDetails.formaPagamento}</p>
                     {ownerDetails.formaPagamento === "PIX" ? (
                       <p className="text-xs text-secondary mt-1">Chave: {ownerDetails.chavePix}</p>
@@ -304,9 +304,9 @@ export default function NovoReciboPage() {
             </CardContent>
           </Card>
           <Card>
-            <CardHeader><CardTitle className="text-base">Observações</CardTitle></CardHeader>
+            <CardHeader><CardTitle className="text-base">ObservaÃ§Ãµes</CardTitle></CardHeader>
             <CardContent>
-              <textarea value={observacoes} onChange={(e) => setObservacoes(e.target.value)} rows={4} className="w-full px-4 py-2 bg-surface border rounded-lg text-sm" placeholder="Observações..." />
+              <textarea value={observacoes} onChange={(e) => setObservacoes(e.target.value)} rows={4} className="w-full px-4 py-2 bg-surface border rounded-lg text-sm" placeholder="ObservaÃ§Ãµes..." />
             </CardContent>
           </Card>
           <Button type="submit" className="w-full h-12" disabled={saving || !contratoId}>{saving ? "Gerando..." : "Emitir Recibo"}</Button>
@@ -315,3 +315,4 @@ export default function NovoReciboPage() {
     </div>
   );
 }
+

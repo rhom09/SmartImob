@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState } from "react";
 import { getApiUrl } from "@/lib/api";
@@ -32,13 +32,13 @@ export default function ImoveisPage() {
       if (params.tipo) queryParams.append("tipo", params.tipo);
       if (params.status) queryParams.append("status", params.status);
 
-      const response = await fetch(getApiUrl("/imoveis?${queryParams.toString()}"), {
+      const response = await fetch(getApiUrl(`/imoveis?${queryParams.toString()}`), {
         cache: 'no-store'
       });
       const result = await response.json();
       setProperties(result.data || []);
     } catch (error) {
-      console.error("Erro ao carregar imóveis:", error);
+      console.error("Erro ao carregar imÃ³veis:", error);
     } finally {
       setLoading(false);
     }
@@ -66,13 +66,13 @@ export default function ImoveisPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-on-surface">Imóveis</h1>
-          <p className="text-on-surface-variant">Gerencie seu inventário imobiliário</p>
+          <h1 className="text-2xl font-bold text-on-surface">ImÃ³veis</h1>
+          <p className="text-on-surface-variant">Gerencie seu inventÃ¡rio imobiliÃ¡rio</p>
         </div>
         <Link href="/imoveis/novo">
           <Button className="gap-2">
             <Plus size={18} />
-            Novo Imóvel
+            Novo ImÃ³vel
           </Button>
         </Link>
       </div>
@@ -82,7 +82,7 @@ export default function ImoveisPage() {
           <form onSubmit={handleSearch} className="flex flex-wrap gap-4">
             <div className="flex-1 min-w-[300px]">
               <Input
-                placeholder="Buscar por endereço, bairro ou código..."
+                placeholder="Buscar por endereÃ§o, bairro ou cÃ³digo..."
                 value={filters.busca}
                 onChange={(e) => setFilters({ ...filters, busca: e.target.value })}
               />
@@ -117,15 +117,15 @@ export default function ImoveisPage() {
       </Card>
 
       {!mounted || loading ? (
-        <div className="py-20 text-center text-on-surface-variant">Carregando imóveis...</div>
+        <div className="py-20 text-center text-on-surface-variant">Carregando imÃ³veis...</div>
       ) : properties.length === 0 ? (
         <div className="py-20 text-center space-y-4">
           <div className="mx-auto w-16 h-16 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant">
             <Building2 size={32} />
           </div>
-          <p className="text-on-surface-variant text-lg">Nenhum imóvel encontrado.</p>
+          <p className="text-on-surface-variant text-lg">Nenhum imÃ³vel encontrado.</p>
           <Link href="/imoveis/novo">
-            <Button variant="outline">Cadastrar primeiro imóvel</Button>
+            <Button variant="outline">Cadastrar primeiro imÃ³vel</Button>
           </Link>
         </div>
       ) : (
@@ -134,13 +134,13 @@ export default function ImoveisPage() {
             <table className="w-full text-sm text-left">
               <thead className="text-xs text-on-surface-variant uppercase bg-surface-container/50 border-b border-outline-variant">
                 <tr>
-                  <th scope="col" className="px-6 py-4 font-bold">Código</th>
-                  <th scope="col" className="px-6 py-4 font-bold">Endereço</th>
+                  <th scope="col" className="px-6 py-4 font-bold">CÃ³digo</th>
+                  <th scope="col" className="px-6 py-4 font-bold">EndereÃ§o</th>
                   <th scope="col" className="px-6 py-4 font-bold">Tipo</th>
                   <th scope="col" className="px-6 py-4 font-bold">Finalidade</th>
                   <th scope="col" className="px-6 py-4 font-bold">Valor</th>
                   <th scope="col" className="px-6 py-4 font-bold">Status</th>
-                  <th scope="col" className="px-6 py-4 font-bold text-right">Ações</th>
+                  <th scope="col" className="px-6 py-4 font-bold text-right">AÃ§Ãµes</th>
                 </tr>
               </thead>
               <tbody>
@@ -187,3 +187,4 @@ export default function ImoveisPage() {
     </div>
   );
 }
+
