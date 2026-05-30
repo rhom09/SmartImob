@@ -11,8 +11,11 @@ export class NotificationService {
     console.log('🔍 Iniciando verificação de vencimentos de contratos...');
 
     const targetDate = addDays(new Date(), 30);
-    const start = startOfDay(targetDate);
-    const end = endOfDay(targetDate);
+    // Janela de busca mais ampla para lidar com fuso horário: do início do dia anterior ao fim do dia posterior
+    const start = startOfDay(addDays(targetDate, -1));
+    const end = endOfDay(addDays(targetDate, 1));
+
+    console.log(`📅 Janela de busca (UTC/Server): ${start.toISOString()} até ${end.toISOString()}`);
 
     const contracts = await prisma.contract.findMany({
       where: {
@@ -28,7 +31,8 @@ export class NotificationService {
       },
     });
 
-    console.log(`📑 Encontrados ${contracts.length} contratos vencendo em ${targetDate.toLocaleDateString()}`);
+    console.log(`📑 Contratos na janela: ${contracts.length}`);
+    contracts.forEach(c => console.log(`  - #${c.numeroContrato} (${c.inquilino.nome}) vence em: ${c.dataFim.toISOString()}`));
 
     for (const contract of contracts) {
       await this.createExpiryAlert(contract);
@@ -39,10 +43,10 @@ export class NotificationService {
    * Cria um alerta no banco e envia e-mail se permitido
    */
   private static async createExpiryAlert(contract: any) {
-    const alertMessage = `O contrato #${contract.numeroContrato} (${contract.inquilino.nome}) vence em 30 dias.`;
+    const alertMessage = `O contrato #${contract.numeroContrato} (${contract.inquilino.nome}) vence em breve.`;
 
-    // 1. Verifica se já existe um alerta de vencimento recente para este contrato
-    // para evitar duplicidade caso o script rode múltiplas vezes
+    // 1. Verifica se já existe um alerta de vencimento ATIVO para este contrato
+    // para evitar duplicidade
     const existingAlert = await prisma.alert.findFirst({
       where: {
         contratoId: contract.id,
@@ -52,7 +56,7 @@ export class NotificationService {
     });
 
     if (existingAlert) {
-      console.log(`⚠️ Alerta já existe para o contrato ${contract.numeroContrato}. Pulando...`);
+      console.log(`⚠️ Alerta já ativo para #${contract.numeroContrato}.`);
       return;
     }
 
@@ -67,15 +71,11 @@ export class NotificationService {
       }
     });
 
-    console.log(`✅ Alerta registrado no banco: ID ${alert.id}`);
+    console.log(`✅ Alerta criado: ID ${alert.id} para #${contract.numeroContrato}`);
 
     // 3. Busca usuários administradores/gestores para notificar via e-mail
-    // e verifica suas preferências
     const usersToNotify = await prisma.user.findMany({
-      where: {
-        status: 'ATIVO',
-        perfil: { in: ['ADMIN', 'MANAGER'] },
-      },
+      where: { status: 'ATIVO' },
       include: {
         notificationPreferences: {
           where: { tipoAlerta: 'VENCIMENTO' }
@@ -83,14 +83,16 @@ export class NotificationService {
       }
     });
 
+    console.log(`👥 Notificando ${usersToNotify.length} usuários via e-mail.`);
+
     for (const user of usersToNotify) {
       const preference = user.notificationPreferences[0];
-
-      // Se não houver preferência definida, assume 'true' por padrão (comportamento do model)
       const isEmailEnabled = preference ? preference.emailEnabled : true;
 
       if (isEmailEnabled) {
         try {
+          console.log(`📧 Tentando enviar e-mail para: ${user.email} (via ${process.env.EMAIL_FROM || 'onboarding@resend.dev'})`);
+
           const html = EmailService.generateContractExpiryTemplate({
             inquilino: contract.inquilino.nome,
             imovel: contract.imovel.endereco,
@@ -98,15 +100,17 @@ export class NotificationService {
             linkContrato: `${process.env.FRONTEND_URL || 'http://localhost:3000'}/contratos/${contract.id}`
           });
 
-          await EmailService.sendEmail(
+          const res = await EmailService.sendEmail(
             user.email,
-            `Alerta de Vencimento: Contrato #${contract.numeroContrato}`,
+            `Alerta de Vencimento: #${contract.numeroContrato}`,
             html
           );
-          console.log(`📧 E-mail enviado para ${user.email}`);
+          console.log(`🚀 Resposta Resend para ${user.email}:`, res);
         } catch (error) {
-          console.error(`❌ Erro ao enviar e-mail para ${user.email}:`, error);
+          console.error(`❌ Erro no envio para ${user.email}:`, error);
         }
+      } else {
+        console.log(`🔕 E-mail desativado nas preferências de ${user.email}`);
       }
     }
   }
