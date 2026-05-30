@@ -17,16 +17,28 @@ export function NotificationBell() {
   const unreadCount = notifications.filter((n) => n.status === "ATIVO").length;
 
   useEffect(() => {
+    // 1. Monitora mudanças na sessão para disparar a busca quando o login for confirmado
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (session?.access_token) {
+        fetchNotifications();
+      }
+    });
+
+    // 2. Tenta uma busca inicial (caso a sessão já exista)
     fetchNotifications();
 
-    // Fecha o dropdown ao clicar fora
+    // 3. Fecha o dropdown ao clicar fora
     function handleClickOutside(event: MouseEvent) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setIsOpen(false);
       }
     }
     document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      subscription.unsubscribe();
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
   }, []);
 
   const fetchNotifications = async () => {
