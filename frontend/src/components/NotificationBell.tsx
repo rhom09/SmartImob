@@ -73,7 +73,7 @@ export function NotificationBell() {
 
       const response = await fetch(getApiUrl(`/notifications/${id}/read`), {
         method: "PATCH",
-        headers: { Authorization: `Bearer ${token}` },
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
       });
 
       if (response.ok) {
