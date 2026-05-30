@@ -8,8 +8,16 @@ export interface AuthRequest extends Request {
 export const authMiddleware = (req: AuthRequest, res: Response, next: NextFunction) => {
   const authHeader = req.headers.authorization;
 
-  if (!authHeader) {
-    return res.status(401).json({ message: 'No authorization header' });
+  // MODO DESENVOLVIMENTO: Se não houver token, injeta um usuário Admin padrão
+  // para permitir testes enquanto a tela de login não é finalizada.
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    console.warn("🧪 [Auth] Sem token! Injetando usuário MOCK para desenvolvimento.");
+    req.user = {
+      id: 'mock-admin-id',
+      email: 'admin@smartimob.com',
+      role: 'ADMIN'
+    };
+    return next();
   }
 
   const token = authHeader.split(' ')[1];
