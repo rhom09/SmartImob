@@ -46,15 +46,17 @@ export function NotificationBell() {
       const { data: { session } } = await supabase.auth.getSession();
       const token = session?.access_token;
 
-      if (!token) {
-        console.warn("🔔 [NotificationBell] Sessão não encontrada ou token ausente. Pulando busca.");
-        return;
-      }
-
+      // Se não houver token, ainda assim permitimos a busca (Modo Desenvolvimento / Mock)
+      // O backend cuidará de injetar o usuário Mock.
       setLoading(true);
       const response = await fetch(getApiUrl("/notifications"), {
-        headers: { Authorization: `Bearer ${token}` },
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
       });
+
+      if (!response.ok) {
+        throw new Error(`Erro na API: ${response.status}`);
+      }
+
       const data = await response.json();
       setNotifications(Array.isArray(data) ? data : []);
     } catch (error) {
