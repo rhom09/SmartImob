@@ -3,26 +3,26 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in_progress
-last_updated: "2026-05-21T12:00:00.000Z"
+last_updated: "2026-05-29T00:00:00.000Z"
 progress:
   total_phases: 9
-  completed_phases: 5
-  total_plans: 7
-  completed_plans: 7
-  percent: 56
+  completed_phases: 7
+  total_plans: 8
+  completed_plans: 8
+  percent: 78
 ---
 
 # Estado do Projeto - SmartImob
 
-**Última atualização**: 2026-05-24T00:00:00.000Z
+**Última atualização**: 2026-05-29T00:00:00.000Z
 
 ---
 
 ## Status Geral
 
-**Estado**: 🟢 Fase 5 Concluída (Relatórios e Dashboards Implementados)  
-**Fase Atual**: Preparando Fase 6 - Sistema de Notificações  
-**Progresso Geral**: 67% (6 de 9 fases concluídas)
+**Estado**: 🟢 Fase 6 Concluída (Sistema de Notificações e Alertas Implementados)  
+**Fase Atual**: Preparando Fase 7 - Integração WhatsApp  
+**Progresso Geral**: 78% (7 de 9 fases concluídas)
 
 ---
 
@@ -45,7 +45,7 @@ progress:
 | 3 | Gestão de Contratos | ✅ Concluído | 100% | 2026-05-20 | 2026-05-20 |
 | 4 | Gestão Financeira | ✅ Concluído | 100% | 2026-05-21 | 2026-05-21 |
 | 5 | Relatórios e Dashboards | ✅ Concluído | 100% | 2026-05-26 | 2026-05-28 |
-| 6 | Sistema de Notificações | 🟡 Em progresso | 0% | 2026-05-28 | - |
+| 6 | Sistema de Notificações | ✅ Concluído | 100% | 2026-05-28 | 2026-05-29 |
 | 7 | Integração WhatsApp | 🔴 Não iniciado | 0% | - | - |
 | 8 | Melhorias e Polimento | 🔴 Não iniciado | 0% | - | - |
 
@@ -53,40 +53,25 @@ progress:
 
 ## Próximas Ações
 
-1. ⏳ Implementar refinamento estético (CSS/Tailwind) para fidelidade total ao protótipo (`dashboard.png`).
-2. ⏳ Implementar filtros globais por período no Dashboard.
-3. ⏳ Adicionar botões de "Ações Rápidas" (Novo Imóvel, Nova Locação) diretamente no Dashboard.
+1. ⏳ Iniciar Fase 7: Integração com WhatsApp para envio de avisos e boletos.
+2. ⏳ Implementar UI de Login (Fase 1 - pendência de segurança).
+3. ⏳ Refinamento final de UX/UI baseado em feedback real.
 
 ---
 
 ## Decisões Importantes
 
-### 2026-05-26 - Evolução do Dashboard
-**Decisão**: Implementação de layout em grid de 12 colunas e expansão do backend com endpoints de agregação temporal (`financial-evolution`) e alertas operacionais.
-**Motivo**: Necessidade de transformar o dashboard MVP em uma interface profissional e robusta conforme o protótipo visual fornecido.
+### 2026-05-29 - Notificações Híbridas (E-mail + In-app)
+**Decisão**: Implementação de backend com Resend e NotificationService, aliado a um componente reativo no frontend (NotificationBell).
+**Motivo**: Necessidade de proatividade no sistema para evitar perda de prazos contratuais. Foi utilizado um "Mock Admin" para permitir desenvolvimento antes da tela de login.
 
 ---
 
 ## Histórico de Mudanças
 
-### 2026-05-26 (Fase 5 - Dashboard)
-- ✅ Backend: Implementação do `DashboardService` com métodos de agregação de métricas, evolução financeira de 6 meses e alertas operacionais.
-- ✅ Backend: Criação do `DashboardController` e rotas correspondentes (`/stats`, `/chart-data`, `/financial-summary`, `/financial-evolution`, `/operational-alerts`).
-- ✅ Frontend: Reestruturação do `dashboard/page.tsx` para layout em grid de 12 colunas.
-- ✅ Frontend: Criação do componente `FinancialAreaChart` e painel de contratos próximos ao vencimento.
-- ✅ Documentação: Atualização do `CLAUDE.md` com diretrizes de desenvolvimento e preferência de consulta ao grafo de conhecimento.
-
-### 2026-05-24 (Ajustes Finais Financeiro)
-- ✅ Integração de Dados Bancários/PIX no perfil do Proprietário.
-- ✅ PDF de Recibos com detalhamento completo (IPTU, Condomínio, taxas, descontos).
-- ✅ Correção do cálculo total e valor por extenso no PDF.
-- ✅ Integração do link de Recibos no Menu Lateral.
-
-### 2026-05-21 (Estabilização)
-- ✅ Estabilização total da Fase 3 e módulos centrais.
-- ✅ Migração de layouts de Cards para Tabelas profissionais.
-- ✅ Correção de erro 500 em detalhes (Serialização Decimal do Prisma).
-- ✅ Correção de erros de Hydration Mismatch no Next.js (SSR robusto).
-- ✅ Estabilização de conexões Supabase (Singleton Pattern + ?pgbouncer=true).
-
----
+### 2026-05-29 (Fase 6 - Notificações)
+- ✅ Backend: Implementação de `EmailService` e `NotificationService` com disparo diário via Cron Job.
+- ✅ Backend: Criação de rota protegida `/notifications` para gestão de alertas.
+- ✅ Frontend: Criação do componente `NotificationBell` com reatividade ao estado de autenticação.
+- ✅ Estabilização: Ajuste global de layout (`pt-24`) e correção de codificação UTF-8 em todas as rotas.
+- ✅ Documentação: Criação do `docs/SECURITY_TRANSITION.md` para guiar a migração do modo Mock para Produção.
