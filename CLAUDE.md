@@ -15,3 +15,7 @@
 ## 🚀 Infraestrutura
 - **Deploy:** Frontend na Vercel e Backend no Render.
 - **Banco de Dados:** PostgreSQL via Supabase. Utilize Row Level Security (RLS) para proteger os dados.
+
+## 🔐 Segurança e Autenticação
+- **Transição:** Durante o desenvolvimento da Fase 6, foi utilizado um modo de "Mock Auth" para permitir testes sem UI de login.
+- **Implementação do Login:** Quando a tela de login for implementada, é OBRIGATÓRIO seguir as instruções de reversão em `docs/SECURITY_TRANSITION.md` para garantir que a segurança do Supabase seja restaurada corretamente no backend e frontend.

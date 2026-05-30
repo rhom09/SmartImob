@@ -69,7 +69,34 @@ Este documento registra a jornada de desenvolvimento do SmartImob, incluindo des
 
 ---
 
+## Fase 6: Sistema de Notificações (2026-05-29)
+
+### Arquitetura de Notificações
+- **Backend - `EmailService`**: Integração com a API do **Resend** para disparos transacionais. Inclui templates HTML profissionais para alertas de vencimento.
+- **Backend - `NotificationService`**: Motor de busca proativa que identifica contratos vencendo em exatos 30 dias.
+- **Automação**: Configuração de **Cron Job** (`node-cron`) que executa a varredura de alertas diariamente às 08:00 AM.
+- **Frontend - `NotificationBell`**: Componente de interface reativo que monitora o estado de autenticação e exibe o badge de alertas não lidos em tempo real.
+
+### Estabilização e UI
+- **Padding Global**: Ajuste do contêiner principal para `pt-24` para evitar sobreposição do Header fixo no desktop.
+- **Codificação UTF-8**: Correção massiva de caracteres especiais corrompidos em todas as páginas do frontend.
+- **Mock Auth**: Implementação de bypass temporário de segurança ("Mock Admin") para permitir o teste de funcionalidades protegidas antes da conclusão da tela de login.
+
+---
+
+## Fase 5: Relatórios e Dashboards (2026-05-28)
+
+### Visualização de Dados Estratégicos
+- **Dashboard Profissional**: Reestruturação completa do layout para grid de 12 colunas, seguindo fielmente o protótipo visual.
+- **Métricas em Tempo Real**: StatCards com indicadores de Total de Imóveis, Taxa de Vacância, Novos Contratos e Previsão de Recebíveis.
+- **Gráficos com Recharts**:
+  - `FinancialAreaChart`: Evolução de receitas vs despesas com preenchimento em gradiente.
+  - `SimpleBarChart`: Distribuição de status dos imóveis (Vago vs Ocupado).
+- **Filtros Globais**: Implementação de seletor de período (7d, 30d, 90d, 12m) que sincroniza todos os componentes do dashboard.
+
+---
+
 ## Próximos Passos
-- Planejamento e Execução da **Fase 5: Relatórios e Dashboards**.
-- Implementação de gráficos interativos com Recharts.
-- Dashboard principal com métricas gerais do sistema.
+- Iniciar **Fase 7: Integração WhatsApp** para automação de avisos de cobrança.
+- Implementação da interface de login e restauração da segurança plena do Supabase (conforme `docs/SECURITY_TRANSITION.md`).
+- Refinamentos finais de UX baseados em testes operacionais.
