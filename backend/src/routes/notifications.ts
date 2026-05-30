@@ -45,4 +45,22 @@ router.patch('/:id/read', authMiddleware, async (req, res) => {
   }
 });
 
+// Endpoint de diagnóstico para forçar verificação de vencimentos
+router.post('/run-check', authMiddleware, async (req, res) => {
+  try {
+    const { NotificationService } = require('../services/notificationService');
+    await NotificationService.checkContractExpirations();
+
+    // Retorna um resumo para o frontend saber o que aconteceu
+    const count = await prisma.alert.count({ where: { status: 'ATIVO' } });
+    res.json({
+      message: 'Verificação concluída com sucesso',
+      activeAlertsCount: count
+    });
+  } catch (error) {
+    console.error('Erro ao forçar verificação:', error);
+    res.status(500).json({ error: 'Falha ao processar alertas' });
+  }
+});
+
 export default router;
