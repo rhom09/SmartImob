@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { toast } from "sonner";
 import { Eye, EyeOff, Mail, Lock } from "lucide-react";
+import googleIcon from "../../../../public/google-icon.svg";
 
 const loginSchema = z.object({
   email: z.string().email("E-mail inválido"),
@@ -123,7 +124,7 @@ export function LoginForm() {
         onClick={handleGoogleLogin}
         className="w-full h-11 font-bold gap-2 hover:bg-surface-container-low"
       >
-        <img src="/google-icon.svg" alt="Google" className="w-4 h-4" />
+        <Image src={googleIcon} alt="Google" width={16} height={16} />
         Entrar com Google
       </Button>
 
