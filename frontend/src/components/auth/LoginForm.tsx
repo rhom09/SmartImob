@@ -123,7 +123,7 @@ export function LoginForm() {
         onClick={handleGoogleLogin}
         className="w-full h-11 font-bold gap-2 hover:bg-surface-container-low"
       >
-        <Image src="/google-icon.svg" alt="Google" width={16} height={16} />
+        <img src="/google-icon.svg" alt="Google" className="w-4 h-4" />
         Entrar com Google
       </Button>
 

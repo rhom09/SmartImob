@@ -17,12 +17,10 @@ export default function LoginPage() {
             Faça login para acessar sua conta e gerenciar seus imóveis com mais praticidade e eficiência.
           </p>
           <div className="relative w-full aspect-video">
-            <Image
+            <img
               src="/building-mockup.png"
               alt="Edifício"
-              fill
-              className="rounded-2xl shadow-xl object-cover"
-              priority
+              className="rounded-2xl shadow-xl object-cover w-full h-full"
             />
           </div>
         </div>
