@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { LoginForm } from "@/components/auth/LoginForm";
+import buildingImage from "../../../public/building-mockup.png";
 
 export default function LoginPage() {
   return (
@@ -17,10 +18,12 @@ export default function LoginPage() {
             Faça login para acessar sua conta e gerenciar seus imóveis com mais praticidade e eficiência.
           </p>
           <div className="relative w-full aspect-video">
-            <img
-              src="/building-mockup.png"
+            <Image
+              src={buildingImage}
               alt="Edifício"
-              className="rounded-2xl shadow-xl object-cover w-full h-full"
+              fill
+              className="rounded-2xl shadow-xl object-cover"
+              priority
             />
           </div>
         </div>
