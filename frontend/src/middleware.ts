@@ -20,8 +20,8 @@ export async function middleware(req: NextRequest) {
         set(name: string, value: string, options: any) {
           res.cookies.set({ name, value, ...options });
         },
-        remove(name: string, value: string, options: any) {
-          res.cookies.set({ name, value, ...options });
+        remove(name: string, options: any) {
+          res.cookies.set({ name, value: '', ...options });
         },
       },
     }
