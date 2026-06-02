@@ -1,35 +1,31 @@
-import Image from "next/image";
 import { LoginForm } from "@/components/auth/LoginForm";
-import buildingImage from "../../../public/building-mockup.png";
 
 export default function LoginPage() {
   return (
     <div className="min-h-screen flex w-full">
       {/* Lado Esquerdo - Branding */}
-      <div className="hidden lg:flex w-1/2 bg-primary-container p-12 flex-col justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-on-primary-container mb-2">SmartImob</h1>
-          <p className="text-on-primary-container/80">Sistema Inteligente de Gestão Imobiliária</p>
-        </div>
-
-        <div className="space-y-4">
-          <h2 className="text-2xl font-bold text-on-primary-container">Bem-vindo de volta!</h2>
-          <p className="text-on-primary-container/70 max-w-sm">
+      <div className="hidden lg:flex w-1/2 bg-[#f8f7ff] p-16 flex-col justify-between relative overflow-hidden">
+        <div className="relative z-10">
+          <div className="flex items-center gap-2 mb-8">
+            <div className="w-10 h-10 bg-secondary rounded-xl flex items-center justify-center text-white font-bold text-xl">in</div>
+            <h1 className="text-2xl font-bold text-primary tracking-tight">SmartImob</h1>
+          </div>
+          <h2 className="text-4xl font-bold text-primary mb-4 leading-tight">Bem-vindo de volta!</h2>
+          <p className="text-on-surface-variant text-lg max-w-sm leading-relaxed">
             Faça login para acessar sua conta e gerenciar seus imóveis com mais praticidade e eficiência.
           </p>
-          <div className="relative w-full aspect-video">
-            <Image
-              src={buildingImage}
-              alt="Edifício"
-              fill
-              className="rounded-2xl shadow-xl object-cover"
-              priority
-            />
-          </div>
         </div>
 
-        <div className="text-on-primary-container/50 text-sm">
-          © 2026 SmartImob.
+        <div className="relative z-10 w-full mt-auto pt-12">
+          <img
+            src="/building-mockup.png"
+            alt="Edifício"
+            className="w-full h-auto object-cover rounded-t-3xl shadow-2xl"
+          />
+        </div>
+
+        <div className="text-on-surface-variant/50 text-sm mt-8 relative z-10">
+          © 2026 SmartImob. Todos os direitos reservados.
         </div>
       </div>
 
