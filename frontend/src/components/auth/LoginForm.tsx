@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import Image from "next/image";
 import { supabase } from "@/lib/supabase";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
@@ -122,7 +123,7 @@ export function LoginForm() {
         onClick={handleGoogleLogin}
         className="w-full h-11 font-bold gap-2 hover:bg-surface-container-low"
       >
-        <img src="/google-icon.svg" alt="Google" className="w-4 h-4" />
+        <Image src="/google-icon.svg" alt="Google" width={16} height={16} />
         Entrar com Google
       </Button>
 

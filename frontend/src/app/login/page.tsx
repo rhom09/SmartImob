@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { LoginForm } from "@/components/auth/LoginForm";
 
 export default function LoginPage() {
@@ -15,11 +16,15 @@ export default function LoginPage() {
           <p className="text-on-primary-container/70 max-w-sm">
             Faça login para acessar sua conta e gerenciar seus imóveis com mais praticidade e eficiência.
           </p>
-          <img
-            src="/building-mockup.png"
-            alt="Edifício"
-            className="rounded-2xl shadow-xl w-full"
-          />
+          <div className="relative w-full aspect-video">
+            <Image
+              src="/building-mockup.png"
+              alt="Edifício"
+              fill
+              className="rounded-2xl shadow-xl object-cover"
+              priority
+            />
+          </div>
         </div>
 
         <div className="text-on-primary-container/50 text-sm">
