@@ -4,12 +4,12 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import Image from "next/image";
 import { supabase } from "@/lib/supabase";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { toast } from "sonner";
 import { Eye, EyeOff, Mail, Lock } from "lucide-react";
+import { GoogleIcon } from "@/components/auth/GoogleIcon";
 
 const loginSchema = z.object({
   email: z.string().email("E-mail inválido"),
@@ -123,7 +123,7 @@ export function LoginForm() {
         onClick={handleGoogleLogin}
         className="w-full h-11 font-bold gap-2 hover:bg-surface-container-low"
       >
-        <Image src="/google-icon.svg" alt="Google" width={16} height={16} />
+        <GoogleIcon className="w-4 h-4" />
         Entrar com Google
       </Button>
 
