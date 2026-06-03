@@ -159,6 +159,9 @@ model Owner {
   agencia        String?
   conta          String?
 
+  imobiliariaId String?      @map("imobiliaria_id")
+  imobiliaria   Imobiliaria? @relation(fields: [imobiliariaId], references: [id])
+
   imoveis Property[]
 
   @@map("PROPRIETARIOS")
@@ -202,6 +205,9 @@ model Property {
   createdAt       DateTime @default(now()) @map("data_criacao")
   updatedAt       DateTime @updatedAt @map("data_atualizacao")
 
+  imobiliariaId String?      @map("imobiliaria_id")
+  imobiliaria   Imobiliaria? @relation(fields: [imobiliariaId], references: [id])
+
   owner     Owner           @relation(fields: [ownerId], references: [id])
   fotos     PropertyPhoto[]
   contratos Contract[]
@@ -236,6 +242,9 @@ model Tenant {
   status         StatusGeral @default(ATIVO)
   createdAt      DateTime    @default(now()) @map("data_criacao")
   updatedAt      DateTime    @updatedAt @map("data_atualizacao")
+
+  imobiliariaId String?      @map("imobiliaria_id")
+  imobiliaria   Imobiliaria? @relation(fields: [imobiliariaId], references: [id])
 
   contratos  Contract[]
   interacoes Interaction[]
@@ -272,6 +281,9 @@ model Contract {
   observacoes    String?
   createdAt      DateTime       @default(now()) @map("data_criacao")
   updatedAt      DateTime       @updatedAt @map("data_atualizacao")
+
+  imobiliariaId String?      @map("imobiliaria_id")
+  imobiliaria   Imobiliaria? @relation(fields: [imobiliariaId], references: [id])
 
   imovel    Property     @relation(fields: [imovelId], references: [id])
   inquilino Tenant       @relation(fields: [inquilinoId], references: [id])
