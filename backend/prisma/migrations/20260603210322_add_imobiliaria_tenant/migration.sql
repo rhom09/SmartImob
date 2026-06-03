@@ -1,0 +1,19 @@
+-- AlterTable
+ALTER TABLE "USUARIOS" ADD COLUMN     "imobiliaria_id" TEXT;
+
+-- CreateTable
+CREATE TABLE "IMOBILIARIAS" (
+    "id" TEXT NOT NULL,
+    "nome" TEXT NOT NULL,
+    "cnpj" TEXT,
+    "data_criacao" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "data_atualizacao" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "IMOBILIARIAS_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateIndex
+CREATE UNIQUE INDEX "IMOBILIARIAS_cnpj_key" ON "IMOBILIARIAS"("cnpj");
+
+-- AddForeignKey
+ALTER TABLE "USUARIOS" ADD CONSTRAINT "USUARIOS_imobiliaria_id_fkey" FOREIGN KEY ("imobiliaria_id") REFERENCES "IMOBILIARIAS"("id") ON DELETE SET NULL ON UPDATE CASCADE;

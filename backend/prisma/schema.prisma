@@ -106,6 +106,20 @@ enum TipoInteracao {
 
 // ─── MODELS ──────────────────────────────────────────────────────────
 
+model Imobiliaria {
+  id        String   @id @default(uuid())
+  nome      String
+  cnpj      String?  @unique
+  createdAt DateTime @default(now()) @map("data_criacao")
+  updatedAt DateTime @updatedAt @map("data_atualizacao")
+
+  usuarios User[]
+
+  @@map("IMOBILIARIAS")
+}
+
+// ─── MODELS ──────────────────────────────────────────────────────────
+
 model User {
   id         String      @id @default(uuid())
   supabaseId String      @unique @map("supabase_id")
@@ -116,6 +130,9 @@ model User {
   status     StatusGeral @default(ATIVO)
   createdAt  DateTime    @default(now()) @map("data_criacao")
   updatedAt  DateTime    @updatedAt @map("data_atualizacao")
+
+  imobiliariaId String?    @map("imobiliaria_id")
+  imobiliaria   Imobiliaria? @relation(fields: [imobiliariaId], references: [id])
 
   auditoria    Auditoria[]
   interactions Interaction[]
