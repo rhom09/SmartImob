@@ -19,6 +19,8 @@
   "type": "commonjs",
   "dependencies": {
     "@prisma/client": "^6.19.3",
+    "@supabase/ssr": "^0.5.2",
+    "@supabase/supabase-js": "^2.48.1",
     "@types/jsonwebtoken": "^9.0.10",
     "cors": "^2.8.6",
     "date-fns": "^4.2.1",
