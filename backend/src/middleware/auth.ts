@@ -1,11 +1,21 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
+import jwksClient from 'jwks-rsa';
+import { promisify } from 'util';
+
+const client = jwksClient({
+  jwksUri: 'https://xdrcbtmtbnnsizuhtqwl.supabase.co/.well-known/jwks.json',
+  cache: true,
+  rateLimit: true,
+});
+
+const getSigningKey = promisify(client.getSigningKey);
 
 export interface AuthRequest extends Request {
   user?: any;
 }
 
-export const authMiddleware = (req: AuthRequest, res: Response, next: NextFunction) => {
+export const authMiddleware = async (req: AuthRequest, res: Response, next: NextFunction) => {
   const authHeader = req.headers.authorization;
 
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -15,35 +25,27 @@ export const authMiddleware = (req: AuthRequest, res: Response, next: NextFuncti
 
   const token = authHeader.split(' ')[1];
 
-  if (!token) {
-    console.warn("⚠️ [Auth] Requisição recebida sem token no header Authorization.");
-    return res.status(401).json({ message: 'No token provided' });
-  }
-
   try {
-    console.log(`🔑 [Auth] Validando token (Início: ${token.substring(0, 15)}... | Tamanho: ${token.length})`);
-
-    const secret = (process.env.SUPABASE_JWT_SECRET || process.env.JWT_SECRET || '').trim();
-
-    if (!secret) {
-      console.error("❌ ERRO: JWT_SECRET não configurado no ambiente!");
-      return res.status(500).json({ message: 'Internal server error: auth config missing' });
+    const decodedHeader = jwt.decode(token, { complete: true }) as any;
+    if (!decodedHeader || !decodedHeader.header.kid) {
+      throw new Error('Token inválido ou sem KID');
     }
 
-    let decoded;
-    try {
-      // Tentativa 1: Validar com string direta (UTF-8) com algoritmo HS256
-      decoded = jwt.verify(token, secret, { algorithms: ['HS256'] });
-    } catch (utf8Error) {
-      try {
-        // Tentativa 2: Se falhar, tentar como Base64 (Comum no Supabase)
-        const secretBuffer = Buffer.from(secret, 'base64');
-        decoded = jwt.verify(token, secretBuffer, { algorithms: ['HS256'] });
-      } catch (base64Error) {
-        // Se ambos falharem, relata o erro original
-        throw utf8Error;
-      }
+    const key = await getSigningKey(decodedHeader.header.kid);
+
+    // Check if key exists and has the required property
+    if (!key) {
+        throw new Error('Não foi possível encontrar a chave de assinatura');
     }
+
+    const publicKey = ('getPublicKey' in key)
+        ? (key as any).getPublicKey()
+        : (key as any).rsaPublicKey;
+
+    const decoded = jwt.verify(token, publicKey, {
+      algorithms: ['RS256'],
+      issuer: 'https://xdrcbtmtbnnsizuhtqwl.supabase.co/auth/v1',
+    });
 
     req.user = decoded;
     next();
