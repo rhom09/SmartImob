@@ -113,7 +113,11 @@ model Imobiliaria {
   createdAt DateTime @default(now()) @map("data_criacao")
   updatedAt DateTime @updatedAt @map("data_atualizacao")
 
-  usuarios User[]
+  usuarios   User[]
+  owners     Owner[]
+  imoveis    Property[]
+  tenants    Tenant[]
+  contratos  Contract[]
 
   @@map("IMOBILIARIAS")
 }
