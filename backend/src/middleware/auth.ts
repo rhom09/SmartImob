@@ -4,7 +4,7 @@ import jwksClient from 'jwks-rsa';
 import { promisify } from 'util';
 
 const client = jwksClient({
-  jwksUri: 'https://xdrcbtmtbnnsizuhtqwl.supabase.co/.well-known/jwks.json',
+  jwksUri: 'https://xdrcbtmtbnnsizuhtqwl.supabase.co/auth/v1/jwks',
   cache: true,
   rateLimit: true,
 });
