@@ -31,6 +31,8 @@ export async function middleware(req: NextRequest) {
     data: { session },
   } = await supabase.auth.getSession();
 
+  console.log('🔍 Middleware check - Path:', req.nextUrl.pathname, 'Session exists:', !!session);
+
   // Redirecionamentos
   if (!session && !req.nextUrl.pathname.startsWith('/login')) {
     return NextResponse.redirect(new URL('/login', req.url));
