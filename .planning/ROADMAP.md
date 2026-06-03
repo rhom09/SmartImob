@@ -548,8 +548,8 @@ Plans:
 | 3 | Gestão de Contratos | 2-3 semanas | ✅ Concluído |
 | 4 | Gestão Financeira | 2 semanas | ✅ Concluído |
 | 5 | Relatórios e Dashboards | 1-2 semanas | ✅ Concluído |
-| 6 | Sistema de Notificações | 1 semana | 🟡 Em planejamento |
-| 7 | Integração WhatsApp | 1-2 semanas | 🔴 Não iniciado |
+| 6 | Sistema de Notificações | 1 semana | ✅ Concluído |
+| 7 | Integração WhatsApp | 1-2 semanas | 🟡 Em planejamento |
 | 8 | Melhorias e Polimento | 1 semana | 🔴 Não iniciado |
 
 **Duração total estimada**: 12-18 semanas (3-4.5 meses)
