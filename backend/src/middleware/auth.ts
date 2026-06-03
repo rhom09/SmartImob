@@ -1,10 +1,13 @@
 import { Request, Response, NextFunction } from 'express';
 import { createClient } from '@supabase/supabase-js';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 // Inicializa cliente admin do Supabase para validar tokens
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY! // Necessário role de serviço para validar usuários
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
 export interface AuthRequest extends Request {
