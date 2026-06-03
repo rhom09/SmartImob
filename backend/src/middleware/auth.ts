@@ -32,13 +32,13 @@ export const authMiddleware = (req: AuthRequest, res: Response, next: NextFuncti
 
     let decoded;
     try {
-      // Tentativa 1: Validar com string direta (UTF-8)
-      decoded = jwt.verify(token, secret);
+      // Tentativa 1: Validar com string direta (UTF-8) com algoritmo HS256
+      decoded = jwt.verify(token, secret, { algorithms: ['HS256'] });
     } catch (utf8Error) {
       try {
         // Tentativa 2: Se falhar, tentar como Base64 (Comum no Supabase)
         const secretBuffer = Buffer.from(secret, 'base64');
-        decoded = jwt.verify(token, secretBuffer);
+        decoded = jwt.verify(token, secretBuffer, { algorithms: ['HS256'] });
       } catch (base64Error) {
         // Se ambos falharem, relata o erro original
         throw utf8Error;
