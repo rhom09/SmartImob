@@ -27,6 +27,7 @@
     "jsonwebtoken": "^9.0.3",
     "jspdf": "^4.2.1",
     "jspdf-autotable": "^5.0.8",
+    "jwks-rsa": "^4.0.1",
     "node-cron": "^4.2.1",
     "pdfkit": "^0.18.0",
     "pg": "^8.21.0",
