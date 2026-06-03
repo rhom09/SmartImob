@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -19,6 +20,7 @@ const loginSchema = z.object({
 type LoginValues = z.infer<typeof loginSchema>;
 
 export function LoginForm() {
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
@@ -35,7 +37,7 @@ export function LoginForm() {
       });
 
       if (error) throw error;
-      window.location.href = "/dashboard";
+      router.push("/dashboard");
     } catch (error: any) {
       toast.error(error.message || "Erro ao fazer login");
     } finally {
