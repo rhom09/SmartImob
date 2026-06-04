@@ -139,12 +139,12 @@ export class ReceiptController {
   static async cancel(req: Request, res: Response) {
     try {
       const imobiliariaId = (req as any).user.imobiliariaId;
-      const { id } = req.params;
-      const receipt = await prisma.receipt.updateMany({
+      const id = req.params.id as string;
+      const result = await prisma.receipt.updateMany({
         where: { id, imobiliariaId },
         data: { status: 'CANCELADO' }
       });
-      if (receipt.count === 0) return res.status(404).json({ message: 'Recibo não encontrado' });
+      if (result.count === 0) return res.status(404).json({ message: 'Recibo não encontrado' });
       return res.json({ message: 'Recibo cancelado' });
     } catch (error) {
       console.error('Erro ao cancelar recibo:', error);
@@ -155,10 +155,10 @@ export class ReceiptController {
   static async pay(req: Request, res: Response) {
     try {
       const imobiliariaId = (req as any).user.imobiliariaId;
-      const { id } = req.params;
+      const id = req.params.id as string;
       const { dataPagamento } = req.body;
 
-      const receipt = await prisma.receipt.updateMany({
+      const result = await prisma.receipt.updateMany({
         where: { id, imobiliariaId },
         data: {
           status: 'PAGO',
@@ -166,7 +166,7 @@ export class ReceiptController {
         },
       });
 
-      if (receipt.count === 0) return res.status(404).json({ message: 'Recibo não encontrado' });
+      if (result.count === 0) return res.status(404).json({ message: 'Recibo não encontrado' });
 
       return res.json({ message: 'Recibo baixado' });
     } catch (error) {
@@ -178,7 +178,7 @@ export class ReceiptController {
   static async downloadPDF(req: Request, res: Response) {
     try {
       const imobiliariaId = (req as any).user.imobiliariaId;
-      const { id } = req.params;
+      const id = req.params.id as string;
       const receipt = await prisma.receipt.findFirst({
         where: { id, imobiliariaId },
         include: { contrato: { include: { inquilino: true, imovel: { include: { owner: true } } } } }
