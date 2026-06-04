@@ -2,9 +2,9 @@ import prisma from '../lib/prisma';
 import { startOfMonth, endOfMonth, subMonths } from 'date-fns';
 
 export class DashboardService {
-  static async getMetrics() {
-    const totalProperties = await prisma.property.count();
-    const occupiedProperties = await prisma.property.count({ where: { status: 'OCUPADO' } });
+  static async getMetrics(imobiliariaId: string) {
+    const totalProperties = await prisma.property.count({ where: { imobiliariaId } });
+    const occupiedProperties = await prisma.property.count({ where: { imobiliariaId, status: 'OCUPADO' } });
 
     // Taxa de vacância simples: (Total - Ocupados) / Total
     const vacancyRate = totalProperties > 0 ? ((totalProperties - occupiedProperties) / totalProperties) * 100 : 0;
@@ -12,12 +12,13 @@ export class DashboardService {
     const lastMonth = subMonths(new Date(), 1);
     const newContracts = await prisma.contract.count({
       where: {
+        imobiliariaId,
         createdAt: { gte: lastMonth }
       }
     });
 
     const activeTenants = await prisma.tenant.count({
-      where: { status: 'ATIVO', tipo: 'INQUILINO' }
+      where: { imobiliariaId, status: 'ATIVO', tipo: 'INQUILINO' }
     });
 
     return {
@@ -28,9 +29,10 @@ export class DashboardService {
     };
   }
 
-  static async getChartData() {
+  static async getChartData(imobiliariaId: string) {
     const propertiesByStatus = await prisma.property.groupBy({
       by: ['status'],
+      where: { imobiliariaId },
       _count: true
     });
 
@@ -42,12 +44,13 @@ export class DashboardService {
     };
   }
 
-  static async getFinancialSummary() {
+  static async getFinancialSummary(imobiliariaId: string) {
     const now = new Date();
     const startOfCurrentMonth = startOfMonth(now);
 
     const pendingReceivables = await prisma.receipt.aggregate({
       where: {
+        imobiliariaId,
         status: 'PENDENTE',
         dataVencimento: { gte: startOfCurrentMonth }
       },
@@ -56,6 +59,7 @@ export class DashboardService {
 
     const overdueExpenses = await prisma.expense.aggregate({
       where: {
+        imobiliariaId,
         status: 'PENDENTE',
         dataVencimento: { lt: now }
       },
@@ -68,18 +72,18 @@ export class DashboardService {
     };
   }
 
-  static async getFinancialEvolution() {
+  static async getFinancialEvolution(imobiliariaId: string) {
     const months = Array.from({ length: 6 }, (_, i) => subMonths(new Date(), i)).reverse();
     const evolution = await Promise.all(
       months.map(async (month) => {
         const start = startOfMonth(month);
         const end = endOfMonth(month);
         const receipts = await prisma.receipt.aggregate({
-          where: { dataPagamento: { gte: start, lte: end }, status: 'PAGO' },
+          where: { imobiliariaId, dataPagamento: { gte: start, lte: end }, status: 'PAGO' },
           _sum: { valorLiquido: true }
         });
         const expenses = await prisma.expense.aggregate({
-          where: { dataPagamento: { gte: start, lte: end }, status: 'PAGO' },
+          where: { imobiliariaId, dataPagamento: { gte: start, lte: end }, status: 'PAGO' },
           _sum: { valor: true }
         });
         return {
@@ -92,11 +96,12 @@ export class DashboardService {
     return evolution;
   }
 
-  static async getOperationalAlerts() {
+  static async getOperationalAlerts(imobiliariaId: string) {
     const nextMonth = new Date();
     nextMonth.setMonth(nextMonth.getMonth() + 1);
     const alerts = await prisma.contract.findMany({
       where: {
+        imobiliariaId,
         status: 'ATIVO',
         dataFim: { lte: nextMonth }
       },
