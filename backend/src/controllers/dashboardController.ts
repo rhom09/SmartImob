@@ -4,7 +4,9 @@ import { DashboardService } from '../services/dashboardService';
 export class DashboardController {
   static async getDashboardData(req: Request, res: Response) {
     try {
-      const metrics = await DashboardService.getMetrics();
+      const imobiliariaId = (req as any).user.imobiliariaId;
+      if (!imobiliariaId) return res.status(403).json({ error: 'Imobiliária não vinculada' });
+      const metrics = await DashboardService.getMetrics(imobiliariaId);
       res.json(metrics);
     } catch (error) {
       console.error('Erro ao buscar estatísticas do dashboard:', error);
@@ -14,7 +16,9 @@ export class DashboardController {
 
   static async getChartData(req: Request, res: Response) {
     try {
-      const charts = await DashboardService.getChartData();
+      const imobiliariaId = (req as any).user.imobiliariaId;
+      if (!imobiliariaId) return res.status(403).json({ error: 'Imobiliária não vinculada' });
+      const charts = await DashboardService.getChartData(imobiliariaId);
       res.json(charts);
     } catch (error) {
       console.error('Erro ao buscar dados de gráficos do dashboard:', error);
@@ -24,7 +28,9 @@ export class DashboardController {
 
   static async getFinancialSummary(req: Request, res: Response) {
     try {
-      const summary = await DashboardService.getFinancialSummary();
+      const imobiliariaId = (req as any).user.imobiliariaId;
+      if (!imobiliariaId) return res.status(403).json({ error: 'Imobiliária não vinculada' });
+      const summary = await DashboardService.getFinancialSummary(imobiliariaId);
       res.json(summary);
     } catch (error) {
       console.error('Erro ao buscar resumo financeiro:', error);
@@ -34,7 +40,9 @@ export class DashboardController {
 
   static async getFinancialEvolution(req: Request, res: Response) {
     try {
-      const evolution = await DashboardService.getFinancialEvolution();
+      const imobiliariaId = (req as any).user.imobiliariaId;
+      if (!imobiliariaId) return res.status(403).json({ error: 'Imobiliária não vinculada' });
+      const evolution = await DashboardService.getFinancialEvolution(imobiliariaId);
       res.json(evolution);
     } catch (error) {
       console.error('Erro ao buscar evolução financeira:', error);
@@ -44,7 +52,9 @@ export class DashboardController {
 
   static async getOperationalAlerts(req: Request, res: Response) {
     try {
-      const alerts = await DashboardService.getOperationalAlerts();
+      const imobiliariaId = (req as any).user.imobiliariaId;
+      if (!imobiliariaId) return res.status(403).json({ error: 'Imobiliária não vinculada' });
+      const alerts = await DashboardService.getOperationalAlerts(imobiliariaId);
       res.json(alerts);
     } catch (error) {
       console.error('Erro ao buscar alertas operacionais:', error);
