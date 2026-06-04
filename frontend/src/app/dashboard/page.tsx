@@ -1,6 +1,5 @@
 "use client";
 
-import { supabase } from "@/lib/supabase";
 import { useEffect, useState } from "react";
 import { DollarSign, TrendingUp, AlertTriangle, BarChart3, Plus, Calendar, Building } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
@@ -9,7 +8,7 @@ import { formatCurrency } from "@/lib/utils";
 import { SimpleBarChart, FinancialAreaChart } from "@/components/dashboard/Charts";
 import { StatCard } from "@/components/dashboard/ui/StatCard";
 import Link from "next/link";
-import { getApiUrl } from "@/lib/api";
+import { getApiUrl, fetchWithAuth } from "@/lib/api";
 
 export const dynamic = "force-dynamic";
 
@@ -29,23 +28,17 @@ export default function DashboardPage() {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const { data: { session } } = await supabase.auth.getSession();
-      const token = session?.access_token;
-
       const [statsRes, chartRes, financeRes, evolutionRes, alertsRes] = await Promise.all([
-        fetch(getApiUrl("/dashboard/stats"), { headers: { 'Authorization': `Bearer ${token}` } }),
-        fetch(getApiUrl("/dashboard/chart-data"), { headers: { 'Authorization': `Bearer ${token}` } }),
-        fetch(getApiUrl("/dashboard/financial-summary"), { headers: { 'Authorization': `Bearer ${token}` } }),
-        fetch(getApiUrl("/dashboard/financial-evolution"), { headers: { 'Authorization': `Bearer ${token}` } }),
-        fetch(getApiUrl("/dashboard/operational-alerts"), { headers: { 'Authorization': `Bearer ${token}` } })
+        fetchWithAuth(getApiUrl("/dashboard/stats")),
+        fetchWithAuth(getApiUrl("/dashboard/chart-data")),
+        fetchWithAuth(getApiUrl("/dashboard/financial-summary")),
+        fetchWithAuth(getApiUrl("/dashboard/financial-evolution")),
+        fetchWithAuth(getApiUrl("/dashboard/operational-alerts"))
       ]);
 
-      const stats = await statsRes.json();
-      setMetrics(stats);
-
+      setMetrics(await statsRes.json());
       const chartDataRes = await chartRes.json();
-      setChartData(chartDataRes.propertiesByStatus);
-
+      setChartData(chartDataRes.propertiesByStatus || []);
       setFinancialSummary(await financeRes.json());
       setEvolutionData(await evolutionRes.json());
       setAlerts(await alertsRes.json());
@@ -174,7 +167,7 @@ export default function DashboardPage() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-outline-variant/10">
-                    {alerts.map(a => (
+                    {alerts.map((a: any) => (
                       <tr key={a.id} className="hover:bg-surface-container-low/50 transition-colors">
                         <td className="p-4 pl-6 font-bold text-on-surface">{a.inquilino?.nome || "Não identificado"}</td>
                         <td className="p-4 text-on-surface-variant font-medium text-xs">{a.imovel?.endereco || "Endereço não informado"}</td>
