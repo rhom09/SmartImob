@@ -1,5 +1,6 @@
 import prisma from '../lib/prisma';
 import { addMonths, differenceInMonths, setDate, format, isBefore } from 'date-fns';
+import { EmailService } from './emailService';
 
 export interface CreateContractData {
   imovelId: string;
@@ -17,7 +18,6 @@ export interface CreateContractData {
 export class ContractService {
   static async create(data: CreateContractData, imobiliariaId: string) {
     return await prisma.$transaction(async (tx) => {
-      // 1. Validar se imóvel está disponível
       const property = await tx.property.findUnique({
         where: { id: data.imovelId, imobiliariaId },
       });
@@ -25,14 +25,12 @@ export class ContractService {
       if (!property) throw new Error('Imóvel não encontrado');
       if (property.status === 'OCUPADO') throw new Error('Imóvel já está ocupado');
 
-      // 2. Validar inquilino
       const tenant = await tx.tenant.findUnique({
         where: { id: data.inquilinoId, imobiliariaId },
       });
 
       if (!tenant) throw new Error('Inquilino não encontrado');
 
-      // 3. Criar o contrato
       const contract = await tx.contract.create({
         data: {
           imobiliariaId,
@@ -50,15 +48,12 @@ export class ContractService {
         },
       });
 
-      // 4. Atualizar status do imóvel
       await tx.property.update({
         where: { id: data.imovelId, imobiliariaId },
         data: { status: 'OCUPADO' },
       });
 
-      // 5. Gerar parcelas (Recibos)
       const receipts = [];
-      let currentMonth = data.dataInicio;
       const totalMonths = differenceInMonths(data.dataFim, data.dataInicio) + 1;
 
       for (let i = 0; i < totalMonths; i++) {
@@ -135,16 +130,16 @@ export class ContractService {
     };
   }
 
-  static async applyAdjustment(id: string, data: { indice: any, percentual: number, novoValor: number, observacoes?: string }) {
+  static async applyAdjustment(id: string, data: { indice: any, percentual: number, novoValor: number, observacoes?: string }, imobiliariaId: string) {
     return await prisma.$transaction(async (tx) => {
-      const contract = await tx.contract.findUnique({ where: { id } });
+      const contract = await tx.contract.findFirst({ where: { id, imobiliariaId } });
       if (!contract) throw new Error('Contrato não encontrado');
 
       const valorAnterior = contract.valorAluguel;
 
-      // 1. Criar registro de reajuste
       const adjustment = await tx.adjustment.create({
         data: {
+          imobiliariaId,
           contratoId: id,
           indice: data.indice,
           percentual: data.percentual,
@@ -155,23 +150,21 @@ export class ContractService {
         }
       });
 
-      // 2. Atualizar valor no contrato
       await tx.contract.update({
-        where: { id },
+        where: { id, imobiliariaId },
         data: { valorAluguel: data.novoValor }
       });
 
-      // 3. Atualizar recibos PENDENTES futuros
-      // Recibos com dataVencimento > hoje
       await tx.receipt.updateMany({
         where: {
           contratoId: id,
+          imobiliariaId,
           status: 'PENDENTE',
           dataVencimento: { gt: new Date() }
         },
         data: {
           valorBruto: data.novoValor,
-          valorLiquido: data.novoValor // Simplificado: valorLiquido = novo valor bruto
+          valorLiquido: data.novoValor
         }
       });
 
@@ -179,9 +172,9 @@ export class ContractService {
     });
   }
 
-  static async getById(id: string) {
-    return await prisma.contract.findUnique({
-      where: { id },
+  static async getById(id: string, imobiliariaId: string) {
+    return await prisma.contract.findFirst({
+      where: { id, imobiliariaId },
       include: {
         imovel: { include: { owner: true } },
         inquilino: true,
