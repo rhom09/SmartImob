@@ -15,11 +15,11 @@ export interface CreateContractData {
 }
 
 export class ContractService {
-  static async create(data: CreateContractData) {
+  static async create(data: CreateContractData, imobiliariaId: string) {
     return await prisma.$transaction(async (tx) => {
       // 1. Validar se imóvel está disponível
       const property = await tx.property.findUnique({
-        where: { id: data.imovelId },
+        where: { id: data.imovelId, imobiliariaId },
       });
 
       if (!property) throw new Error('Imóvel não encontrado');
@@ -27,7 +27,7 @@ export class ContractService {
 
       // 2. Validar inquilino
       const tenant = await tx.tenant.findUnique({
-        where: { id: data.inquilinoId },
+        where: { id: data.inquilinoId, imobiliariaId },
       });
 
       if (!tenant) throw new Error('Inquilino não encontrado');
@@ -35,6 +35,7 @@ export class ContractService {
       // 3. Criar o contrato
       const contract = await tx.contract.create({
         data: {
+          imobiliariaId,
           imovelId: data.imovelId,
           inquilinoId: data.inquilinoId,
           usuarioId: data.usuarioId,
@@ -51,30 +52,25 @@ export class ContractService {
 
       // 4. Atualizar status do imóvel
       await tx.property.update({
-        where: { id: data.imovelId },
+        where: { id: data.imovelId, imobiliariaId },
         data: { status: 'OCUPADO' },
       });
 
       // 5. Gerar parcelas (Recibos)
       const receipts = [];
       let currentMonth = data.dataInicio;
-
-      // Calcula a quantidade de meses (incluindo o parcial se houver)
-      // Usamos differenceInMonths + 1 para garantir que cobrimos o período
       const totalMonths = differenceInMonths(data.dataFim, data.dataInicio) + 1;
 
       for (let i = 0; i < totalMonths; i++) {
         const dueDateBase = addMonths(data.dataInicio, i);
         let dueDate = setDate(dueDateBase, data.diaVencimento);
 
-        // Se o dia de vencimento for menor que o dia de início no primeiro mês,
-        // a parcela vence no mês seguinte?
-        // Regra padrão: Se contrato começa dia 15 e vence dia 10, a primeira parcela vence no mês seguinte.
         if (i === 0 && isBefore(dueDate, data.dataInicio)) {
           dueDate = addMonths(dueDate, 1);
         }
 
         receipts.push({
+          imobiliariaId,
           contratoId: contract.id,
           referenciaMes: dueDate.getMonth() + 1,
           referenciaAno: dueDate.getFullYear(),
@@ -99,11 +95,11 @@ export class ContractService {
     });
   }
 
-  static async list(filters: any) {
+  static async list(filters: any, imobiliariaId: string) {
     const { busca, status, page = 1, limit = 20 } = filters;
     const skip = (page - 1) * limit;
 
-    const where: any = {};
+    const where: any = { imobiliariaId };
     if (status) where.status = status;
     if (busca) {
       where.OR = [
