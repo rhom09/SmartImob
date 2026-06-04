@@ -196,7 +196,7 @@ export class ReceiptController {
   static async listByContract(req: Request, res: Response) {
     try {
       const imobiliariaId = (req as any).user.imobiliariaId;
-      const { contratoId } = req.params;
+      const contratoId = req.params.contratoId as string;
       const receipts = await prisma.receipt.findMany({
         where: { contratoId, imobiliariaId },
         orderBy: { dataVencimento: 'asc' },
