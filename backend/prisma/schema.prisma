@@ -118,6 +118,11 @@ model Imobiliaria {
   imoveis    Property[]
   tenants    Tenant[]
   contratos  Contract[]
+  recibos    Receipt[]
+  reajustes  Adjustment[]
+  despesas   Expense[]
+  alertas    Alert[]
+  auditorias Auditoria[]
 
   @@map("IMOBILIARIAS")
 }
