@@ -6,6 +6,7 @@ export interface CreateExpenseData {
   descricao?: string;
   valor: number;
   dataVencimento: Date;
+  imobiliariaId: string;
 }
 
 export interface UpdateExpenseData {
@@ -19,9 +20,9 @@ export interface UpdateExpenseData {
 export class ExpenseService {
   // ─── Criar Despesa ──────────────────────────────────────────────────
   static async create(data: CreateExpenseData) {
-    // Validar se contrato existe
+    // Validar se contrato existe e pertence à mesma imobiliária
     const contract = await prisma.contract.findUnique({
-      where: { id: data.contratoId },
+      where: { id: data.contratoId, imobiliariaId: data.imobiliariaId },
     });
     if (!contract) throw new Error('Contrato não encontrado');
 
@@ -32,6 +33,7 @@ export class ExpenseService {
         descricao: data.descricao,
         valor: data.valor,
         dataVencimento: new Date(data.dataVencimento),
+        imobiliariaId: data.imobiliariaId,
       },
     });
   }
@@ -45,11 +47,11 @@ export class ExpenseService {
     dataFim?: string;
     page?: number;
     limit?: number;
-  }) {
+  }, imobiliariaId: string) {
     const { contratoId, tipo, status, dataInicio, dataFim, page = 1, limit = 20 } = filters;
     const skip = (page - 1) * limit;
 
-    const where: any = {};
+    const where: any = { imobiliariaId };
 
     if (contratoId) where.contratoId = contratoId;
     if (tipo) where.tipo = tipo;
@@ -91,9 +93,9 @@ export class ExpenseService {
   }
 
   // ─── Buscar por ID ──────────────────────────────────────────────────
-  static async getById(id: string) {
-    return await prisma.expense.findUnique({
-      where: { id },
+  static async getById(id: string, imobiliariaId: string) {
+    return await prisma.expense.findFirst({
+      where: { id, imobiliariaId },
       include: {
         contrato: {
           include: {
@@ -106,7 +108,10 @@ export class ExpenseService {
   }
 
   // ─── Atualizar Despesa ──────────────────────────────────────────────
-  static async update(id: string, data: UpdateExpenseData) {
+  static async update(id: string, data: UpdateExpenseData, imobiliariaId: string) {
+    const expense = await prisma.expense.findFirst({ where: { id, imobiliariaId } });
+    if (!expense) throw new Error('Despesa não encontrada');
+
     return await prisma.expense.update({
       where: { id },
       data: {
@@ -120,12 +125,18 @@ export class ExpenseService {
   }
 
   // ─── Excluir Despesa ────────────────────────────────────────────────
-  static async delete(id: string) {
+  static async delete(id: string, imobiliariaId: string) {
+    const expense = await prisma.expense.findFirst({ where: { id, imobiliariaId } });
+    if (!expense) throw new Error('Despesa não encontrada');
+
     return await prisma.expense.delete({ where: { id } });
   }
 
   // ─── Marcar como Paga ───────────────────────────────────────────────
-  static async markAsPaid(id: string, dataPagamento?: Date) {
+  static async markAsPaid(id: string, dataPagamento: Date | undefined, imobiliariaId: string) {
+    const expense = await prisma.expense.findFirst({ where: { id, imobiliariaId } });
+    if (!expense) throw new Error('Despesa não encontrada');
+
     return await prisma.expense.update({
       where: { id },
       data: {
@@ -136,9 +147,10 @@ export class ExpenseService {
   }
 
   // ─── Total de Despesas por Contrato em Período ──────────────────────
-  static async getTotalByContract(contratoId: string, dataInicio?: Date, dataFim?: Date) {
+  static async getTotalByContract(contratoId: string, imobiliariaId: string, dataInicio?: Date, dataFim?: Date) {
     const where: any = {
       contratoId,
+      imobiliariaId,
       status: 'PAGO',
     };
 
