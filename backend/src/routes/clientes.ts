@@ -1,28 +1,33 @@
 import { Router, Request, Response } from 'express';
 import prisma from '../lib/prisma';
+import { authMiddleware as authenticate } from '../middleware/auth';
 import { createTenantSchema, updateTenantSchema, createInteractionSchema } from '../validators/schemas';
 
 const router = Router();
 
 // ─── POST /api/clientes ──────────────────────────────────────────────
-router.post('/', async (req: Request, res: Response) => {
+router.post('/', authenticate, async (req: Request, res: Response) => {
   try {
+    const imobiliariaId = (req as any).user.imobiliariaId;
+    if (!imobiliariaId) return res.status(403).json({ error: 'Imobiliária não vinculada' });
+
     const parsed = createTenantSchema.safeParse(req.body);
     if (!parsed.success) {
       return res.status(400).json({ errors: parsed.error.flatten().fieldErrors });
     }
 
-    const existing = await prisma.tenant.findUnique({
-      where: { cpfCnpj: parsed.data.cpfCnpj.replace(/\D/g, '') },
+    const existing = await prisma.tenant.findFirst({
+      where: { cpfCnpj: parsed.data.cpfCnpj.replace(/\D/g, ''), imobiliariaId },
     });
     if (existing) {
-      return res.status(409).json({ message: 'CPF/CNPJ já cadastrado' });
+      return res.status(409).json({ message: 'CPF/CNPJ já cadastrado para esta imobiliária' });
     }
 
     const tenant = await prisma.tenant.create({
       data: {
         ...parsed.data,
         cpfCnpj: parsed.data.cpfCnpj.replace(/\D/g, ''),
+        imobiliariaId,
       },
     });
 
@@ -34,12 +39,15 @@ router.post('/', async (req: Request, res: Response) => {
 });
 
 // ─── GET /api/clientes ───────────────────────────────────────────────
-router.get('/', async (req: Request, res: Response) => {
+router.get('/', authenticate, async (req: Request, res: Response) => {
   try {
+    const imobiliariaId = (req as any).user.imobiliariaId;
+    if (!imobiliariaId) return res.status(403).json({ error: 'Imobiliária não vinculada' });
+
     const { busca, tipo, page = '1', limit = '20' } = req.query;
     const skip = (Number(page) - 1) * Number(limit);
 
-    const where: any = { status: 'ATIVO' };
+    const where: any = { status: 'ATIVO', imobiliariaId };
 
     if (tipo) {
       where.tipo = tipo;
@@ -80,13 +88,14 @@ router.get('/', async (req: Request, res: Response) => {
 });
 
 // ─── GET /api/clientes/:id ───────────────────────────────────────────
-router.get('/:id', async (req: Request, res: Response) => {
+router.get('/:id', authenticate, async (req: Request, res: Response) => {
   try {
+    const imobiliariaId = (req as any).user.imobiliariaId;
     const { id } = req.params;
     if (typeof id !== 'string') return res.status(400).json({ message: 'ID inválido' });
 
-    const tenant = await prisma.tenant.findUnique({
-      where: { id },
+    const tenant = await prisma.tenant.findFirst({
+      where: { id, imobiliariaId },
       include: {
         contratos: {
           orderBy: { createdAt: 'desc' },
@@ -107,8 +116,9 @@ router.get('/:id', async (req: Request, res: Response) => {
 });
 
 // ─── PUT /api/clientes/:id ───────────────────────────────────────────
-router.put('/:id', async (req: Request, res: Response) => {
+router.put('/:id', authenticate, async (req: Request, res: Response) => {
   try {
+    const imobiliariaId = (req as any).user.imobiliariaId;
     const { id } = req.params;
     if (typeof id !== 'string') return res.status(400).json({ message: 'ID inválido' });
 
@@ -122,30 +132,37 @@ router.put('/:id', async (req: Request, res: Response) => {
       data.cpfCnpj = data.cpfCnpj.replace(/\D/g, '');
     }
 
-    const tenant = await prisma.tenant.update({
-      where: { id },
+    const tenant = await prisma.tenant.updateMany({
+      where: { id, imobiliariaId },
       data,
     });
 
-    return res.json(tenant);
+    if (tenant.count === 0) return res.status(404).json({ message: 'Cliente não encontrado' });
+
+    return res.json({ message: 'Cliente atualizado com sucesso' });
   } catch (error: any) {
-    if (error.code === 'P2025') {
-      return res.status(404).json({ message: 'Cliente não encontrado' });
-    }
     console.error('Erro ao atualizar cliente:', error);
     return res.status(500).json({ message: 'Erro interno do servidor' });
   }
 });
 
 // ─── DELETE /api/clientes/:id (soft delete) ──────────────────────────
-router.delete('/:id', async (req: Request, res: Response) => {
+router.delete('/:id', authenticate, async (req: Request, res: Response) => {
   try {
+    const imobiliariaId = (req as any).user.imobiliariaId;
     const { id } = req.params;
     if (typeof id !== 'string') return res.status(400).json({ message: 'ID inválido' });
 
+    const existing = await prisma.tenant.findFirst({
+        where: { id, imobiliariaId }
+    });
+    if (!existing) {
+        return res.status(404).json({ message: 'Cliente não encontrado' });
+    }
+
     // Validate if client has active contracts before deleting
     const activeContracts = await prisma.contract.count({
-      where: { inquilinoId: id, status: 'ATIVO' },
+      where: { inquilinoId: id, status: 'ATIVO', imobiliariaId },
     });
 
     if (activeContracts > 0) {
@@ -161,17 +178,15 @@ router.delete('/:id', async (req: Request, res: Response) => {
 
     return res.json({ message: 'Cliente desativado com sucesso', tenant });
   } catch (error: any) {
-    if (error.code === 'P2025') {
-      return res.status(404).json({ message: 'Cliente não encontrado' });
-    }
     console.error('Erro ao desativar cliente:', error);
     return res.status(500).json({ message: 'Erro interno do servidor' });
   }
 });
 
 // ─── POST /api/clientes/:id/interacoes ───────────────────────────────
-router.post('/:id/interacoes', async (req: Request, res: Response) => {
+router.post('/:id/interacoes', authenticate, async (req: Request, res: Response) => {
   try {
+    const imobiliariaId = (req as any).user.imobiliariaId;
     const { id } = req.params;
     if (typeof id !== 'string') return res.status(400).json({ message: 'ID inválido' });
 
@@ -180,7 +195,7 @@ router.post('/:id/interacoes', async (req: Request, res: Response) => {
       return res.status(400).json({ errors: parsed.error.flatten().fieldErrors });
     }
 
-    const tenant = await prisma.tenant.findUnique({ where: { id } });
+    const tenant = await prisma.tenant.findFirst({ where: { id, imobiliariaId } });
     if (!tenant) {
       return res.status(404).json({ message: 'Cliente não encontrado' });
     }
@@ -200,10 +215,14 @@ router.post('/:id/interacoes', async (req: Request, res: Response) => {
 });
 
 // ─── GET /api/clientes/:id/interacoes ────────────────────────────────
-router.get('/:id/interacoes', async (req: Request, res: Response) => {
+router.get('/:id/interacoes', authenticate, async (req: Request, res: Response) => {
   try {
+    const imobiliariaId = (req as any).user.imobiliariaId;
     const { id } = req.params;
     if (typeof id !== 'string') return res.status(400).json({ message: 'ID inválido' });
+
+    const tenant = await prisma.tenant.findFirst({ where: { id, imobiliariaId } });
+    if (!tenant) return res.status(404).json({ message: 'Cliente não encontrado' });
 
     const interacoes = await prisma.interaction.findMany({
       where: { tenantId: id },
