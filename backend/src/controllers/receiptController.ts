@@ -117,6 +117,25 @@ export class ReceiptController {
     }
   }
 
+  static async preview(req: Request, res: Response) {
+    try {
+      const imobiliariaId = (req as any).user.imobiliariaId;
+      const { contratoId, ...data } = req.body;
+      const contrato = await prisma.contract.findFirst({
+        where: { id: contratoId, imobiliariaId },
+        include: { inquilino: true, imovel: { include: { owner: true } } }
+      });
+      if (!contrato) return res.status(404).json({ message: 'Contrato não encontrado' });
+
+      const mockReceipt: any = { ...data, contrato, numeroRecibo: 'PREVIEW' };
+      const pdfBuffer = await PDFService.generateReceiptPDF(mockReceipt);
+      res.setHeader('Content-Type', 'application/pdf');
+      return res.send(pdfBuffer);
+    } catch (error) {
+      return res.status(500).json({ message: 'Erro ao gerar prévia' });
+    }
+  }
+
   static async cancel(req: Request, res: Response) {
     try {
       const imobiliariaId = (req as any).user.imobiliariaId;
@@ -153,6 +172,24 @@ export class ReceiptController {
     } catch (error) {
       console.error('Erro ao dar baixa no recibo:', error);
       return res.status(500).json({ message: 'Erro interno do servidor' });
+    }
+  }
+
+  static async downloadPDF(req: Request, res: Response) {
+    try {
+      const imobiliariaId = (req as any).user.imobiliariaId;
+      const { id } = req.params;
+      const receipt = await prisma.receipt.findFirst({
+        where: { id, imobiliariaId },
+        include: { contrato: { include: { inquilino: true, imovel: { include: { owner: true } } } } }
+      });
+      if (!receipt) return res.status(404).json({ message: 'Recibo não encontrado' });
+      const pdfBuffer = await PDFService.generateReceiptPDF(receipt as any);
+      res.setHeader('Content-Type', 'application/pdf');
+      return res.send(pdfBuffer);
+    } catch (error) {
+      console.error('Erro ao gerar PDF:', error);
+      return res.status(500).json({ message: 'Erro ao gerar documento' });
     }
   }
 
