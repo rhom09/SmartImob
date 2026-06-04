@@ -1,15 +1,17 @@
 import { Request, Response } from 'express';
 import prisma from '../lib/prisma';
 import { PDFService } from '../services/pdfService';
-
-const generateReceiptNumber = () => Math.random().toString(36).substring(2, 8).toUpperCase();
+import { authMiddleware as authenticate } from '../middleware/auth';
 
 export class ReceiptController {
   static async listAll(req: Request, res: Response) {
     try {
+      const imobiliariaId = (req as any).user.imobiliariaId;
+      if (!imobiliariaId) return res.status(403).json({ error: 'Imobiliária não vinculada' });
+
       const { search, status, mes, ano } = req.query;
 
-      const where: any = {};
+      const where: any = { imobiliariaId };
 
       if (status && status !== 'TODOS') {
         where.status = status;
@@ -47,6 +49,9 @@ export class ReceiptController {
 
   static async create(req: Request, res: Response) {
     try {
+      const imobiliariaId = (req as any).user.imobiliariaId;
+      if (!imobiliariaId) return res.status(403).json({ error: 'Imobiliária não vinculada' });
+
       const {
         contratoId,
         referenciaMes,
@@ -64,13 +69,20 @@ export class ReceiptController {
         formaPagamento
       } = req.body;
 
-      // Validação de duplicidade: Evitar gerar dois recibos para o mesmo mês/ano/contrato
+      const contrato = await prisma.contract.findFirst({
+        where: { id: contratoId, imobiliariaId },
+        include: { imovel: { include: { owner: true } } }
+      });
+
+      if (!contrato) return res.status(404).json({ message: 'Contrato não encontrado' });
+
       const existing = await prisma.receipt.findFirst({
         where: {
           contratoId,
           referenciaMes: Number(referenciaMes),
           referenciaAno: Number(referenciaAno),
-          status: { not: 'CANCELADO' }
+          status: { not: 'CANCELADO' },
+          imobiliariaId
         }
       });
 
@@ -81,6 +93,7 @@ export class ReceiptController {
       const receipt = await prisma.receipt.create({
         data: {
           contratoId,
+          imobiliariaId,
           referenciaMes: Number(referenciaMes),
           referenciaAno: Number(referenciaAno),
           valorBruto: Number(valorBruto),
@@ -94,10 +107,7 @@ export class ReceiptController {
           valorAgua: Number(valorAgua || 0),
           valorLuz: Number(valorLuz || 0),
           outrosDebitos: Number(outrosDebitos || 0),
-          formaPagamento: (await prisma.contract.findUnique({
-            where: { id: contratoId },
-            include: { imovel: { include: { owner: true } } }
-          }))?.imovel.owner.formaPagamento || 'Transferência Bancária'
+          formaPagamento: formaPagamento || contrato.imovel.owner.formaPagamento || 'Transferência Bancária'
         }
       });
       return res.status(201).json(receipt);
@@ -107,160 +117,51 @@ export class ReceiptController {
     }
   }
 
-  static async preview(req: Request, res: Response) {
-    try {
-      const {
-        contratoId,
-        referenciaMes,
-        referenciaAno,
-        valorBruto,
-        descontos,
-        valorLiquido,
-        dataVencimento,
-        observacoes,
-        valorIptu,
-        valorCondominio,
-        valorAgua,
-        valorLuz,
-        outrosDebitos,
-        formaPagamento
-      } = req.body;
-
-      const contrato = await prisma.contract.findUnique({
-        where: { id: contratoId },
-        include: {
-          inquilino: true,
-          imovel: {
-            include: {
-              owner: true
-            }
-          }
-        }
-      });
-
-      if (!contrato) {
-        return res.status(404).json({ message: 'Contrato não encontrado' });
-      }
-
-      console.log('Dados do contrato carregados:', JSON.stringify(contrato, null, 2));
-      console.log('Imóvel:', contrato.imovel);
-      console.log('Proprietário (Owner):', contrato.imovel?.owner);
-
-      // Mock de um objeto Receipt para o PDFService
-      const mockReceipt: any = {
-        numeroRecibo: 'PREVIEW',
-        contrato,
-        referenciaMes: Number(referenciaMes),
-        referenciaAno: Number(referenciaAno),
-        valorBruto: Number(valorBruto),
-        descontos: Number(descontos || 0),
-        valorLiquido: Number(valorLiquido),
-        dataVencimento: new Date(dataVencimento),
-        observacoes,
-        valorIptu: Number(valorIptu || 0),
-        valorCondominio: Number(valorCondominio || 0),
-        valorAgua: Number(valorAgua || 0),
-        valorLuz: Number(valorLuz || 0),
-        outrosDebitos: Number(outrosDebitos || 0),
-        formaPagamento: formaPagamento || 'Transferência Bancária',
-        status: 'PENDENTE',
-        createdAt: new Date()
-      };
-
-      const pdfBuffer = req.query.layout === 'simple'
-        ? await PDFService.generateSimpleReceiptPDF(mockReceipt)
-        : await PDFService.generateReceiptPDF(mockReceipt);
-
-      res.setHeader('Content-Type', 'application/pdf');
-      res.setHeader('Content-Disposition', 'inline; filename=preview-recibo.pdf');
-      return res.send(pdfBuffer);
-    } catch (error) {
-      console.error('Erro ao gerar prévia:', error);
-      return res.status(500).json({ message: 'Erro ao gerar prévia do documento' });
-    }
-  }
-
   static async cancel(req: Request, res: Response) {
     try {
-      const id = typeof req.params.id === 'string' ? req.params.id : '';
-      const receipt = await prisma.receipt.update({
-        where: { id },
+      const imobiliariaId = (req as any).user.imobiliariaId;
+      const { id } = req.params;
+      const receipt = await prisma.receipt.updateMany({
+        where: { id, imobiliariaId },
         data: { status: 'CANCELADO' }
       });
-      return res.json(receipt);
-    } catch (error: any) {
-      console.error('Erro ao cancelar recibo:', error);
-      if (error.code === 'P2025') {
-        return res.status(404).json({ message: 'Recibo não encontrado' });
-      }
-      return res.status(500).json({ message: 'Erro interno do servidor ao cancelar' });
-    }
-  }
-
-  static async downloadPDF(req: Request, res: Response) {
-    try {
-      const id = typeof req.params.id === 'string' ? req.params.id : '';
-      const receipt = await prisma.receipt.findUnique({
-        where: { id },
-        include: {
-          contrato: {
-            include: {
-              inquilino: true,
-              imovel: {
-                include: {
-                  owner: true
-                }
-              }
-            }
-          }
-        }
-      });
-
-      if (!receipt) {
-        return res.status(404).json({ message: 'Recibo não encontrado' });
-      }
-
-      const pdfBuffer = req.query.layout === 'simple'
-        ? await PDFService.generateSimpleReceiptPDF(receipt)
-        : await PDFService.generateReceiptPDF(receipt);
-
-      res.setHeader('Content-Type', 'application/pdf');
-      res.setHeader('Content-Disposition', `attachment; filename=recibo-${receipt.numeroRecibo}.pdf`);
-      return res.send(pdfBuffer);
+      if (receipt.count === 0) return res.status(404).json({ message: 'Recibo não encontrado' });
+      return res.json({ message: 'Recibo cancelado' });
     } catch (error) {
-      console.error('Erro ao gerar PDF:', error);
-      return res.status(500).json({ message: 'Erro ao gerar documento' });
+      console.error('Erro ao cancelar recibo:', error);
+      return res.status(500).json({ message: 'Erro interno do servidor ao cancelar' });
     }
   }
 
   static async pay(req: Request, res: Response) {
     try {
-      const id = typeof req.params.id === 'string' ? req.params.id : '';
+      const imobiliariaId = (req as any).user.imobiliariaId;
+      const { id } = req.params;
       const { dataPagamento } = req.body;
 
-      const receipt = await prisma.receipt.update({
-        where: { id },
+      const receipt = await prisma.receipt.updateMany({
+        where: { id, imobiliariaId },
         data: {
           status: 'PAGO',
           dataPagamento: dataPagamento ? new Date(dataPagamento) : new Date(),
         },
       });
 
-      return res.json(receipt);
-    } catch (error: any) {
+      if (receipt.count === 0) return res.status(404).json({ message: 'Recibo não encontrado' });
+
+      return res.json({ message: 'Recibo baixado' });
+    } catch (error) {
       console.error('Erro ao dar baixa no recibo:', error);
-      if (error.code === 'P2025') {
-        return res.status(404).json({ message: 'Recibo não encontrado' });
-      }
       return res.status(500).json({ message: 'Erro interno do servidor' });
     }
   }
 
   static async listByContract(req: Request, res: Response) {
     try {
-      const contratoId = typeof req.params.contratoId === 'string' ? req.params.contratoId : '';
+      const imobiliariaId = (req as any).user.imobiliariaId;
+      const { contratoId } = req.params;
       const receipts = await prisma.receipt.findMany({
-        where: { contratoId },
+        where: { contratoId, imobiliariaId },
         orderBy: { dataVencimento: 'asc' },
       });
       return res.json(receipts);
