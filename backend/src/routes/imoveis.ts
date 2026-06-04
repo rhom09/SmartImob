@@ -1,5 +1,6 @@
 import { Router, Request, Response } from 'express';
 import prisma from '../lib/prisma';
+import { authMiddleware as authenticate } from '../middleware/auth';
 import {
   createPropertySchema,
   updatePropertySchema,
@@ -9,23 +10,26 @@ import {
 const router = Router();
 
 // ─── POST /api/imoveis ───────────────────────────────────────────────
-router.post('/', async (req: Request, res: Response) => {
+router.post('/', authenticate, async (req: Request, res: Response) => {
   try {
+    const imobiliariaId = (req as any).user.imobiliariaId;
+    if (!imobiliariaId) return res.status(403).json({ error: 'Imobiliária não vinculada' });
+
     const parsed = createPropertySchema.safeParse(req.body);
     if (!parsed.success) {
       return res.status(400).json({ errors: parsed.error.flatten().fieldErrors });
     }
 
-    // Verificar se proprietário existe
+    // Verificar se proprietário existe e pertence à mesma imobiliária
     const owner = await prisma.owner.findUnique({
-      where: { id: parsed.data.ownerId },
+      where: { id: parsed.data.ownerId, imobiliariaId },
     });
     if (!owner) {
       return res.status(400).json({ message: 'Proprietário não encontrado' });
     }
 
     const property = await prisma.property.create({
-      data: parsed.data,
+      data: { ...parsed.data, imobiliariaId },
       include: { owner: true },
     });
 
@@ -40,8 +44,9 @@ router.post('/', async (req: Request, res: Response) => {
 });
 
 // ─── GET /api/imoveis ────────────────────────────────────────────────
-router.get('/', async (req: Request, res: Response) => {
+router.get('/', authenticate, async (req: Request, res: Response) => {
   try {
+    const imobiliariaId = (req as any).user.imobiliariaId;
     const parsed = propertyFiltersSchema.safeParse(req.query);
     if (!parsed.success) {
       return res.status(400).json({ errors: parsed.error.flatten().fieldErrors });
@@ -53,7 +58,7 @@ router.get('/', async (req: Request, res: Response) => {
       page, limit, orderBy, order,
     } = parsed.data;
 
-    const where: any = { deletedAt: null };
+    const where: any = { deletedAt: null, imobiliariaId };
 
     if (tipo) where.tipo = tipo;
     if (finalidade) where.finalidade = finalidade;
@@ -127,13 +132,14 @@ router.get('/', async (req: Request, res: Response) => {
 });
 
 // ─── GET /api/imoveis/:id ────────────────────────────────────────────
-router.get('/:id', async (req: Request, res: Response) => {
+router.get('/:id', authenticate, async (req: Request, res: Response) => {
   try {
+    const imobiliariaId = (req as any).user.imobiliariaId;
     const { id } = req.params;
     if (typeof id !== 'string') return res.status(400).json({ message: 'ID inválido' });
 
     const property = await prisma.property.findFirst({
-      where: { id, deletedAt: null },
+      where: { id, deletedAt: null, imobiliariaId },
       include: {
         owner: true,
         fotos: { orderBy: { order: 'asc' } },
@@ -159,8 +165,9 @@ router.get('/:id', async (req: Request, res: Response) => {
 });
 
 // ─── PUT /api/imoveis/:id ────────────────────────────────────────────
-router.put('/:id', async (req: Request, res: Response) => {
+router.put('/:id', authenticate, async (req: Request, res: Response) => {
   try {
+    const imobiliariaId = (req as any).user.imobiliariaId;
     const { id } = req.params;
     if (typeof id !== 'string') return res.status(400).json({ message: 'ID inválido' });
 
@@ -169,19 +176,16 @@ router.put('/:id', async (req: Request, res: Response) => {
       return res.status(400).json({ errors: parsed.error.flatten().fieldErrors });
     }
 
-    // Check if property exists and is not deleted
     const existing = await prisma.property.findFirst({
-      where: { id, deletedAt: null },
+      where: { id, deletedAt: null, imobiliariaId },
     });
     if (!existing) {
       return res.status(404).json({ message: 'Imóvel não encontrado' });
     }
 
-    // If changing owner, verify new owner exists
     if (parsed.data.ownerId) {
-      const ownerId = parsed.data.ownerId;
       const owner = await prisma.owner.findUnique({
-        where: { id: ownerId },
+        where: { id: parsed.data.ownerId, imobiliariaId },
       });
       if (!owner) {
         return res.status(400).json({ message: 'Proprietário não encontrado' });
@@ -206,21 +210,21 @@ router.put('/:id', async (req: Request, res: Response) => {
 });
 
 // ─── DELETE /api/imoveis/:id (soft delete) ───────────────────────────
-router.delete('/:id', async (req: Request, res: Response) => {
+router.delete('/:id', authenticate, async (req: Request, res: Response) => {
   try {
+    const imobiliariaId = (req as any).user.imobiliariaId;
     const { id } = req.params;
     if (typeof id !== 'string') return res.status(400).json({ message: 'ID inválido' });
 
     const existing = await prisma.property.findFirst({
-      where: { id, deletedAt: null },
+      where: { id, deletedAt: null, imobiliariaId },
     });
     if (!existing) {
       return res.status(404).json({ message: 'Imóvel não encontrado' });
     }
 
-    // Check for active contracts
     const activeContracts = await prisma.contract.count({
-      where: { imovelId: id, status: 'ATIVO' },
+      where: { imovelId: id, status: 'ATIVO', imobiliariaId },
     });
     if (activeContracts > 0) {
       return res.status(400).json({
@@ -240,13 +244,14 @@ router.delete('/:id', async (req: Request, res: Response) => {
   }
 });
 
-router.get('/:id/defaults', async (req: Request, res: Response) => {
+router.get('/:id/defaults', authenticate, async (req: Request, res: Response) => {
   try {
-    const id = typeof req.params.id === 'string' ? req.params.id : (req.params.id ? req.params.id[0] : '');
+    const imobiliariaId = (req as any).user.imobiliariaId;
+    const id = typeof req.params.id === 'string' ? req.params.id : (req.params.id ? (req.params.id as any)[0] : '');
     if (!id) return res.status(400).json({ message: 'ID inválido' });
 
     const property = await prisma.property.findUnique({
-      where: { id },
+      where: { id, imobiliariaId },
       select: {
         valorCondominio: true,
         valorIptu: true,
@@ -266,13 +271,14 @@ router.get('/:id/defaults', async (req: Request, res: Response) => {
   }
 });
 
-router.get('/:id/owner', async (req: Request, res: Response) => {
+router.get('/:id/owner', authenticate, async (req: Request, res: Response) => {
   try {
+    const imobiliariaId = (req as any).user.imobiliariaId;
     const id = typeof req.params.id === 'string' ? req.params.id : '';
     if (!id) return res.status(400).json({ message: 'ID inválido' });
 
     const property = await prisma.property.findUnique({
-      where: { id },
+      where: { id, imobiliariaId },
       include: { owner: true },
     });
 
