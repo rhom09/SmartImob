@@ -322,6 +322,9 @@ model Receipt {
   createdAt      DateTime     @default(now()) @map("data_criacao")
   updatedAt      DateTime     @updatedAt @map("data_atualizacao")
 
+  imobiliariaId String?      @map("imobiliaria_id")
+  imobiliaria   Imobiliaria? @relation(fields: [imobiliariaId], references: [id])
+
   contrato Contract @relation(fields: [contratoId], references: [id])
 
   @@map("RECIBOS")
@@ -338,6 +341,9 @@ model Adjustment {
   observacoes   String?
   createdAt     DateTime       @default(now()) @map("data_criacao")
   updatedAt     DateTime       @updatedAt @map("data_atualizacao")
+
+  imobiliariaId String?      @map("imobiliaria_id")
+  imobiliaria   Imobiliaria? @relation(fields: [imobiliariaId], references: [id])
 
   contrato Contract @relation(fields: [contratoId], references: [id])
 
@@ -356,6 +362,9 @@ model Expense {
   createdAt      DateTime      @default(now()) @map("data_criacao")
   updatedAt      DateTime      @updatedAt @map("data_atualizacao")
 
+  imobiliariaId String?      @map("imobiliaria_id")
+  imobiliaria   Imobiliaria? @relation(fields: [imobiliariaId], references: [id])
+
   contrato Contract @relation(fields: [contratoId], references: [id])
 
   @@map("DESPESAS")
@@ -373,6 +382,9 @@ model Alert {
   createdAt  DateTime     @default(now()) @map("data_criacao")
   updatedAt  DateTime     @updatedAt @map("data_atualizacao")
 
+  imobiliariaId String?      @map("imobiliaria_id")
+  imobiliaria   Imobiliaria? @relation(fields: [imobiliariaId], references: [id])
+
   contrato Contract?    @relation(fields: [contratoId], references: [id])
   usuario  User?        @relation(fields: [usuarioId], references: [id])
 
@@ -389,6 +401,9 @@ model Auditoria {
   dadosNovos      Json?    @map("dados_novos")
   dataAcao        DateTime @default(now()) @map("data_acao")
   ipMaquina       String?  @map("ip_maquina")
+
+  imobiliariaId String?      @map("imobiliaria_id")
+  imobiliaria   Imobiliaria? @relation(fields: [imobiliariaId], references: [id])
 
   usuario User @relation(fields: [usuarioId], references: [id])
 
