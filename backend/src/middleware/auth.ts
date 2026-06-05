@@ -38,7 +38,11 @@ export const authMiddleware = async (req: AuthRequest, res: Response, next: Next
       select: { id: true, imobiliariaId: true }
     });
 
+    console.log("🔍 [AUTH DEBUG] Supabase User ID:", user.id);
+    console.log("🔍 [AUTH DEBUG] DB User found:", dbUser);
+
     if (!dbUser) {
+      console.warn("⚠️ [AUTH DEBUG] Usuário não encontrado no banco de dados.");
       return res.status(401).json({ message: 'Usuário não registrado no sistema' });
     }
 
