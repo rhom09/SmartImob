@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getApiUrl } from "@/lib/api";
+import { fetchWithAuth, getApiUrl } from "../../lib/api";
 import { Plus, Search, Users, Phone, Mail } from "lucide-react";
 import Link from "next/link";
 import { Card, CardContent, CardHeader } from "@/components/ui/Card";
