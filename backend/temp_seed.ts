@@ -1,0 +1,1 @@
+import router from './src/routes/seed_completo'; const req: any = {}; const res: any = { status: (s: number) => ({ json: (data: any) => console.log(s, data) }), json: (data: any) => console.log(data) }; const route = router.stack[0].route.stack[0].handle; route(req, res).then(() => process.exit(0)).catch((e: any) => { console.error(e); process.exit(1); });

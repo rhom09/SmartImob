@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import prisma from '../lib/prisma';
+import { addMonths, subMonths } from 'date-fns';
 
 const router = Router();
 
@@ -17,11 +18,18 @@ router.get('/', async (req, res) => {
     await prisma.property.deleteMany();
     await prisma.owner.deleteMany();
 
-    console.log('Semeando dados de teste...');
+    console.log('Semeando dados de teste básicos...');
+
+    const imobiliarias = await prisma.imobiliaria.findMany();
+    if (imobiliarias.length === 0) {
+      return res.status(400).json({ error: 'Nenhuma imobiliária encontrada no banco.' });
+    }
+    const imoRhom = imobiliarias.find(i => i.nome === 'Imobiliária Rhom') || imobiliarias[0];
 
     // 1. Proprietários
     const owner1 = await prisma.owner.create({
       data: {
+        imobiliariaId: imoRhom.id,
         nome: 'Ricardo Almeida',
         cpfCnpj: '12345678901',
         email: 'ricardo@email.com',
@@ -32,6 +40,7 @@ router.get('/', async (req, res) => {
 
     const owner2 = await prisma.owner.create({
       data: {
+        imobiliariaId: imoRhom.id,
         nome: 'Dona Maria Silva',
         cpfCnpj: '98765432109',
         email: 'maria@email.com',
@@ -43,6 +52,7 @@ router.get('/', async (req, res) => {
     // 2. Imóveis
     const prop1 = await prisma.property.create({
       data: {
+        imobiliariaId: imoRhom.id,
         ownerId: owner1.id,
         tipo: 'APARTAMENTO',
         finalidade: 'LOCACAO',
@@ -60,6 +70,7 @@ router.get('/', async (req, res) => {
 
     const prop2 = await prisma.property.create({
       data: {
+        imobiliariaId: imoRhom.id,
         ownerId: owner1.id,
         tipo: 'CASA',
         finalidade: 'LOCACAO',
@@ -78,6 +89,7 @@ router.get('/', async (req, res) => {
     // 3. Clientes
     const tenant1 = await prisma.tenant.create({
       data: {
+        imobiliariaId: imoRhom.id,
         nome: 'Mariana Santos',
         cpfCnpj: '98765432100',
         email: 'mariana@email.com',
@@ -88,6 +100,7 @@ router.get('/', async (req, res) => {
 
     const lead1 = await prisma.tenant.create({
       data: {
+        imobiliariaId: imoRhom.id,
         nome: 'Carlos Eduardo',
         cpfCnpj: '11122233344',
         email: 'cadu@email.com',
@@ -109,11 +122,12 @@ router.get('/', async (req, res) => {
     // 5. Contrato
     const contract = await prisma.contract.create({
       data: {
+        imobiliariaId: imoRhom.id,
         imovelId: prop1.id,
         inquilinoId: tenant1.id,
         numeroContrato: 'CNT-2024-001',
-        dataInicio: new Date('2024-01-01'),
-        dataFim: new Date('2024-12-31'),
+        dataInicio: subMonths(new Date(), 6),
+        dataFim: addMonths(new Date(), 6),
         valorAluguel: 3500,
         diaVencimento: 10,
         status: 'ATIVO',
@@ -123,13 +137,14 @@ router.get('/', async (req, res) => {
     // 6. Recibos
     await prisma.receipt.create({
       data: {
+        imobiliariaId: imoRhom.id,
         contratoId: contract.id,
-        referenciaMes: 1,
-        referenciaAno: 2024,
+        referenciaMes: subMonths(new Date(), 1).getMonth() + 1,
+        referenciaAno: subMonths(new Date(), 1).getFullYear(),
         valorBruto: 3500,
         valorLiquido: 3500,
-        dataVencimento: new Date('2024-01-10'),
-        dataPagamento: new Date('2024-01-08'),
+        dataVencimento: subMonths(new Date(), 1),
+        dataPagamento: subMonths(new Date(), 1),
         status: 'PAGO',
         numeroRecibo: 'CNT-2024-001-001',
       }
@@ -137,12 +152,13 @@ router.get('/', async (req, res) => {
 
     await prisma.receipt.create({
       data: {
+        imobiliariaId: imoRhom.id,
         contratoId: contract.id,
-        referenciaMes: 2,
-        referenciaAno: 2024,
+        referenciaMes: new Date().getMonth() + 1,
+        referenciaAno: new Date().getFullYear(),
         valorBruto: 3500,
         valorLiquido: 3500,
-        dataVencimento: new Date('2024-02-10'),
+        dataVencimento: new Date(),
         status: 'PENDENTE',
         numeroRecibo: 'CNT-2024-001-002',
       }
