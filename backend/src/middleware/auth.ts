@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { createClient } from '@supabase/supabase-js';
 import dotenv from 'dotenv';
+import prisma from '../lib/prisma';
 
 dotenv.config();
 
@@ -31,7 +32,22 @@ export const authMiddleware = async (req: AuthRequest, res: Response, next: Next
       throw new Error(error?.message || 'Usuário não encontrado');
     }
 
-    req.user = user;
+    // Busca o usuário no banco para pegar o imobiliariaId
+    const dbUser = await prisma.user.findUnique({
+      where: { supabaseId: user.id },
+      select: { id: true, imobiliariaId: true }
+    });
+
+    if (!dbUser) {
+      return res.status(401).json({ message: 'Usuário não registrado no sistema' });
+    }
+
+    req.user = {
+      ...user,
+      id: dbUser.id,
+      imobiliariaId: dbUser.imobiliariaId
+    };
+
     next();
   } catch (error) {
     console.error("Erro na verificação do JWT:", error);
