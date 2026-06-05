@@ -1,14 +1,15 @@
 import { Router } from 'express';
 import { ReceiptController } from '../controllers/receiptController';
+import { authMiddleware as authenticate } from '../middleware/auth';
 
 const router = Router();
 
-router.get('/', ReceiptController.listAll);
-router.post('/', ReceiptController.create);
-router.post('/preview', ReceiptController.preview);
-router.post('/:id/pagar', ReceiptController.pay);
-router.post('/:id/cancelar', ReceiptController.cancel);
-router.get('/:id/pdf', ReceiptController.downloadPDF);
-router.get('/contrato/:contratoId', ReceiptController.listByContract);
+router.get('/', authenticate, ReceiptController.listAll);
+router.post('/', authenticate, ReceiptController.create);
+router.post('/preview', authenticate, ReceiptController.preview);
+router.post('/:id/pagar', authenticate, ReceiptController.pay);
+router.post('/:id/cancelar', authenticate, ReceiptController.cancel);
+router.get('/:id/pdf', authenticate, ReceiptController.downloadPDF);
+router.get('/contrato/:contratoId', authenticate, ReceiptController.listByContract);
 
 export default router;
