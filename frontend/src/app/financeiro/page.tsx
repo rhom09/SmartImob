@@ -36,8 +36,8 @@ export default function FinanceiroPage() {
     setLoading(true);
     try {
       const [resumoRes, fluxoRes] = await Promise.all([
-        fetch(getApiUrl("/financeiro/resumo")),
-        fetch(getApiUrl("/financeiro/fluxo-caixa?dataInicio=2026-01-01&dataFim=2026-12-31"))
+        fetchWithAuth(getApiUrl("/financeiro/resumo")),
+        fetchWithAuth(getApiUrl("/financeiro/fluxo-caixa?dataInicio=2026-01-01&dataFim=2026-12-31"))
       ]);
       const resumoData = await resumoRes.json();
       const fluxoData = await fluxoRes.json();

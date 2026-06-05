@@ -29,7 +29,7 @@ export default function ContratosPage() {
       if (params.busca) queryParams.append("busca", params.busca);
       if (params.status) queryParams.append("status", params.status);
 
-      const response = await fetch(getApiUrl(`/contratos?${queryParams.toString()}`));
+      const response = await fetchWithAuth(getApiUrl(`/contratos?${queryParams.toString()}`));
       const result = await response.json();
       setContracts(result.items || []);
     } catch (error) {

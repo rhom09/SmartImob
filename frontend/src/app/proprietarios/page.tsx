@@ -23,7 +23,7 @@ export default function ProprietariosPage() {
   const fetchOwners = async (query = "") => {
     setLoading(true);
     try {
-      const response = await fetch(getApiUrl(`/proprietarios?busca=${query}`));
+      const response = await fetchWithAuth(getApiUrl(`/proprietarios?busca=${query}`));
       const result = await response.json();
       setOwners(result.data || []);
     } catch (error) {

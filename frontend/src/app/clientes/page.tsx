@@ -30,7 +30,7 @@ export default function ClientesPage() {
       if (params.busca) queryParams.append("busca", params.busca);
       if (params.tipo) queryParams.append("tipo", params.tipo);
 
-      const response = await fetch(getApiUrl(`/clientes?${queryParams.toString()}`));
+      const response = await fetchWithAuth(getApiUrl(`/clientes?${queryParams.toString()}`));
       const result = await response.json();
       setClients(result.data || []);
     } catch (error) {
