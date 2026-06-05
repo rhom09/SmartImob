@@ -86,7 +86,7 @@ router.get('/', authenticate, async (req: Request, res: Response) => {
 router.get('/:id', authenticate, async (req: Request, res: Response) => {
   try {
     const imobiliariaId = (req as any).user.imobiliariaId;
-    const { id } = req.params;
+    const { id } = req.params; console.log("🔍 [DEBUG] Buscando proprietário:", id, "na Imobiliária:", (req as any).user.imobiliariaId);
     if (typeof id !== 'string') return res.status(400).json({ message: 'ID inválido' });
 
     const owner = await prisma.owner.findFirst({
