@@ -17,5 +17,6 @@
 - **Banco de Dados:** PostgreSQL via Supabase. Utilize Row Level Security (RLS) para proteger os dados.
 
 ## 🔐 Segurança e Autenticação
-- **Transição:** Durante o desenvolvimento da Fase 6, foi utilizado um modo de "Mock Auth" para permitir testes sem UI de login.
-- **Implementação do Login:** Quando a tela de login for implementada, é OBRIGATÓRIO seguir as instruções de reversão em `docs/SECURITY_TRANSITION.md` para garantir que a segurança do Supabase seja restaurada corretamente no backend e frontend.
+- **Status:** Autenticação real com Supabase (JWT + Middleware) implementada e ativa.
+- **Isolamento:** Todas as rotas de API possuem RLS e injeção de `imobiliariaId` via `authMiddleware` no backend.
+- **Segurança:** A comunicação entre Frontend e Backend é autenticada via `fetchWithAuth`.
