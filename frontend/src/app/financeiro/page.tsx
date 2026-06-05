@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getApiUrl } from "@/lib/api";
+import { fetchWithAuth, getApiUrl } from "../../lib/api";
 import { DollarSign, TrendingUp, TrendingDown, AlertTriangle, ArrowRight, Receipt, BarChart3 } from "lucide-react";
 import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
