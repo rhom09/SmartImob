@@ -1,7 +1,7 @@
 ﻿"use client";
 
 import { useEffect, useState } from "react";
-import { getApiUrl } from "@/lib/api";
+import { getApiUrl, fetchWithAuth } from "@/lib/api";
 import { Plus, Search, Receipt, Calendar, Building2 } from "lucide-react";
 import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
@@ -50,7 +50,7 @@ export default function DespesasPage() {
       if (filters.tipo) queryParams.append("tipo", filters.tipo);
       if (filters.status) queryParams.append("status", filters.status);
 
-      const response = await fetch(getApiUrl(`/despesas?${queryParams.toString()}`));
+      const response = await fetchWithAuth(getApiUrl(`/despesas?${queryParams.toString()}`));
       const result = await response.json();
       setDespesas(result.items || []);
     } catch (error) {
@@ -62,7 +62,7 @@ export default function DespesasPage() {
 
   const fetchContratos = async () => {
     try {
-      const response = await fetch(getApiUrl("/contratos?status=ATIVO&limit=100"));
+      const response = await fetchWithAuth(getApiUrl("/contratos?status=ATIVO&limit=100"));
       const result = await response.json();
       setContratos(result.items || []);
     } catch (error) {
@@ -73,7 +73,7 @@ export default function DespesasPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await fetch(getApiUrl("/despesas"), {
+      const response = await fetchWithAuth(getApiUrl("/despesas"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -98,7 +98,7 @@ export default function DespesasPage() {
 
   const handlePagar = async (id: string) => {
     try {
-      const response = await fetch(getApiUrl(`/despesas/${id}/pagar`), {
+      const response = await fetchWithAuth(getApiUrl(`/despesas/${id}/pagar`), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({}),
@@ -115,7 +115,7 @@ export default function DespesasPage() {
   const handleDelete = async (id: string) => {
     if (!confirm("Deseja realmente excluir esta despesa?")) return;
     try {
-      const response = await fetch(getApiUrl(`/despesas/${id}`), {
+      const response = await fetchWithAuth(getApiUrl(`/despesas/${id}`), {
         method: "DELETE",
       });
       if (response.ok) {

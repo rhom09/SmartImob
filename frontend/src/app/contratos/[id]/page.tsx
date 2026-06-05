@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getApiUrl } from "@/lib/api";
+import { getApiUrl, fetchWithAuth } from "@/lib/api";
 import { useParams, useRouter } from "next/navigation";
 import {
   ArrowLeft,
@@ -37,7 +37,7 @@ export default function DetalhesContratoPage() {
 
   const fetchContract = async () => {
     try {
-      const response = await fetch(getApiUrl(`/contratos/${id}`));
+      const response = await fetchWithAuth(getApiUrl(`/contratos/${id}`));
       if (!response.ok) throw new Error("Contrato não encontrado");
       const data = await response.json();
       setContract(data);
@@ -52,7 +52,7 @@ export default function DetalhesContratoPage() {
     if (!confirm("Confirmar o recebimento desta parcela?")) return;
 
     try {
-      const response = await fetch(getApiUrl(`/recibos/${receiptId}/pagar`), {
+      const response = await fetchWithAuth(getApiUrl(`/recibos/${receiptId}/pagar`), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ dataPagamento: new Date().toISOString() })
@@ -73,7 +73,7 @@ export default function DetalhesContratoPage() {
     if (!adjustmentData.novoValor || adjustmentData.novoValor <= 0) return;
 
     try {
-      const response = await fetch(getApiUrl(`/contratos/${id}/reajustar`), {
+      const response = await fetchWithAuth(getApiUrl(`/contratos/${id}/reajustar`), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(adjustmentData)

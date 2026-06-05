@@ -1,7 +1,7 @@
 ﻿"use client";
 
 import { useEffect, useState } from "react";
-import { getApiUrl } from "@/lib/api";
+import { getApiUrl, fetchWithAuth } from "@/lib/api";
 import { DollarSign, User, Building2, FileText } from "lucide-react";
 import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
@@ -48,7 +48,7 @@ export default function RepassesPage() {
       if (filters.dataInicio) queryParams.append("dataInicio", filters.dataInicio);
       if (filters.dataFim) queryParams.append("dataFim", filters.dataFim);
 
-      const response = await fetch(getApiUrl(`/financeiro/repasses?${queryParams.toString()}`));
+      const response = await fetchWithAuth(getApiUrl(`/financeiro/repasses?${queryParams.toString()}`));
       const result = await response.json();
       setRepasses(result);
     } catch (error) {

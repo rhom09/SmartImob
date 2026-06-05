@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef } from "react";
 import { Bell, Check, ExternalLink, Calendar } from "lucide-react";
-import { getApiUrl } from "@/lib/api";
+import { getApiUrl, fetchWithAuth } from "@/lib/api";
 import { supabase } from "@/lib/supabase";
 import { Button } from "./ui/Button";
 import Link from "next/link";
@@ -49,7 +49,7 @@ export function NotificationBell() {
       // Se não houver token, ainda assim permitimos a busca (Modo Desenvolvimento / Mock)
       // O backend cuidará de injetar o usuário Mock.
       setLoading(true);
-      const response = await fetch(getApiUrl("/notifications"), {
+      const response = await fetchWithAuth(getApiUrl("/notifications"), {
         headers: token ? { Authorization: `Bearer ${token}` } : {},
       });
 
@@ -71,7 +71,7 @@ export function NotificationBell() {
       const { data: { session } } = await supabase.auth.getSession();
       const token = session?.access_token;
 
-      const response = await fetch(getApiUrl(`/notifications/${id}/read`), {
+      const response = await fetchWithAuth(getApiUrl(`/notifications/${id}/read`), {
         method: "PATCH",
         headers: token ? { Authorization: `Bearer ${token}` } : {},
       });

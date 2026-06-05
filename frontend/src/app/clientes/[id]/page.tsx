@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getApiUrl } from "@/lib/api";
+import { getApiUrl, fetchWithAuth } from "@/lib/api";
 import { useParams, useRouter } from "next/navigation";
 import {
   ArrowLeft,
@@ -44,7 +44,7 @@ export default function DetalhesClientePage() {
 
   const fetchClient = async () => {
     try {
-      const response = await fetch(getApiUrl(`/clientes/${id}`));
+      const response = await fetchWithAuth(getApiUrl(`/clientes/${id}`));
       if (!response.ok) throw new Error("Cliente não encontrado");
       const data = await response.json();
       setClient(data);
@@ -57,7 +57,7 @@ export default function DetalhesClientePage() {
 
   const fetchInteractions = async () => {
     try {
-      const response = await fetch(getApiUrl(`/clientes/${id}/interacoes`));
+      const response = await fetchWithAuth(getApiUrl(`/clientes/${id}/interacoes`));
       const data = await response.json();
       setInteractions(data || []);
     } catch (error) {
@@ -69,7 +69,7 @@ export default function DetalhesClientePage() {
     if (!confirm("Tem certeza que deseja desativar este cliente?")) return;
 
     try {
-      const response = await fetch(getApiUrl(`/clientes/${id}`), {
+      const response = await fetchWithAuth(getApiUrl(`/clientes/${id}`), {
         method: "DELETE",
       });
       if (response.ok) {
@@ -89,7 +89,7 @@ export default function DetalhesClientePage() {
 
     setLoadingInteracao(true);
     try {
-      const response = await fetch(getApiUrl(`/clientes/${id}/interacoes`), {
+      const response = await fetchWithAuth(getApiUrl(`/clientes/${id}/interacoes`), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(novaInteracao),
