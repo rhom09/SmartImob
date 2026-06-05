@@ -13,11 +13,15 @@ export const fetchWithAuth = async (url: string, options: RequestInit = {}) => {
     data: { session },
   } = await supabase.auth.getSession();
 
+  console.log("🔍 [FRONTEND AUTH] Current Session Token:", session?.access_token);
+
   const headers = new Headers(options.headers || {});
   headers.set("Content-Type", "application/json");
 
   if (session?.access_token) {
     headers.set("Authorization", `Bearer ${session.access_token}`);
+  } else {
+    console.warn("⚠️ [FRONTEND AUTH] No session token found for request:", url);
   }
 
   return fetch(url, { ...options, headers });
