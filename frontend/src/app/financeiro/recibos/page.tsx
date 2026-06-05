@@ -47,7 +47,7 @@ export default function RecibosPage() {
       if (mesFilter) params.append("mes", mesFilter);
       if (anoFilter) params.append("ano", anoFilter);
 
-      const res = await fetch(getApiUrl(`/recibos?${params.toString()}`));
+      const res = await fetchWithAuth(getApiUrl(`/recibos?${params.toString()}`));
       const data = await res.json();
       setRecibos(data);
     } catch (error) {
@@ -65,7 +65,7 @@ export default function RecibosPage() {
   const handlePagar = async (id: string) => {
     if (!confirm("Deseja marcar este recibo como pago?")) return;
     try {
-      await fetch(getApiUrl(`/recibos/${id}/pagar`), {
+      await fetchWithAuth(getApiUrl(`/recibos/${id}/pagar`), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ dataPagamento: new Date().toISOString() })
@@ -79,7 +79,7 @@ export default function RecibosPage() {
   const handleCancelar = async (id: string) => {
     if (!confirm("Deseja cancelar este recibo?")) return;
     try {
-      await fetch(getApiUrl(`/recibos/${id}/cancelar`), {
+      await fetchWithAuth(getApiUrl(`/recibos/${id}/cancelar`), {
         method: "POST",
         headers: { "Content-Type": "application/json" }
       });
@@ -91,7 +91,7 @@ export default function RecibosPage() {
 
   const handleDownload = async (id: string, numero: string) => {
     try {
-      const res = await fetch(getApiUrl(`/recibos/${id}/pdf`));
+      const res = await fetchWithAuth(getApiUrl(`/recibos/${id}/pdf`));
       const blob = await res.blob();
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement("a");
