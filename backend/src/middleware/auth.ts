@@ -54,7 +54,7 @@ export const authMiddleware = async (req: AuthRequest, res: Response, next: Next
 
     next();
   } catch (error) {
-    console.error("❌ [AUTH DEBUG] Erro crítico na verificação:", error);
+    console.error("❌ [AUTH DEBUG] ERRO DO SUPABASE:", error);
     return res.status(401).json({ message: 'Token inválido', error: (error as Error).message });
   }
 };
