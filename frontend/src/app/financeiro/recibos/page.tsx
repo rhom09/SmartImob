@@ -1,7 +1,7 @@
 ﻿"use client";
 
 import { useState, useEffect } from "react";
-import { getApiUrl } from "@/lib/api";
+import { fetchWithAuth, getApiUrl } from "../../../lib/api";
 import { Plus, Search, FileText, XCircle, CheckCircle, FileDown, Clock } from "lucide-react";
 import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
