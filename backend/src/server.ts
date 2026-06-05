@@ -50,8 +50,11 @@ app.use('/api/despesas', despesasRouter);
 app.use('/api/financeiro', financeiroRouter);
 app.use('/api/dashboard', dashboardRouter);
 app.use('/api/notifications', notificationsRouter);
-app.use('/api/seed', seedRouter);
-app.use('/api/seed-completo', seedCompletoRouter);
+
+if (process.env.NODE_ENV !== 'production') {
+  app.use('/api/seed', seedRouter);
+  app.use('/api/seed-completo', seedCompletoRouter);
+}
 
 // ─── Protected route example ─────────────────────────────────────────
 app.get('/api/protected', authMiddleware, (req, res) => {

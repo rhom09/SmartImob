@@ -7,9 +7,13 @@ const router = Router();
 // Listar alertas ativos
 router.get('/', authMiddleware, async (req: any, res) => {
   try {
+    const imobiliariaId = req.user?.imobiliariaId;
+    if (!imobiliariaId) return res.status(403).json({ error: 'Sem imobiliária associada' });
+
     const alerts = await prisma.alert.findMany({
       where: {
         status: 'ATIVO',
+        imobiliariaId,
       },
       orderBy: {
         createdAt: 'desc',
@@ -32,13 +36,19 @@ router.get('/', authMiddleware, async (req: any, res) => {
 });
 
 // Marcar alerta como lido
-router.patch('/:id/read', authMiddleware, async (req, res) => {
+router.patch('/:id/read', authMiddleware, async (req: any, res) => {
   const id = req.params.id as string;
+  const imobiliariaId = req.user?.imobiliariaId;
+  if (!imobiliariaId) return res.status(403).json({ error: 'Sem imobiliária associada' });
+
   try {
-    await prisma.alert.update({
-      where: { id },
+    const result = await prisma.alert.updateMany({
+      where: { id, imobiliariaId },
       data: { status: 'LIDO' }
     });
+
+    if (result.count === 0) return res.status(404).json({ error: 'Alerta não encontrado' });
+
     res.json({ success: true });
   } catch (error) {
     res.status(500).json({ error: 'Erro ao atualizar notificação' });
@@ -46,13 +56,16 @@ router.patch('/:id/read', authMiddleware, async (req, res) => {
 });
 
 // Endpoint de diagnóstico para forçar verificação de vencimentos
-router.post('/run-check', authMiddleware, async (req, res) => {
+router.post('/run-check', authMiddleware, async (req: any, res) => {
   try {
+    const imobiliariaId = req.user?.imobiliariaId;
+    if (!imobiliariaId) return res.status(403).json({ error: 'Sem imobiliária associada' });
+
     const { NotificationService } = require('../services/notificationService');
-    await NotificationService.checkContractExpirations();
+    await NotificationService.checkContractExpirations(imobiliariaId);
 
     // Retorna um resumo para o frontend saber o que aconteceu
-    const count = await prisma.alert.count({ where: { status: 'ATIVO' } });
+    const count = await prisma.alert.count({ where: { status: 'ATIVO', imobiliariaId } });
     res.json({
       message: 'Verificação concluída com sucesso',
       activeAlertsCount: count

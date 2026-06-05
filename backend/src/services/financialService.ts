@@ -4,12 +4,13 @@ import { startOfMonth, endOfMonth, addMonths, format } from 'date-fns';
 
 export class FinancialService {
   // ─── Contratos Inadimplentes ──────────────────────────────────────
-  static async getInadimplentes() {
+  static async getInadimplentes(imobiliariaId: string) {
     // Buscar todos os recibos vencidos e não pagos
     const overdueReceipts = await prisma.receipt.findMany({
       where: {
         status: 'PENDENTE',
         dataVencimento: { lt: new Date() },
+        imobiliariaId,
       },
       include: {
         contrato: {
@@ -78,9 +79,10 @@ export class FinancialService {
   }
 
   // ─── Comissões ────────────────────────────────────────────────────
-  static async getComissoes(filters: { dataInicio?: string; dataFim?: string }) {
+  static async getComissoes(imobiliariaId: string, filters: { dataInicio?: string; dataFim?: string }) {
     const where: any = {
       status: 'PAGO',
+      imobiliariaId,
     };
 
     if (filters.dataInicio || filters.dataFim) {
@@ -144,8 +146,8 @@ export class FinancialService {
   }
 
   // ─── Repasses aos Proprietários ───────────────────────────────────
-  static async getRepasses(filters: { dataInicio?: string; dataFim?: string }) {
-    const receiptWhere: any = { status: 'PAGO' };
+  static async getRepasses(imobiliariaId: string, filters: { dataInicio?: string; dataFim?: string }) {
+    const receiptWhere: any = { status: 'PAGO', imobiliariaId };
 
     if (filters.dataInicio || filters.dataFim) {
       receiptWhere.dataPagamento = {};
@@ -238,7 +240,7 @@ export class FinancialService {
   }
 
   // ─── Fluxo de Caixa ──────────────────────────────────────────────
-  static async getFluxoCaixa(filters: { dataInicio: string; dataFim: string }) {
+  static async getFluxoCaixa(imobiliariaId: string, filters: { dataInicio: string; dataFim: string }) {
     const inicio = new Date(filters.dataInicio);
     const fim = new Date(filters.dataFim);
 
@@ -254,6 +256,7 @@ export class FinancialService {
       const recibosPagos = await prisma.receipt.findMany({
         where: {
           status: 'PAGO',
+          imobiliariaId,
           dataPagamento: {
             gte: mesInicio,
             lte: mesFim,
@@ -272,6 +275,7 @@ export class FinancialService {
       const despesasPagas = await prisma.expense.findMany({
         where: {
           status: 'PAGO',
+          imobiliariaId,
           dataPagamento: {
             gte: mesInicio,
             lte: mesFim,
@@ -306,7 +310,7 @@ export class FinancialService {
   }
 
   // ─── Resumo Financeiro ────────────────────────────────────────────
-  static async getResumo(filters: { dataInicio?: string; dataFim?: string }) {
+  static async getResumo(imobiliariaId: string, filters: { dataInicio?: string; dataFim?: string }) {
     const now = new Date();
     const inicio = filters.dataInicio
       ? new Date(filters.dataInicio)
@@ -319,6 +323,7 @@ export class FinancialService {
     const recibosPagos = await prisma.receipt.findMany({
       where: {
         status: 'PAGO',
+        imobiliariaId,
         dataPagamento: { gte: inicio, lte: fim },
       },
       include: {
@@ -341,6 +346,7 @@ export class FinancialService {
     const despesasPagas = await prisma.expense.aggregate({
       where: {
         status: 'PAGO',
+        imobiliariaId,
         dataPagamento: { gte: inicio, lte: fim },
       },
       _sum: { valor: true },
@@ -351,6 +357,7 @@ export class FinancialService {
     const recibosInadimplentes = await prisma.receipt.findMany({
       where: {
         status: 'PENDENTE',
+        imobiliariaId,
         dataVencimento: { lt: new Date() },
       },
     });
@@ -364,13 +371,14 @@ export class FinancialService {
 
     // Contagem de contratos ativos
     const contratosAtivos = await prisma.contract.count({
-      where: { status: 'ATIVO' },
+      where: { status: 'ATIVO', imobiliariaId },
     });
 
     // Recibos pendentes do mês atual
     const recibosPendentes = await prisma.receipt.count({
       where: {
         status: 'PENDENTE',
+        imobiliariaId,
         dataVencimento: { gte: startOfMonth(now), lte: endOfMonth(now) },
       },
     });

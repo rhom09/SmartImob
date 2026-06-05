@@ -7,8 +7,8 @@ export class NotificationService {
    * Processa alertas de vencimento de contratos
    * Busca contratos que vencem exatamente em 30 dias
    */
-  static async checkContractExpirations() {
-    console.log('🔍 Iniciando verificação de vencimentos de contratos...');
+  static async checkContractExpirations(imobiliariaId?: string) {
+    console.log(`🔍 Iniciando verificação de vencimentos de contratos${imobiliariaId ? ` para Imobiliária ${imobiliariaId}` : ' (Global)'}...`);
 
     const targetDate = addDays(new Date(), 30);
     // Janela de busca mais ampla para lidar com fuso horário: do início do dia anterior ao fim do dia posterior
@@ -17,14 +17,17 @@ export class NotificationService {
 
     console.log(`📅 Janela de busca (UTC/Server): ${start.toISOString()} até ${end.toISOString()}`);
 
-    const contracts = await prisma.contract.findMany({
-      where: {
-        status: 'ATIVO',
-        dataFim: {
-          gte: start,
-          lte: end,
-        },
+    const where: any = {
+      status: 'ATIVO',
+      dataFim: {
+        gte: start,
+        lte: end,
       },
+    };
+    if (imobiliariaId) where.imobiliariaId = imobiliariaId;
+
+    const contracts = await prisma.contract.findMany({
+      where,
       include: {
         inquilino: true,
         imovel: true,
@@ -52,6 +55,7 @@ export class NotificationService {
         contratoId: contract.id,
         tipo: 'VENCIMENTO',
         status: 'ATIVO',
+        imobiliariaId: contract.imobiliariaId,
       }
     });
 
@@ -64,6 +68,7 @@ export class NotificationService {
     const alert = await prisma.alert.create({
       data: {
         contratoId: contract.id,
+        imobiliariaId: contract.imobiliariaId,
         tipo: 'VENCIMENTO',
         mensagem: alertMessage,
         dataEvento: contract.dataFim,
@@ -75,7 +80,10 @@ export class NotificationService {
 
     // 3. Busca usuários administradores/gestores para notificar via e-mail
     const usersToNotify = await prisma.user.findMany({
-      where: { status: 'ATIVO' },
+      where: {
+        status: 'ATIVO',
+        imobiliariaId: contract.imobiliariaId
+      },
       include: {
         notificationPreferences: {
           where: { tipoAlerta: 'VENCIMENTO' }

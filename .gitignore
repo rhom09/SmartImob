@@ -63,3 +63,4 @@ graphify-out/
 .planning/graphs/
 backend/backend/
 backend/schema_current.prisma
+bash.exe.stackdump
