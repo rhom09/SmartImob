@@ -20,3 +20,7 @@
 - **Status:** Autenticação real com Supabase (JWT + Middleware) implementada e ativa.
 - **Isolamento:** Todas as rotas de API possuem RLS e injeção de `imobiliariaId` via `authMiddleware` no backend.
 - **Segurança:** A comunicação entre Frontend e Backend é autenticada via `fetchWithAuth`.
+
+## 🔐 Segurança e Autenticação (Atualizado)
+- Toda requisição ao backend DEVE utilizar .
+- O isolamento multi-tenant é obrigatório via  em todas as queries.

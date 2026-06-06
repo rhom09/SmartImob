@@ -100,3 +100,4 @@ Este documento registra a jornada de desenvolvimento do SmartImob, incluindo des
 - Iniciar **Fase 7: Integração WhatsApp** para automação de avisos de cobrança.
 - Implementação da interface de login e restauração da segurança plena do Supabase (conforme `docs/SECURITY_TRANSITION.md`).
 - Refinamentos finais de UX baseados em testes operacionais.
+- Fase 7.1 concluída: Isolamento multi-tenant (Financeiro, Notificações, Segurança de rotas) e correção de autenticação em todas as chamadas de API (fetchWithAuth).
