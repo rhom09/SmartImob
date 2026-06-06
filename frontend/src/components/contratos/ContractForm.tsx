@@ -50,8 +50,8 @@ export function ContractForm({ onSubmit, isLoading }: ContractFormProps) {
     async function fetchOptions() {
       try {
         const [propsRes, tenantsRes] = await Promise.all([
-          fetch(getApiUrl("/imoveis?status=VAGO")),
-          fetch(getApiUrl("/clientes?tipo=INQUILINO")),
+          fetchWithAuth(getApiUrl("/imoveis?status=VAGO")),
+          fetchWithAuth(getApiUrl("/clientes?tipo=INQUILINO")),
         ]);
 
         const propsData = await propsRes.json();
