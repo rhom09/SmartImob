@@ -41,10 +41,10 @@ export default function RelatoriosPage() {
       const qs = queryParams.toString();
 
       const [resumoRes, comissoesRes, repassesRes, despesasRes] = await Promise.all([
-        fetch(getApiUrl(`/financeiro/resumo?${qs}`)),
-        fetch(getApiUrl(`/financeiro/comissoes?${qs}`)),
-        fetch(getApiUrl(`/financeiro/repasses?${qs}`)),
-        fetch(getApiUrl(`/despesas?${qs}&limit=100`)),
+        fetchWithAuth(getApiUrl(`/financeiro/resumo?${qs}`)),
+        fetchWithAuth(getApiUrl(`/financeiro/comissoes?${qs}`)),
+        fetchWithAuth(getApiUrl(`/financeiro/repasses?${qs}`)),
+        fetchWithAuth(getApiUrl(`/despesas?${qs}&limit=100`)),
       ]);
 
       setResumo(await resumoRes.json());
