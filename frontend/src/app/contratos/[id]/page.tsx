@@ -92,7 +92,18 @@ export default function DetalhesContratoPage() {
 
   const handleDownloadPDF = async (receiptId: string, numeroRecibo: string) => {
     try {
-      window.open(getApiUrl(`/recibos/${receiptId}/pdf?layout=simple`), '_blank');
+      const response = await fetchWithAuth(getApiUrl(`/recibos/${receiptId}/pdf?layout=simple`));
+      if (!response.ok) throw new Error('Falha ao gerar PDF');
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `recibo-${numeroRecibo}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
     } catch (error) {
       alert("Erro ao gerar PDF.");
     }
