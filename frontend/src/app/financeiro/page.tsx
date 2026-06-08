@@ -27,17 +27,23 @@ export default function FinanceiroPage() {
   const [loading, setLoading] = useState(true);
   const [mounted, setMounted] = useState(false);
 
+  const [date, setDate] = useState(new Date().toISOString().slice(0, 7)); // YYYY-MM
+
   useEffect(() => {
     setMounted(true);
-    fetchData();
-  }, []);
+    fetchData(date);
+  }, [date]);
 
-  const fetchData = async () => {
+  const fetchData = async (selectedDate: string) => {
     setLoading(true);
     try {
+      const [year, month] = selectedDate.split('-');
+      const start = `${year}-${month}-01`;
+      const end = `${year}-${month}-${new Date(parseInt(year), parseInt(month), 0).getDate()}`;
+
       const [resumoRes, fluxoRes] = await Promise.all([
-        fetchWithAuth(getApiUrl("/financeiro/resumo")),
-        fetchWithAuth(getApiUrl("/financeiro/fluxo-caixa?dataInicio=2026-01-01&dataFim=2026-12-31"))
+        fetchWithAuth(getApiUrl(`/financeiro/resumo?dataInicio=${start}&dataFim=${end}`)),
+        fetchWithAuth(getApiUrl(`/financeiro/fluxo-caixa?dataInicio=${year}-01-01&dataFim=${year}-12-31`))
       ]);
       const resumoData = await resumoRes.json();
       const fluxoData = await fluxoRes.json();
@@ -62,9 +68,19 @@ export default function FinanceiroPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div>
-        <h1 className="text-2xl font-bold text-on-surface">Financeiro</h1>
-        <p className="text-on-surface-variant">Visão geral financeira da imobiliária</p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-on-surface">Financeiro</h1>
+          <p className="text-on-surface-variant">Visão geral financeira da imobiliária</p>
+        </div>
+        <div className="flex items-center gap-4">
+          <Input
+            type="month"
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
+            className="w-40"
+          />
+        </div>
       </div>
 
       {/* Cards de Métricas */}
