@@ -67,7 +67,7 @@ export default function FinanceiroPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 pt-20">
       {/* Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
