@@ -64,3 +64,4 @@ graphify-out/
 backend/backend/
 backend/schema_current.prisma
 bash.exe.stackdump
+.playwright-mcp/*
