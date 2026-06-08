@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { fetchWithAuth, getApiUrl } from "../../lib/api";
-import { DollarSign, TrendingUp, TrendingDown, AlertTriangle, ArrowRight, Receipt, BarChart3 } from "lucide-react";
+import { Input } from "@/components/ui/Input";
 import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
