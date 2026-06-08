@@ -69,17 +69,17 @@ export default function FinanceiroPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-on-surface">Financeiro</h1>
           <p className="text-on-surface-variant">Visão geral financeira da imobiliária</p>
         </div>
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4 w-full sm:w-auto">
           <Input
             type="month"
             value={date}
             onChange={(e) => setDate(e.target.value)}
-            className="w-40"
+            className="w-full sm:w-40"
           />
         </div>
       </div>
