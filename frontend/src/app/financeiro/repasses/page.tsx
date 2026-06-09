@@ -62,7 +62,7 @@ export default function RepassesPage() {
 
   if (!mounted || loading) {
     return (
-      <div className="space-y-6">
+      <div className="space-y-6 pt-20">
         <h1 className="text-2xl font-bold text-on-surface">Repasses</h1>
         <div className="py-12 text-center text-on-surface-variant">Carregando repasses...</div>
       </div>
@@ -70,7 +70,7 @@ export default function RepassesPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 pt-20">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>

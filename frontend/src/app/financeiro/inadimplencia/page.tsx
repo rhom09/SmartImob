@@ -76,7 +76,7 @@ export default function InadimplenciaPage() {
 
   if (!mounted || loading) {
     return (
-      <div className="space-y-6">
+      <div className="space-y-6 pt-20">
         <h1 className="text-2xl font-bold text-on-surface">Inadimplência</h1>
         <div className="py-12 text-center text-on-surface-variant">Carregando dados de inadimplência...</div>
       </div>
@@ -84,7 +84,7 @@ export default function InadimplenciaPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 pt-20">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>

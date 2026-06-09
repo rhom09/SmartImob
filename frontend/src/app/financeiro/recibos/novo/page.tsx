@@ -296,7 +296,7 @@ export default function NovoReciboPage() {
           </div>
         </div>
 
-        <div className="space-y-6">
+        <div className="space-y-6 pt-20">
           <Card className="bg-primary/5">
             <CardHeader><CardTitle className="text-base flex items-center gap-2"><CreditCard size={20} className="text-primary"/>Resumo</CardTitle></CardHeader>
             <CardContent className="space-y-4">
