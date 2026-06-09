@@ -45,7 +45,7 @@ export default function ContratosPage() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 pt-20">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-on-surface">Contratos</h1>
