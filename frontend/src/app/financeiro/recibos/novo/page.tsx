@@ -194,7 +194,7 @@ export default function NovoReciboPage() {
   };
 
   return (
-    <div className="space-y-6 pb-20">
+    <div className="space-y-6 pb-20 pt-20">
       <div className="flex justify-between items-center">
         <div className="flex items-center gap-4">
           <Link href="/financeiro/recibos">
