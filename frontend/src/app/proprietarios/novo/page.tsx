@@ -42,7 +42,7 @@ export default function NovoProprietarioPage() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
+    <div className="max-w-4xl mx-auto space-y-6 pt-20">
       <div className="flex items-center gap-4">
         <Link href="/proprietarios">
           <Button variant="ghost" size="icon">

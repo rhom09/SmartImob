@@ -78,7 +78,7 @@ export default function DetalhesImovelPage() {
   const hasPhotos = property.fotos && property.fotos.length > 0;
 
   return (
-    <div className="max-w-6xl mx-auto space-y-8 pb-20">
+    <div className="max-w-6xl mx-auto space-y-8 pb-20 pt-20">
       {/* Header Ações */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="flex items-center gap-4">
