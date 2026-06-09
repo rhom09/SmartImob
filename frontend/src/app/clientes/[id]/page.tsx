@@ -111,7 +111,7 @@ export default function DetalhesClientePage() {
   if (!client) return <div className="py-20 text-center text-error">Cliente não encontrado.</div>;
 
   return (
-    <div className="max-w-6xl mx-auto space-y-8 pb-20">
+    <div className="max-w-6xl mx-auto space-y-8 pb-20 pt-20">
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="flex items-center gap-4">
