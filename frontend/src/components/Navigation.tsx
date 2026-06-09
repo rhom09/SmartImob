@@ -53,14 +53,31 @@ export function Sidebar() {
   );
 }
 
+import { supabase } from "@/lib/supabase";
+
 export function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [user, setUser] = useState<{ name: string; role: string } | null>(null);
   const pathname = usePathname();
 
-  // Fecha o menu móvel quando o caminho muda
   useEffect(() => {
     setIsMobileMenuOpen(false);
+
+    // Busca dados do usuário
+    supabase.auth.getUser().then(({ data }) => {
+      if (data.user) {
+        setUser({
+          name: data.user.user_metadata?.name || "Usuário",
+          role: "Gestor" // Pode ser extraído de metadata se necessário
+        });
+      }
+    });
   }, [pathname]);
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    window.location.href = "/login";
+  };
 
   return (
     <>
@@ -87,12 +104,16 @@ export function Header() {
           <NotificationBell />
           <div className="flex items-center gap-3 pl-2 md:pl-4 border-l border-outline-variant">
             <div className="hidden sm:block text-right">
-              <p className="text-sm font-semibold text-on-surface leading-tight">Admin</p>
-              <p className="text-[10px] uppercase tracking-tighter text-on-surface-variant font-bold">Gestor</p>
+              <p className="text-sm font-semibold text-on-surface leading-tight">{user?.name || "Carregando..."}</p>
+              <p className="text-[10px] uppercase tracking-tighter text-on-surface-variant font-bold">{user?.role || "..."}</p>
             </div>
-            <div className="w-8 h-8 rounded-full bg-secondary text-on-secondary flex items-center justify-center font-bold text-sm">
-              A
-            </div>
+            <button
+                onClick={handleLogout}
+                className="w-8 h-8 rounded-full bg-secondary text-on-secondary flex items-center justify-center font-bold text-sm hover:bg-error transition-colors"
+                title="Sair"
+            >
+              {user?.name.charAt(0) || 'A'}
+            </button>
           </div>
         </div>
       </header>
