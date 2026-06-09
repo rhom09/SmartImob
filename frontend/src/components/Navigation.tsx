@@ -80,43 +80,71 @@ export function Header() {
   };
 
   return (
-    <>
-      <header className="fixed top-0 right-0 left-0 lg:left-sidebar h-16 bg-white border-b border-outline-variant flex items-center justify-between px-4 md:px-8 z-40">
-        <div className="flex items-center gap-3">
-          <button
-            onClick={() => setIsMobileMenuOpen(true)}
-            className="lg:hidden p-2 -ml-2 rounded-full hover:bg-surface-container text-on-surface"
-          >
-            <Menu size={24} />
-          </button>
-          <div className="hidden md:flex items-center gap-4 bg-surface-container-low px-4 py-2 rounded-md w-64 lg:w-96">
-            <Search size={18} className="text-on-surface-variant" />
-            <input
-              type="text"
-              placeholder="Pesquisar..."
-              className="bg-transparent border-none outline-none text-sm w-full text-on-surface"
-            />
-          </div>
-          <h1 className="md:hidden text-lg font-bold text-primary">SmartImob</h1>
-        </div>
+    <aside className="hidden lg:flex fixed left-0 top-0 h-screen w-sidebar bg-primary text-on-primary flex-col z-50">
+      <div className="p-6">
+        <h1 className="text-xl font-bold tracking-tight">SmartImob</h1>
+      </div>
 
-        <div className="flex items-center gap-2 md:gap-4">
-          <NotificationBell />
-          <div className="flex items-center gap-3 pl-2 md:pl-4 border-l border-outline-variant">
-            <div className="hidden sm:block text-right">
-              <p className="text-sm font-semibold text-on-surface leading-tight">{user?.name || "Carregando..."}</p>
-              <p className="text-[10px] uppercase tracking-tighter text-on-surface-variant font-bold">{user?.role || "..."}</p>
-            </div>
-            <button
-                onClick={handleLogout}
-                className="w-8 h-8 rounded-full bg-secondary text-on-secondary flex items-center justify-center font-bold text-sm hover:bg-error transition-colors"
-                title="Sair"
-            >
-              {user?.name.charAt(0) || 'A'}
-            </button>
-          </div>
-        </div>
-      </header>
+      <nav className="flex-1 px-4 py-2 space-y-1">
+        {menuItems.map((item) => (
+          <Link
+            key={item.label}
+            href={item.href}
+            className={`flex items-center gap-3 px-3 py-2 rounded-md transition-colors ${
+              pathname === item.href
+                ? 'bg-primary-container text-on-primary'
+                : 'text-on-primary-container/80 hover:bg-primary-container/50 hover:text-on-primary-container'
+            }`}
+          >
+            <item.icon size={20} />
+            <span className="text-sm font-medium">{item.label}</span>
+          </Link>
+        ))}
+      </nav>
+
+      <div className="p-4 border-t border-primary-container">
+        <button
+          onClick={handleLogout}
+          className="flex items-center gap-3 w-full px-3 py-2 rounded-md hover:bg-primary-container text-on-primary-container/80 hover:text-on-primary-container transition-colors"
+        >
+          <LogOut size={20} />
+          <span className="text-sm font-medium">Sair</span>
+        </button>
+      </div>
+    </aside>
+  );
+}
+
+export function Header() {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [user, setUser] = useState<{ firstName: string; role: string } | null>(null);
+  const pathname = usePathname();
+
+  useEffect(() => {
+    setIsMobileMenuOpen(false);
+
+    // Busca dados do usuário diretamente do banco para garantir consistência
+    const fetchUser = async () => {
+      const { data: { user: authUser } } = await supabase.auth.getUser();
+      if (authUser) {
+        // Busca perfil completo no banco usando email
+        const { data: dbUser } = await supabase
+          .from('USUARIOS')
+          .select('nome, perfil')
+          .eq('email', authUser.email)
+          .single();
+
+        if (dbUser) {
+          const firstName = dbUser.nome.split(' ')[0];
+          setUser({
+            name: firstName,
+            role: dbUser.perfil
+          });
+        }
+      }
+    };
+    fetchUser();
+  }, [pathname]);
 
       {/* Mobile Menu (Overlay) */}
       {isMobileMenuOpen && (
